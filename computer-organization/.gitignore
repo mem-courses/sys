@@ -1,6 +1,7 @@
 # vivado
 *.log
 *.jou
+*.str
 prj
 .Xil
 
