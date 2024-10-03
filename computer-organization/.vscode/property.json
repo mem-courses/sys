@@ -1,0 +1,11 @@
+{
+  "toolChain": "xilinx",
+  "prjName": {
+    "PL": "OExp01-ALU"
+  },
+  "soc": {
+    "core": "none"
+  },
+  "enableShowLog": true,
+  "device": "xc7a100tcsg324-1"
+}
