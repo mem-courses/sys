@@ -1,0 +1,8 @@
+# vivado
+*.log
+*.jou
+.Xil
+
+# typst
+report.pdf
+template.pdf
