@@ -1,3 +1,6 @@
 {
-	"explorer.excludeGitIgnore": true
+	"explorer.excludeGitIgnore": true,
+	"code-runner.executorMap": {
+		"tcl": "cd $dir && vivado -mode tcl -source $fileName"
+	}
 }
