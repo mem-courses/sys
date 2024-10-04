@@ -26,7 +26,7 @@ module div32 (
       .s(diff)
    );
 
-   always @(posedge clk) begin
+   always @(posedge clk or posedge rst) begin
       if (rst == 1) begin
          tmp <= 64'b0;
          cnt <= 6'b0;
