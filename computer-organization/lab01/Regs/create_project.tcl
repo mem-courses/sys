@@ -1,6 +1,6 @@
 # vivado -mode tcl -source create_project.tcl
 
-set project_name "ALU"
+set project_name "Regs"
 set target_dir "./prj"
 
 set_param general.maxThreads 32 
