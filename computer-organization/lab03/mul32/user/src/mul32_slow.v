@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module mul32 (
+module mul32_slow (
    input clk,
    input rst,
    input [31:0] multiplicand,
