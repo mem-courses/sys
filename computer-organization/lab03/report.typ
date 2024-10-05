@@ -69,17 +69,29 @@
     #codex(read("./mul32/user/src/add32.v"), lang: "verilog")
   ]
 
-- #[
-    在 `user/sim/tb.v` 中填入以下代码：
-
-    #codex(read("./mul32/user/sim/tb.v"), lang: "verilog")
-  ]
+- 在 `user/sim/tb.v` 中填入给出的仿真代码。
 
 - 通过 `vivado -mode tcl -source create_project.tcl` 指令创建并打开 Vivado 项目，并进行仿真测试。
 
+- #[
+    在仿真设置中，可将 Radix 设为 Unsigned Decimal，从而方便查看仿真结果。
+
+    #align(center, image("images/2024-10-06-00-30-20.png", width: 50%))
+  ]
+
 == 实验结果与分析
 
-仿真结果
+- #[
+    对于第一组数据，被乘数为 2，乘数为 3，所得乘积为 6，结果正确。且在得出结果后 finish 信号被置为 1，符合预期。注意到中间有一段信号图像类似于弹簧，这体现了乘积寄存器中不断发生右移的过程，即使被乘数和乘数的高位部分均为 0。
+
+    #align(center, image("images/2024-10-06-00-32-35.png", width: 100%))
+  ]
+
+- #[
+    对于剩下的几组数据 $10 times 8 = 80$, $9 times 9 = 81$, $50 times 6 = 300$, $6 times 60 = 360$，结果均正确。
+
+    #align(center, image("images/2024-10-06-00-33-51.png", width: 100%))
+  ]
 
 == 实验讨论与心得
 
@@ -88,10 +100,6 @@
 #pagebreak(weak: true)
 
 = 实验三 (2)：32 位无符号整数除法
-
-== 实验设备和环境
-
-本次实验不需要用到开发板，只需要进行 Verilog 仿真。
 
 == 实验实现方法与步骤
 
@@ -113,15 +121,18 @@
     #codex(read("./div32/user/src/sub32_nocarry.v"), lang: "verilog")
   ]
 
-- #[
-    在 `user/sim/tb.v` 中填入以下代码：
-
-    #codex(read("./div32/user/sim/tb.v"), lang: "verilog")
-  ]
+- 在 `user/sim/tb.v` 中填入给出的仿真代码。
 
 - 通过 `vivado -mode tcl -source create_project.tcl` 指令创建并打开 Vivado 项目，并进行仿真测试。
 
+- #[
+    在仿真设置中，可将 Radix 设为 Unsigned Decimal，从而方便查看仿真结果。
+
+    #align(center, image("images/2024-10-06-00-30-20.png", width: 50%))
+  ]
+
 == 实验结果与分析
+
 
 == 实验讨论与心得
 
