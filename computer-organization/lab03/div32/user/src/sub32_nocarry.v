@@ -5,5 +5,4 @@ module sub32_nocarry (
 );
 
    assign s = a - b;
-
 endmodule

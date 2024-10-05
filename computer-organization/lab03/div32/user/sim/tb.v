@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module div32_tb ();
+module tb ();
    reg clk;
    reg rst;
    reg [31:0] dividend;
@@ -46,6 +46,5 @@ module div32_tb ();
       divisor  = 32'd99;
       #350 start = 0;
       #350 $stop();
-
    end
 endmodule

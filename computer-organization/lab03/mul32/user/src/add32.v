@@ -6,5 +6,4 @@ module add32 (
 );
 
    assign {c, s} = {1'b0, a} + {1'b0, b};
-
 endmodule
