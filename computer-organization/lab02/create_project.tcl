@@ -10,7 +10,12 @@ set_param general.maxThreads 16
 create_project -force $project_name $target_dir -part xc7a100tcsg324-1
 
 # add source files
-set source_dirs [list "./user/src" "../public/ip"]
+set source_dirs [list \
+  "./user/src" \
+  "../public/ip" \
+  "../public/VGA" \
+  # "../public/VGA_edf" \
+]
 foreach source_dir $source_dirs {
   add_files -scan_for_includes -fileset sources_1 $source_dir
   foreach edf_file [glob -nocomplain -directory $source_dir *.edf] {
@@ -23,7 +28,9 @@ add_files -scan_for_includes -fileset sim_1 ./user/sim
 add_files -scan_for_includes -fileset constrs_1 ./user/data
 
 # create ROM_D with I_mem.coe
-create_ip -name dist_mem_gen -vendor xilinx.com -library ip -version 8.0 -module_name ROM_D
+create_ip -name dist_mem_gen \
+          -module_name ROM_D \
+          -vendor xilinx.com -library ip -version 8.0
 set_property -dict [list \
   CONFIG.coefficient_file [file normalize ./user/data/I_mem.coe] \
   CONFIG.depth {1024} \
