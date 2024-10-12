@@ -3,6 +3,7 @@
 *.jou
 *.str
 prj
+tmp
 .Xil
 
 # typst
