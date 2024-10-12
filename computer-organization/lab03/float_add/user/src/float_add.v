@@ -19,6 +19,7 @@ module float_add (
    assign a_sign = A[31];
    assign b_sign = B[31];
 
+
    always @(posedge en or posedge rst) begin
       if (rst) begin
          diff_e   <= 0;
@@ -40,11 +41,14 @@ module float_add (
                result = A;
                fin    = 1;
             end else begin
+
                a_e = A[30:23];
                b_e = B[30:23];
+               $display("a_e = %b, b_e = %b", a_e, b_e);
 
                // de-normalize A
                a_m = {A[22:0], 4'b0000};
+               $display("a_m = %b, a_e = %b (pre)", a_m, a_e);
                if (a_e == 0) begin
                   a_m = a_m >> 1;
                end else if (a_e < 8'b11111111) begin
@@ -57,9 +61,11 @@ module float_add (
                   a_m = ~a_m + 1;
                   a_m = $signed(a_m) >>> 1;
                end
+               $display("a_m = %b, a_e = %b (after)", a_m, a_e);
 
                // de-normalize B
                b_m = {B[22:0], 4'b0000};
+               $display("b_m = %b, b_e = %b (pre)", b_m, b_e);
                if (b_e == 0) begin
                   b_m = b_m >> 1;
                end else if (b_e < 8'b11111111) begin
@@ -72,9 +78,11 @@ module float_add (
                   b_m = ~b_m + 1;
                   b_m = $signed(b_m) >>> 1;
                end
+               $display("b_m = %b, b_e = %b (after)", b_m, b_e);
 
                // calculate
                diff_e = b_e - a_e;
+               $display("diff_e = %b", diff_e);
                if (diff_e[8] == 0) begin
                   a_m = $signed(a_m) >> diff_e;
                   result_e = b_e;
@@ -84,11 +92,11 @@ module float_add (
                   result_e = a_e;
                end
                result_m = a_m + b_m;
+               $display("result_m = %b (%d), result_e = %b", result_m, result_m, result_e);
 
                // normalize
                if ((result_m[26] ^ result_m[25]) == 1) begin
                   result_m = $signed(result_m) >>> 1;
-                  result_e = result_e + 1;
                end else if (result_m[26:24] == 3'b000) begin
                   while (result_m[26:24] != 3'b001) begin
                      result_m = result_m << 1;
@@ -100,6 +108,8 @@ module float_add (
                      result_e = result_e - 1;
                   end
                end
+               result_e = result_e + 1;
+               $display("result_m = %b (%d), result_e = %b", result_m, result_m, result_e);
                if (result_e >= 0 && result_e < 8'b11111110) begin
                   result_e = result_e + 1;
                   result[31] = result_m[26];
@@ -110,6 +120,7 @@ module float_add (
                      result[22:0] = result_m[23:1];
                   end
                end
+               $display("result_m = %b (%d), result_e = %b", result_m, result_m, result_e);
 
                // finish
                fin = 1;
