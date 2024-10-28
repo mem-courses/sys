@@ -26,20 +26,17 @@
 
 == 实验目的
 
-- 复习二进制加减、乘除的基本法则
-- 掌握补码的基本原理和作用
-- 了解浮点数的表示方法及加法运算法则
-- 进一步了解计算机系统的复杂运算操作
+- 复习二进制加减、乘除的基本法则；
+- 掌握补码的基本原理和作用；
+- 了解浮点数的表示方法及加法运算法则；
+- 进一步了解计算机系统的复杂运算操作。
 
 == 实验目标与任务
 
-- *目标*：熟悉二进制原码补码的概念，了解二进制加减乘除的原理，掌握浮点加法的操作实现
-
-- *任务一*：设计实现乘法器
-
-- *任务二*：设计实现除法器
-
-- *任务三*：设计实现浮点加法器
+- *目标*：熟悉二进制原码补码的概念，了解二进制加减乘除的原理，掌握浮点加法的操作实现。
+- *任务一*：设计实现乘法器；
+- *任务二*：设计实现除法器；
+- *任务三*：设计实现浮点加法器。
 
 == 实验设备和环境
 
@@ -125,13 +122,21 @@
 
 - 通过 `vivado -mode tcl -source create_project.tcl` 指令创建并打开 Vivado 项目，并进行仿真测试。
 
-- #[
-    在仿真设置中，可将 Radix 设为 Unsigned Decimal，从而方便查看仿真结果。
-
-    #align(center, image("images/2024-10-06-00-30-20.png", width: 50%))
-  ]
+- 仿真时，可将 Radix 设为 Unsigned Decimal。
 
 == 实验结果与分析
+
+- #[
+    对于第一组数据，被除数为 8，除数为 4，刚好整除；得到商为 2，余数为 0，结果正确。
+
+    #align(center, image("images/2024-10-28-21-10-02.png", width: 100%))
+  ]
+
+- #[
+    对于剩下的几组数据，程序运行结果均正确。
+
+    #align(center, image("images/2024-10-28-21-11-56.png", width: 100%))
+  ]
 
 
 == 实验讨论与心得
@@ -141,3 +146,47 @@
 #pagebreak(weak: true)
 
 = 实验三 (3)：单精度浮点数加法
+
+== 实验实现方法与步骤
+
+- #[
+    在 `create_project.tcl` 中填入以下代码：
+
+    #codex(read("./float_add/create_project.tcl"), lang: "tcl")
+  ]
+
+- #[
+    在 `user/src/float_add.v` 中填入以下代码：
+
+    这里加入了一些 `$display` 语句用于调试，他们并不会对仿真结果产生影响。
+
+    #codex(read("./float_add/user/src/float_add.v"), lang: "verilog")
+  ]
+
+- #[
+    在 `user/sim/tb.v` 中填入以下仿真代码：
+
+    #codex(read("./float_add/user/sim/tb.v"), lang: "verilog")
+  ]
+
+
+- 通过 `vivado -mode tcl -source create_project.tcl` 指令创建并打开 Vivado 项目，并进行仿真测试。
+
+- #[
+    仿真时，可将选中输入输出信号 `A`、`B` 和 `result`，在右键菜单中选择 Radix $->$ Real Settings，并选择 Floating point $->$ Single precision，从而方便查看仿真结果。
+
+    #align(center, image("images/2024-10-28-23-44-08.png", width: 60%))
+
+    #align(center, image("images/2024-10-28-23-44-13.png", width: 60%))
+  ]
+
+== 实验结果与分析
+
+正确设置数据格式后，可以直观的验证仿真结果。如下图，本实验的仿真结果与预期一致。
+
+#align(center, image("images/2024-10-28-23-45-22.png", width: 100%))
+
+== 实验讨论与心得
+
+- 这里因为浮点数加法的流程较为复杂，所以实现时没有使用非阻塞复制 + 时序逻辑的设计模式，而是直接使用阻塞赋值进行实现，因而代码较为简单。如果要求更本质的实现，可以使用严格的非阻塞赋值完成模块。
+- 这里并没有实现 guard bit、round bit、sticky bit 和不同的舍入逻辑，有必要的话也可以实现这些功能。
