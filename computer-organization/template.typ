@@ -129,6 +129,7 @@
 
   show par: set block(above: 1.2em, below: 1.2em)
   show list: set block(above: 1.2em, below: 1.2em)
+  show enum: set block(above: 1.2em, below: 1.2em)
 
   set par(leading: 0.75em)
 
