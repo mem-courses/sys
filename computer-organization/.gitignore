@@ -1,3 +1,6 @@
+# debugging files
+pixel_data.txt
+
 # vivado
 *.log
 *.jou

@@ -167,23 +167,35 @@
   ]
 
 + #[
+    为 `SCPU_ctrl` 模块编写专门的仿真代码 `SCPU_ctrl_tb.v`：
+
+    #codex(read("./cpu/user/sim/SCPU_ctrl_tb.v"), lang: "verilog")
+  ]
+
++ #[
     替换 Exp02 的对应部分并进行测试。
 
     实际上，这里我们只需要使用 `create_project.tcl` 脚本重新构建项目即可。
   ]
 
 + #[
-    利用给定的 Testbench 代码进行功能仿真：
+    运行 `SCPU_ctrl` 的仿真测试，通过在 Scope 窗口中添加观察信号，可以得到控制器输出的控制信号：
 
-    #codex(read("./cpu/user/sim/tb.v"), lang: "verilog")
+    #align(center, image("images/2024-11-20-20-14-23.png", width: 100%))
+ ]
 
-    注意：可以在 Scope 窗口中添加观察信号。
-  ]
+// + #[
+//     利用给定的 Testbench 代码进行功能仿真：
+
+//     // #codex(read("./cpu/user/sim/SCPU_ctrl_tb.v"), lang: "verilog")
+
+//     注意：可以在 Scope 窗口中添加观察信号。
+//   ]
 
 + #[
     上板进行物理验证，测试 Demo 程序能否成功运行。
 
-		TODO：来张图片
+    TODO：来张图片
   ]
 
 #pagebreak(weak: true)

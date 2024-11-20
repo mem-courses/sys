@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`include "Defines.vh"
 
 module CSSTE (
    input clk_100mhz,
@@ -26,6 +27,8 @@ module CSSTE (
    wire [31:0] Cpu_data4bus, douta, ram_data_in, Peripheral_in;
    wire [31:0] counter_out, Disp_num;
 
+   `RegFile_Regs_Declaration
+
    SCPU U1 (
       .Addr_out(Addr_out),
       .Data_in(Cpu_data4bus),
@@ -35,7 +38,8 @@ module CSSTE (
       .PC_out(PC_out),
       .clk(Clk_CPU),
       .inst_in(spo),
-      .rst(rst)
+      .rst(rst),
+      `RegFile_Regs_Arguments
    );
 
    ROM_D U2 (
@@ -165,7 +169,8 @@ module CSSTE (
       .vs(VSYNC),
       .vga_r(Red),
       .vga_g(Green),
-      .vga_b(Blue)
+      .vga_b(Blue),
+      `RegFile_Regs_Arguments
    );
 
 endmodule
