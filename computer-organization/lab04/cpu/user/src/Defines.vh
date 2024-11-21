@@ -30,7 +30,7 @@
     output [31: 0] t3, \
     output [31: 0] t4, \
     output [31: 0] t5, \
-    output [31: 0] t6
+    output [31: 0] t6,
 
 `define RegFile_Regs_Assignments \
     assign x0 = 0; \
@@ -98,7 +98,7 @@
     .t3(t3),    \
     .t4(t4),    \
     .t5(t5),    \
-    .t6(t6)
+    .t6(t6),
 
 `define RegFile_Regs_Declaration \
     wire [31: 0] x0; \

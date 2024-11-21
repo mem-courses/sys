@@ -27,6 +27,8 @@ foreach source_dir $source_dirs {
 add_files -scan_for_includes -fileset sim_1 ./user/sim
 add_files -scan_for_includes -fileset constrs_1 ./user/data
 
+set top "socTest_tb"
+
 # create ROM_D with I_mem.coe
 create_ip -name dist_mem_gen \
   -module_name ROM_D \

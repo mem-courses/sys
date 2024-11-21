@@ -8,12 +8,12 @@ module SCPU (
    input wire [31:0] inst_in,
    input wire [31:0] Data_in,
 
+   `RegFile_Regs_output
    output wire CPU_MIO,
    output wire MemRW,
    output wire [31:0] PC_out,
    output wire [31:0] Data_out,
-   output wire [31:0] Addr_out,
-   `RegFile_Regs_output
+   output wire [31:0] Addr_out
 );
 
    wire ALUSrc_B;
@@ -37,13 +37,12 @@ module SCPU (
       .clk(clk),
       .inst_field(inst_in),
       .rst(rst),
+     // `RegFile_Regs_Arguments
 
       // output
       .ALU_out (Addr_out),
       .Data_out(Data_out),
-      .PC_out  (PC_out),
-
-      `RegFile_Regs_Arguments
+      .PC_out  (PC_out)
    );
 
    SCPU_ctrl SCPU_ctrl_inst (

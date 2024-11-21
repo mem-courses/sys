@@ -58,7 +58,6 @@ module DataPath (
       .zero(ALU_zero)
    );
 
-   // ===============================================
 
    wire [31:0] PC_plus_4, PC_plus_imm;
    wire [31:0] PC_next_b, PC_next_j;

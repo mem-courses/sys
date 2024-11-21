@@ -30,16 +30,16 @@ module CSSTE (
    `RegFile_Regs_Declaration
 
    SCPU U1 (
+      `RegFile_Regs_Arguments
+      .clk(Clk_CPU),
+      .rst(rst),
       .Addr_out(Addr_out),
       .Data_in(Cpu_data4bus),
       .Data_out(Data_out),
       .MIO_ready(1'b0),
       .MemRW(MemRW),
       .PC_out(PC_out),
-      .clk(Clk_CPU),
-      .inst_in(spo),
-      .rst(rst),
-      `RegFile_Regs_Arguments
+      .inst_in(spo)
    );
 
    ROM_D U2 (
@@ -155,6 +155,7 @@ module CSSTE (
    );
 
    VGA U11 (
+      `RegFile_Regs_Arguments
       .clk_25m(clkdiv[1]),
       .clk_100m(clk_100mhz),
       .rst(rst),
@@ -169,8 +170,7 @@ module CSSTE (
       .vs(VSYNC),
       .vga_r(Red),
       .vga_g(Green),
-      .vga_b(Blue),
-      `RegFile_Regs_Arguments
+      .vga_b(Blue)
    );
 
 endmodule

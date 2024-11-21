@@ -2,7 +2,7 @@
 
 #show: project.with(
   theme: "lab",
-  title: "Computer Organization Exp 04",
+  title: "Computer Organization Lab 04",
   course: "计算机组成",
   name: "实验四：单周期 CPU 设计",
   author: "吴与伦",
@@ -22,7 +22,7 @@
   },
 )
 
-= Exp04-0：CPU 核集成设计
+= Lab04-0：CPU 核集成设计
 
 == 实验目的
 
@@ -60,11 +60,9 @@
     接入给定的数据通路和控制器软核进行调试。
   ]
 
-*注：测试过程与结果详见Lab04-2的实验报告。*
-
 #pagebreak(weak: true)
 
-= Exp04-1：CPU设计之数据通路
+= Lab04-1：CPU设计之数据通路
 
 == 实验目的
 
@@ -83,10 +81,10 @@
 - *目标*：熟悉RISC-V RV32I的指令特点，了解数据通路的原理，设计并测试数据通路。
 
 - *任务一*：设计实现数据通路（采用RTL实现）：
-  - ALU和Regs调用Exp01设计的模块（可直接加RTL）；
+  - ALU和Regs调用Lab01设计的模块（可直接加RTL）；
   - PC寄存器设计及PC通路建立；
   - ImmGen立即数生成模块设计；
-  - 此实验在Exp4-0的基础上完成，替换Exp4-0的数据通路核。
+  - 此实验在Lab4-0的基础上完成，替换Lab4-0的数据通路核。
 
 - *任务二*：设计数据通路测试方案并完成测试：
   - 通路测试：I-格式通路、R-格式通路；
@@ -95,32 +93,64 @@
 == 实验实现方法与步骤
 
 + #[
-    完成立即数生成模块 Imm Gen 的剩余实现，注意是进行符号拓展。
+    完成立即数生成模块 Imm Gen 的剩余实现：。
 
     #codex(read("./cpu/user/src/ImmGen.v"), lang: "verilog")
+
+    这里的实现主要是根据 RISC-V 的指令格式来得到的，如下图：
+
+    #align(center, figure(image("images/2024-11-21-15-21-02.png", width: 90%), caption: "RISC-V Instruction Formats"))
+
+    如 `addi` 指令，其立即数部分的 `imm[11:0]` 对应了指令的 `inst[31:25]`，对于高位只需要通过符号拓展得到即可。
   ]
 
 + #[
-    设计 REG32 模块实现 32 位寄存器：
+    设计 REG32 模块实现 32 位寄存器，这将用于 PC 寄存器的硬件实现中：
 
     #codex(read("./cpu/user/src/REG32.v"), lang: "verilog")
   ]
 
 + #[
-    参考原理图 @datapath_diagram 完成数据通路顶层设计：
+    参考原理图@datapath_diagram（见附录）完成数据通路顶层设计：
 
     #codex(read("./cpu/user/src/DataPath.v"), lang: "verilog")
   ]
 
 + #[
-    替换 Lab02 的对应 SCPU 部分，并运行 Demo 程序。
+    利用后面在 Lab04-2 中实现的 SCPU 仿真模块进行程序的仿真测试。
+
+    其中选用的测试程序为 Lab04-1 课件 P74 给出的 Demo 程序，内容如下：
+
+    #codex(read("./cpu/user/data/test_add.s"), lang: "asm")
+
+    *注意*：这里的注释部分仅是课件中给出的结果，其从 `x17=000006D3` 开始的输出均有问题。
   ]
 
-*注：测试过程与结果详见Lab04-2的实验报告。*
++ #[
+    为了方便地将 RV32 汇编代码转化为机器码，这里在 claude-3.5-sonnet 的帮助下编写了一个简单的 Python 脚本，详见@assembly_script。
+  ]
+
++ #[
+    在 Vivado 中进行仿真测试，可以得到仿真结果为：
+
+    #grid(
+      columns: (1fr, 1fr),
+      align(center, image("images/2024-11-21-16-21-44.png", height: 16em)),
+      align(center, image("images/2024-11-21-16-24-47.png", height: 16em)),
+    )
+  ]
+
++ #[
+    替换 Lab02 的对应 SCPU 部分，并运行 Demo 程序，进行物理验证。
+
+    TODO：来张照片
+  ]
+
+// *注：测试过程与结果详见Lab04-2的实验报告。*
 
 #pagebreak(weak: true)
 
-= Exp04-2：CPU设计之控制器
+= Lab04-2：CPU设计之控制器
 
 == 实验目的
 
@@ -139,8 +169,8 @@
 - *目标*：熟悉RISC-V RV32I的指令特点，了解控制器的原理，设计并测试控制器。
 
 - *任务一*：用硬件描述语言设计实现控制器：
-  - 根据Exp04-1数据通路及指令编码完成控制信号真值表；
-  - 此实验在Exp04-1的基础上完成，替换Exp04-1的控制器核。
+  - 根据Lab04-1数据通路及指令编码完成控制信号真值表；
+  - 此实验在Lab04-1的基础上完成，替换Lab04-1的控制器核。
 
 - *任务二*：设计控制器测试方案并完成测试：
   - OP译码测试：R-格式、访存指令、分支指令，转移指令；
@@ -173,16 +203,18 @@
   ]
 
 + #[
-    替换 Exp02 的对应部分并进行测试。
+    替换 Lab02 的对应部分并进行测试。
 
     实际上，这里我们只需要使用 `create_project.tcl` 脚本重新构建项目即可。
   ]
 
 + #[
-    运行 `SCPU_ctrl` 的仿真测试，通过在 Scope 窗口中添加观察信号，可以得到控制器输出的控制信号：
+    对控制器模块的单独的仿真测试，通过在 Scope 窗口中添加观察信号，可以得到控制器输出的控制信号：
 
     #align(center, image("images/2024-11-20-20-14-23.png", width: 100%))
- ]
+
+    经过对比可以验证，这些控制信号均输出正确。
+  ]
 
 // + #[
 //     利用给定的 Testbench 代码进行功能仿真：
@@ -198,11 +230,29 @@
     TODO：来张图片
   ]
 
++ #[
+    用表格的形式记录 Demo 程序的 VGA 输出：
+  ]
+
 #pagebreak(weak: true)
 
+
 = 附录
+
+#set heading(numbering: (..args) => {
+  let nums = args.pos()
+  if nums.len() == 1 {
+    return none
+  } else if nums.len() == 2 {
+    return numbering("附录 (1) ", ..nums.slice(1))
+  }
+})
 
 #figure(
   align(center, image("images/2024-11-20-15-56-00.png", width: 100%)),
   caption: "Datapath 原理图",
 ) <datapath_diagram>
+
+== RV32 汇编脚本 <assembly_script>
+
+#codex(read("./cpu/assembly.py"), lang: "python")
