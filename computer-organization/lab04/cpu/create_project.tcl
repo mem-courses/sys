@@ -27,7 +27,9 @@ foreach source_dir $source_dirs {
 add_files -scan_for_includes -fileset sim_1 ./user/sim
 add_files -scan_for_includes -fileset constrs_1 ./user/data
 
-set top "socTest_tb"
+# set socTest_tb.v as top module when simulation
+set_property top "socTest_tb" [get_filesets sim_1]
+set_property top_lib xil_defaultlib [get_filesets sim_1]
 
 # create ROM_D with I_mem.coe
 create_ip -name dist_mem_gen \
