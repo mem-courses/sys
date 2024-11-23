@@ -1,20 +1,23 @@
 `timescale 1ns / 1ps
+`include "Defines.vh"
 
 module DataPath (
-   input         clk,          // 寄存器时钟
-   input         rst,          // 寄存器复位
-   input  [31:0] inst_field,   // 指令数据域[31:7]
-   input         ALUSrc_B,     // ALU端口B输入选择
-   input  [ 1:0] MemtoReg,     // Regs写入数据源控制
-   input         Jump,         // J指令
-   input         Branch,       // Beq指令
-   input         RegWrite,     // 寄存器写信号
-   input  [31:0] Data_in,      // 存储器输入
-   input  [ 2:0] ALU_Control,  // ALU操作控制
-   input  [ 1:0] ImmSel,       // ImmGen操作控制
-   output [31:0] ALU_out,      // ALU运算输出
-   output [31:0] Data_out,     // CPU数据输出
-   output [31:0] PC_out        // PC指针输出
+   input        clk,          // 寄存器时钟
+   input        rst,          // 寄存器复位
+   input [31:0] inst_field,   // 指令数据域[31:7]
+   input        ALUSrc_B,     // ALU端口B输入选择
+   input [ 1:0] MemtoReg,     // Regs写入数据源控制
+   input        Jump,         // J指令
+   input        Branch,       // Beq指令
+   input        RegWrite,     // 寄存器写信号
+   input [31:0] Data_in,      // 存储器输入
+   input [ 2:0] ALU_Control,  // ALU操作控制
+   input [ 1:0] ImmSel,       // ImmGen操作控制
+
+   `RegFile_Regs_output
+   output [31:0] ALU_out,   // ALU运算输出
+   output [31:0] Data_out,  // CPU数据输出
+   output [31:0] PC_out     // PC指针输出
 );
 
    wire [31:0] Rs1_data, ALU_B;
@@ -25,6 +28,8 @@ module DataPath (
    Regs Regs_v1_0 (
       .clk(clk),
       .rst(rst),
+      
+      `RegFile_Regs_Arguments
       .Rs1_addr(inst_field[19:15]),
       .Rs2_addr(inst_field[24:20]),
       .Wt_addr(inst_field[11:7]),
@@ -93,7 +98,7 @@ module DataPath (
    REG32 PC (
       .clk(clk),
       .rst(rst),
-      .CE (1  /* vcc */),
+      .CE (1'b1  /* vcc */),
       .D  (PC_next_j),
       .Q  (PC_out)
    );

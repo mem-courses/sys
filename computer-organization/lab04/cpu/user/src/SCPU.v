@@ -37,9 +37,9 @@ module SCPU (
       .clk(clk),
       .inst_field(inst_in),
       .rst(rst),
-     // `RegFile_Regs_Arguments
 
       // output
+      `RegFile_Regs_Arguments
       .ALU_out (Addr_out),
       .Data_out(Data_out),
       .PC_out  (PC_out)

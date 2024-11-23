@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`include "Defines.vh"
 
 module Regs (
    input clk,
@@ -8,10 +9,13 @@ module Regs (
    input [4:0] Wt_addr,
    input [31:0] Wt_data,
    input RegWrite,
+
+   `RegFile_Regs_output
    output [31:0] Rs1_data,
    output [31:0] Rs2_data
 );
    reg [31:0] register[1:31];  // r1-r31
+   `RegFile_Regs_Assignments
    integer i;
 
    assign Rs1_data = (Rs1_addr == 0) ? 0 : register[Rs1_addr];  // read

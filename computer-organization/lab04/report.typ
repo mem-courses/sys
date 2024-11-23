@@ -127,7 +127,7 @@
   ]
 
 + #[
-    为了方便地将 RV32 汇编代码转化为机器码，这里在 claude-3.5-sonnet 的帮助下编写了一个简单的 Python 脚本，详见@assembly_script。
+    为了方便地将 RV32 汇编代码转化为机器码，这里在 claude-3.5-sonnet 的帮助下编写了一个简单的 Python 脚本 `assembly.py`，详见@assembly_script。
   ]
 
 + #[
@@ -138,6 +138,8 @@
       align(center, image("images/2024-11-21-16-21-44.png", height: 16em)),
       align(center, image("images/2024-11-21-16-24-47.png", height: 16em)),
     )
+
+    说明实验结果正确。
   ]
 
 + #[
