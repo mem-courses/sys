@@ -133,7 +133,7 @@
   ]
 
 + #[
-    参考原理图@datapath_diagram 完成数据通路顶层设计：
+    参考原理图 @datapath_diagram 完成数据通路顶层设计：
 
     #codex(read("./cpu/user/src/DataPath.v"), lang: "verilog")
   ]
@@ -146,39 +146,40 @@
     #codex(read("./cpu/user/data/test_add.s"), lang: "asm")
 
     *注意*：这里的注释部分仅是课件中给出的结果，其从 `x17=000006D3` 开始的输出均有问题。
-  ]
 
-+ #[
     为了方便地将 RV32 汇编代码转化为机器码，这里在 claude-3.5-sonnet 的帮助下编写了一个简单的 Python 脚本 `assembly.py`，详见 @assembly_script 。
   ]
 
 + #[
-    在 Vivado 中进行仿真测试，可以得到仿真结果为：
-
-    #grid(
-      columns: (1fr, 1fr),
-      align(center, image("images/2024-11-21-16-21-44.png", height: 16em)),
-      align(center, image("images/2024-11-21-16-24-47.png", height: 16em)),
-    )
-
-    说明实验结果正确。
+    在 Vivado 中进行仿真测试。
   ]
 
 + #[
     替换 Lab02 的对应 SCPU 部分，并运行 Demo 程序，进行物理验证。
-
-    通过单步调试，可以发现寄存器中的值逐个被 ALU 的运算结果覆盖：
-
-    #align(center, image("images/2024-11-23-16-45-59.png", width: 80%))
-
-    当整个程序运行完成后，可以发现所有寄存器的值都被覆盖，且构成了 16 进制下的斐波那契序列，可以初步验证 Datapath 的实现正确。
-
-    #align(center, image("images/2024-11-23-16-46-28.png", width: 80%))
-
-    对 Datapath 的更详细测试可以配合 Lab04-2 的测试部分。
   ]
 
-// *注：测试过程与结果详见Lab04-2的实验报告。*
+== 实验结果与分析
+
+=== Demo 程序的仿真结果
+
+#grid(
+  columns: (1fr, 1fr),
+  align(center, image("images/2024-11-21-16-21-44.png", height: 16em)), align(center, image("images/2024-11-21-16-24-47.png", height: 16em)),
+)
+
+说明实验结果正确。
+
+=== Demo 程序的上板结果
+
+通过单步调试，可以发现寄存器中的值逐个被 ALU 的运算结果覆盖（这里通过对 VGA 模块进行修改实现，相关代码见 @vga_module）：
+
+#align(center, image("images/2024-11-23-16-45-59.png", width: 80%))
+
+当整个程序运行完成后，可以发现所有寄存器的值都被覆盖，且构成了 16 进制下的斐波那契序列，可以初步验证 Datapath 的实现正确。
+
+#align(center, image("images/2024-11-23-16-46-28.png", width: 80%))
+
+更详细的测试可以参考 Lab04-2 的测试部分。
 
 #pagebreak(weak: true)
 
@@ -229,15 +230,15 @@
   ]
 
 + #[
-    为 `SCPU_ctrl` 模块编写专门的仿真代码 `SCPU_ctrl_tb.v`：
+    为 `SCPU_ctrl` 模块编写仿真代码 `SCPU_ctrl_tb.v`（根据 Lab04-2 课件 P35-36 给出的代码）：
 
     #codex(read("./cpu/user/sim/SCPU_ctrl_tb.v"), lang: "verilog")
   ]
 
 + #[
-    替换 Lab02 的对应部分并进行测试。
+    用本实验中编写的控制器模块替换 Lab04-0 的对应部分并进行测试。
 
-    实际上，这里我们只需要使用 `create_project.tcl` 脚本重新构建项目即可。
+    实际上，我们只需要使用 `create_project.tcl` 脚本重新构建项目即可。
   ]
 
 + #[
@@ -257,17 +258,107 @@
 //   ]
 
 + #[
-    上板进行物理验证，测试 Demo 程序能否成功运行。
+    上板进行物理验证，测试 Lab04-1 中的 Demo 程序能否成功运行。
 
-    TODO：来张图片
+    #align(center, image("images/2024-11-23-16-46-28.png", width: 80%))
   ]
 
 + #[
-    用表格的形式记录 Demo 程序的 VGA 输出：
+    根据课件 P47 的要求编写汇编程序进行对 ALU 指令的测试：
+
+    #codex(read("./cpu/user/data/demo.s"), lang: "asm")
+
+    先使用 socTest 模块进行仿真测试，然后上板进行物理验证，并用表格记录实验结果。
   ]
+
++ #[
+    根据课件 P48 的要求编写汇编程序完成对动态 Load & Store 指令的测试：
+
+    #codex(read("./cpu/user/data/test_load_store.s"), lang: "asm")
+  ]
+
+== 实验结果与分析
+
+=== ALU 指令测试
+
+得到的仿真结果为：
+
+#align(center, image("images/2024-11-25-00-57-42.png", width: 75%))
+
+#align(center, image("images/2024-11-25-00-58-01.png", width: 90%))
+
+得到的上板结果为：
+
+#align(center, image("images/2024-11-25-00-56-16.png", width: 80%))
+
+可以发现，这些结果与我们在 Venus 模拟器中得到的如下结果一致，这可以说明我们在 Lab04-0/1/2 中的 CPU 实现是正确的。
+
+#grid(
+  columns: (1fr, 1fr),
+  align(center, image("images/2024-11-25-00-48-26.png", height: 24em)), align(center, image("images/2024-11-25-00-48-31.png", height: 24em)),
+)
+
+=== 动态 Load & Store 测试
 
 #pagebreak(weak: true)
 
+= Lab04-2：CPU设计之指令集扩展
+
+== 实验目的
+
++ 运用寄存器传输控制技术
+
++ 掌握CPU的核心：指令执行过程与控制流关系
+
++ 设计数据通路和控制器
+
++ 设计测试程序
+
+== 实验目标及任务
+
+- *目标*：熟悉RISC-V RV32I的指令特点，了解控制器和数据通路的原理，扩展实验lab4-2 CPU指令集，设计并测试CPU。
+
+- *任务一*：重新设计数据通路和控制器，在lab4-2的基础上完成：
+  - 兼容lab4-1、lab4-2的数据通路和控制器；
+  - 替换lab4-1、lab4-2的数据通路控制器核；
+  - 扩展不少于下列指令
+    - R-Type：sltu, sra, sll；
+    - I-Type：addi, andi, ori, xori, slti, sltiu, srli, srai, slli, lw, jalr；
+    - S-Type：sw；
+    - B-Type：beq, bne；
+    - J-Type：jal；
+    - U-Type：lui。
+
+- *任务二*：设计指令集测试方案并完成测试。
+
+== 实验实现方法与步骤
+
++ #[
+    实现扩展后的控制器模块 `SCPU_ctrl_more`：
+  ]
+
+
++ #[
+    实现扩展后的数据通路模块 `DataPath_more`：
+  ]
+
++ #[
+    将拓展后的模块装入新的 CPU 模块 `ExtSCPU` 中。
+  ]
+
++ #[
+    导入课件中的 `I_mem.coe` 文件：
+
+    #codex(read("./cpu_more/user/data/I_mem.coe"), lang: "text")
+  ]
+
++ #[
+    上板测试能否正常运行，并记录运行结果。
+  ]
+
+// =================================================================
+
+#pagebreak(weak: true)
 
 = 附录
 
@@ -283,6 +374,18 @@
 == Datapath 原理图 <datapath_diagram>
 
 #align(center, image("images/2024-11-20-15-56-00.png", width: 95%))
+#pagebreak(weak: true)
+
+== 修改后的 VGA 模块 <vga_module>
+
+=== VGA.v
+
+#codex(read("../public/VGA/VGA.v"), lang: "verilog")
+#pagebreak(weak: true)
+
+=== VgaDebugger.v
+
+#codex(read("../public/VGA/VgaDebugger.v"), lang: "verilog")
 #pagebreak(weak: true)
 
 == RV32 汇编脚本 <assembly_script>

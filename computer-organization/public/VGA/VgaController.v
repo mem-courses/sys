@@ -41,7 +41,7 @@ module VgaController (
 
    localparam HS_1 = 96;
    localparam VS_1 = 2;
-   localparam HS_2 = 144;
+   localparam HS_2 = 147;
    localparam VS_2 = 35;
    localparam WIDTH = 640;
    localparam HEIGHT = 480;

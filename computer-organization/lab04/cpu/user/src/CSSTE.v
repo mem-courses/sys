@@ -15,17 +15,17 @@ module CSSTE (
    output [7:0] AN,
    output [7:0] segment
 );
-   wire [3:0] BTN_OK;
-   wire [9:0] ram_addr;
-   wire data_ram_we, GPIOf_we, GPIOe_we, counter_we;
-   wire [15:0] SW_OK;
    wire rst, MemRW, Clk_CPU;
    wire [1:0] counter_set;
+   wire [3:0] BTN_OK;
    wire [7:0] point_out, LE_out;
-   wire counter0_OUT, counter1_OUT, counter2_OUT;
+   wire [9:0] ram_addr;
+   wire [15:0] SW_OK;
    wire [31:0] clkdiv, Addr_out, Data_out, PC_out, spo;
    wire [31:0] Cpu_data4bus, douta, ram_data_in, Peripheral_in;
    wire [31:0] counter_out, Disp_num;
+   wire data_ram_we, GPIOf_we, GPIOe_we, counter_we;
+   wire counter0_OUT, counter1_OUT, counter2_OUT;
 
    `RegFile_Regs_Declaration
 

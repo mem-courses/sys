@@ -24,6 +24,8 @@ module CSSTE_tb ();
    always #5 clk_100mhz = ~clk_100mhz;
 
    initial begin
+      $display("Testing CSSTE...");
+
       clk_100mhz = 0;
       RSTN = 0;
       BTN_y = 0;
@@ -34,7 +36,9 @@ module CSSTE_tb ();
 
       #100000;
       RSTN = 1;
+
       #100;
+      $display("Testing CSSTE Done.");
       $finish;
    end
 

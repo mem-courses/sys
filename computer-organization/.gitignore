@@ -1,6 +1,7 @@
 # debugging files
 tmp
 pixel_data.txt
+display_data.txt
 
 # vivado
 *.log
