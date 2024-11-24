@@ -304,7 +304,7 @@
 
 上板进行物理验证，得到的结果为：
 
-#align(center, image("images/2024-11-25-01-47-08.png", width: 80%))
+#align(center, image("images/2024-11-25-02-07-11.png", width: 80%))
 
 可以发现，这些结果与我们在 Venus 模拟器中得到的如下结果一致，这可以说明我们在 Lab04-0/1/2 中的 CPU 实现是正确的。
 
