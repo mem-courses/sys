@@ -13,6 +13,28 @@
   date: "2024/11/20",
 )
 
+#show ref: it => {
+  let eq = math.equation
+  let el = it.element
+  if el != none and el.func() == eq {
+    // Override equation references.
+    link(
+      el.location(),
+      numbering(
+        el.numbering,
+        ..counter(eq).at(el.location()),
+      ),
+    )
+  } else {
+    set text(fill: blue)
+    if (el.supplement.text == "Section") {
+      it + " " + el.body
+    } else {
+      it
+    }
+  }
+}
+
 #show heading.where(level: 2): it => block(
   width: 100%,
   {
@@ -111,7 +133,7 @@
   ]
 
 + #[
-    参考原理图@datapath_diagram（见附录）完成数据通路顶层设计：
+    参考原理图@datapath_diagram 完成数据通路顶层设计：
 
     #codex(read("./cpu/user/src/DataPath.v"), lang: "verilog")
   ]
@@ -127,7 +149,7 @@
   ]
 
 + #[
-    为了方便地将 RV32 汇编代码转化为机器码，这里在 claude-3.5-sonnet 的帮助下编写了一个简单的 Python 脚本 `assembly.py`，详见@assembly_script。
+    为了方便地将 RV32 汇编代码转化为机器码，这里在 claude-3.5-sonnet 的帮助下编写了一个简单的 Python 脚本 `assembly.py`，详见 @assembly_script 。
   ]
 
 + #[
@@ -145,7 +167,15 @@
 + #[
     替换 Lab02 的对应 SCPU 部分，并运行 Demo 程序，进行物理验证。
 
-    TODO：来张照片
+    通过单步调试，可以发现寄存器中的值逐个被 ALU 的运算结果覆盖：
+
+    #align(center, image("images/2024-11-23-16-45-59.png", width: 80%))
+
+    当整个程序运行完成后，可以发现所有寄存器的值都被覆盖，且构成了 16 进制下的斐波那契序列，可以初步验证 Datapath 的实现正确。
+
+    #align(center, image("images/2024-11-23-16-46-28.png", width: 80%))
+
+    对 Datapath 的更详细测试可以配合 Lab04-2 的测试部分。
   ]
 
 // *注：测试过程与结果详见Lab04-2的实验报告。*
@@ -246,15 +276,21 @@
   if nums.len() == 1 {
     return none
   } else if nums.len() == 2 {
-    return numbering("附录 (1) ", ..nums.slice(1))
+    return numbering("附录1:", ..nums.slice(1))
   }
 })
 
-#figure(
-  align(center, image("images/2024-11-20-15-56-00.png", width: 100%)),
-  caption: "Datapath 原理图",
-) <datapath_diagram>
+== Datapath 原理图 <datapath_diagram>
+
+#align(center, image("images/2024-11-20-15-56-00.png", width: 95%))
+#pagebreak(weak: true)
 
 == RV32 汇编脚本 <assembly_script>
 
 #codex(read("./cpu/assembly.py"), lang: "python")
+#pagebreak(weak: true)
+
+== CSSTE 仿真 <csste_tb>
+
+#codex(read("./cpu/user/sim/CSSTE_tb.v"), lang: "verilog")
+#pagebreak(weak: true)
