@@ -275,19 +275,21 @@
     根据课件 P48 的要求编写汇编程序完成对动态 Load & Store 指令的测试：
 
     #codex(read("./cpu/user/data/test_load_store.s"), lang: "asm")
+
+    因为没法对使用 .edf 的 RAM 模块进行仿真测试，所以这里直接上板进行物理验证。
   ]
 
 == 实验结果与分析
 
 === ALU 指令测试
 
-得到的仿真结果为：
+仿真测试的结果为：
 
 #align(center, image("images/2024-11-25-00-57-42.png", width: 75%))
 
 #align(center, image("images/2024-11-25-00-58-01.png", width: 90%))
 
-得到的上板结果为：
+上板进行物理验证，得到的结果为：
 
 #align(center, image("images/2024-11-25-00-56-16.png", width: 80%))
 
@@ -299,6 +301,17 @@
 )
 
 === 动态 Load & Store 测试
+
+上板进行物理验证，得到的结果为：
+
+#align(center, image("images/2024-11-25-01-47-08.png", width: 80%))
+
+可以发现，这些结果与我们在 Venus 模拟器中得到的如下结果一致，这可以说明我们在 Lab04-0/1/2 中的 CPU 实现是正确的。
+
+#grid(
+  columns: (1fr, 1fr),
+  align(center, image("images/2024-11-25-01-47-50.png", height: 24em)), align(center, image("images/2024-11-25-01-47-58.png", height: 24em)),
+)
 
 #pagebreak(weak: true)
 

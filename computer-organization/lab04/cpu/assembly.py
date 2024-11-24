@@ -13,6 +13,13 @@ SUPPORTED_INSTRUCTIONS = {
     # 根据实际支持的指令添加或删除
 }
 
+def remove_comment(line):
+    line = line.split('//')[0].strip()
+    line = line.split('# ')[0].strip()
+    line = line.split(';')[0].strip()
+    return line
+
+
 class Assembler:
     def collect_labels(self, filename):
         labels = {}
@@ -21,36 +28,28 @@ class Assembler:
         with open(filename, 'r', encoding='utf8') as f:
             lines = f.readlines()
 
-        # 第一遍扫描：收集所有指令的地址
         for line in lines:
-            line = line.split('//')[0].strip()
-            line = line.split(';')[0].strip()
+            line = remove_comment(line)
             if not line:
                 continue
 
-            if any(instr in line.lower() for instr in ['add', 'sub', 'addi', 'lw', 'sw', 'beq', 'bne', 'blt', 'bge', 'bltu', 'bgeu']):
-                current_addr += 4
-
-        # 第二遍扫描：收集所有标签
-        current_addr = 0
-        for line in lines:
-            line = line.split('//')[0].strip()
-            line = line.split(';')[0].strip()
-
-            if not line:
-                continue
-
+            # 处理标签行
             if line.endswith(':'):
                 label = line[:-1].strip()
                 labels[label] = current_addr
-            elif any(instr in line.lower() for instr in ['add', 'sub', 'addi', 'lw', 'sw', 'beq', 'bne', 'blt', 'bge', 'bltu', 'bgeu']):
+                continue  # 标签行不增加地址计数
+
+            # 检查是否是有效指令
+            parts = re.split(r'[,\s]+', line)
+            instr = parts[0].lower()
+            if instr in SUPPORTED_INSTRUCTIONS:
                 current_addr += 4
 
         return labels
 
     def parse_instruction(self, line, labels=None, current_addr=0):
         # 移除注释
-        line = line.split(';')[0].strip()
+        line = remove_comment(line)
         if not line:
             return None
 
@@ -61,11 +60,11 @@ class Assembler:
         # 分割指令和操作数
         parts = re.split(r'[,\s]+', line)
         instr = parts[0].lower()
-        
+
         # 检查指令是否受支持
         if instr not in SUPPORTED_INSTRUCTIONS:
             raise ValueError(f"不支持的指令: {instr}")
-        
+
         operands = [op.strip() for op in parts[1:] if op.strip()]
 
         # R型指令
@@ -237,7 +236,7 @@ class Assembler:
 
         elif instr == 'jal':
             rd = get_reg_num(operands[0])
-            
+
             # 处理标签或立即数
             if operands[1].startswith('0x'):
                 imm = int(operands[1], 16)
@@ -253,13 +252,28 @@ class Assembler:
             # JAL 的 opcode
             opcode = '1101111'
             
-            # 构造 20 位立即数字段
-            imm_20 = format((imm >> 20) & 0x1, '01b')
-            imm_10_1 = format((imm >> 1) & 0x3FF, '010b')
-            imm_11 = format((imm >> 11) & 0x1, '01b')
-            imm_19_12 = format((imm >> 12) & 0xFF, '08b')
+            # 处理20位有符号数的补码表示
+            print(imm)
+            if imm < 0:
+                imm = (1 << 21) + imm  # 转换为补码，使用21位
             
-            machine_code = imm_20 + imm_19_12 + imm_11 + imm_10_1 + format(rd, '05b') + opcode
+            # JAL指令的立即数编码，按照RISC-V规范：
+            # imm[20|10:1|11|19:12] = inst[31|30:21|20|19:12]
+            imm_20 = (imm >> 20) & 1      # 符号位
+            imm_10_1 = (imm >> 1) & 0x3FF # bits 10:1
+            imm_11 = (imm >> 11) & 1      # bit 11
+            imm_19_12 = (imm >> 12) & 0xFF # bits 19:12
+            
+            machine_code = (f"{imm_20:01b}" + 
+                          f"{imm_10_1:010b}" + 
+                          f"{imm_11:01b}" + 
+                          f"{imm_19_12:08b}" + 
+                          format(rd, '05b') + 
+                          opcode)
+            # print(imm_20)
+            # print(' ' + f"{imm_10_1:010b}")
+            # print(machine_code)        
+            # print('00000000110000000000010001101111')        
 
         else:
             return None
@@ -275,6 +289,10 @@ class Assembler:
         # 读取汇编文件
         with open(input_file, 'r', encoding='utf8') as f:
             for line in f:
+                line = remove_comment(line)
+                if not line or line.endswith(':'):  # 跳过空行和标签行
+                    continue
+                
                 machine_code = self.parse_instruction(line, labels, current_addr)
                 if machine_code:
                     instructions.append(machine_code)
@@ -292,7 +310,7 @@ class Assembler:
 
 
 if __name__ == '__main__':
-    input_file = 'user/data/demo.s'
+    input_file = 'user/data/test_load_store.s'
     output_file = 'user/data/I_mem.coe'
     assembler = Assembler()
     assembler.assemble_file(input_file, output_file)

@@ -14,3 +14,7 @@ tmp
 # typst
 report.pdf
 template.pdf
+
+# other
+.ngc2ver
+.ngc2vercache
