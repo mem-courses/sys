@@ -18,15 +18,15 @@ module socTest (
 
    ExtSCPU U0 (
       `RegFile_Regs_Arguments
-      .Addr_out(Addr_out),
-      .Data_in(dmem_o_data),
-      .Data_out(dmem_i_data),
+      .Addr_out (Addr_out),
+      .Data_in  (dmem_o_data),
+      .Data_out (dmem_i_data),
       .MIO_ready(CPU_MIO),
-      .MemRW(mem_wen),
-      .PC_out(PC_out),
-      .clk(clk),
-      .rst(rst),
-      .inst_in(inst)
+      .MemRW    (mem_wen),
+      .PC_out   (PC_out),
+      .clk      (clk),
+      .rst      (rst),
+      .inst_in  (inst)
    );
 
    RAM_B U1 (
@@ -74,8 +74,8 @@ module socTest (
          `LOG_AND_DISPLAY(fd, "PC = %h", PC_out)
          `LOG_AND_DISPLAY(fd, "inst = %h", inst)
          `LOG_AND_DISPLAY(fd, "alu_res = %h", alu_res)
-         `LOG_AND_DISPLAY(fd, "dmem_o_data = %h", dmem_o_data) // 可能滞后 
-         `LOG_AND_DISPLAY(fd, "dmem_i_data = %h", dmem_i_data) // 可能滞后
+         `LOG_AND_DISPLAY(fd, "dmem_o_data = %h", dmem_o_data)  // 可能滞后 
+         `LOG_AND_DISPLAY(fd, "dmem_i_data = %h", dmem_i_data)  // 可能滞后
          PC_last = PC_out;
       end
    end

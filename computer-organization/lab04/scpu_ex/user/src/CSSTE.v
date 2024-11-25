@@ -2,37 +2,72 @@
 `include "Defines.vh"
 
 module CSSTE (
-   input clk_100mhz,
-   input RSTN,
-   input [3:0] BTN_y,
-   input [15:0] SW,
-   output [3:0] Blue,
-   output [3:0] Green,
-   output [3:0] Red,
-   output HSYNC,
-   output VSYNC,
+   input         clk_100mhz,
+   input         RSTN,
+   input  [ 3:0] BTN_y,
+   input  [15:0] SW,
+   output [ 3:0] Blue,
+   output [ 3:0] Green,
+   output [ 3:0] Red,
+   output        HSYNC,
+   output        VSYNC,
    output [15:0] LED_out,
-   output [7:0] AN,
-   output [7:0] segment
+   output [ 7:0] AN,
+   output [ 7:0] segment
 );
-   wire rst, MemRW, Clk_CPU;
-   wire [1:0] counter_set;
-   wire [3:0] BTN_OK;
-   wire [7:0] point_out, LE_out;
-   wire [9:0] ram_addr;
+   wire        rst;
+   wire        MemRW;
+   wire        Clk_CPU;
+   wire [ 1:0] counter_set;
+   wire [ 3:0] BTN_OK;
+   wire [ 7:0] point_out;
+   wire [ 7:0] LE_out;
+   wire [ 9:0] ram_addr;
    wire [15:0] SW_OK;
-   wire [31:0] clkdiv, Addr_out, Data_out, PC_out, spo;
-   wire [31:0] Cpu_data4bus, douta, ram_data_in, Peripheral_in;
-   wire [31:0] counter_out, Disp_num;
-   wire data_ram_we, GPIOf_we, GPIOe_we, counter_we;
-   wire counter0_OUT, counter1_OUT, counter2_OUT;
+   wire [31:0] clkdiv;
+   wire [31:0] Addr_out;
+   wire [31:0] Data_out;
+   wire [31:0] PC_out;
+   wire [31:0] spo;
+   wire [31:0] Cpu_data4bus;
+   wire [31:0] douta;
+   wire [31:0] ram_data_in;
+   wire [31:0] Peripheral_in;
+   wire [31:0] counter_out;
+   wire [31:0] Disp_num;
+   wire        data_ram_we;
+   wire        GPIOf_we;
+   wire        GPIOe_we;
+   wire        counter_we;
+   wire        counter0_OUT;
+   wire        counter1_OUT;
+   wire        counter2_OUT;
 
    `RegFile_Regs_Declaration
 
+   wire [ 4:0] vga_rs1;
+   wire [31:0] vga_rs1_val;
+   wire [ 4:0] vga_rs2;
+   wire [31:0] vga_rs2_val;
+   wire [31:0] vga_imm;
+   wire [31:0] vga_a_val;
+   wire [31:0] vga_b_val;
+   wire [ 3:0] vga_alu_ctrl;
+
    ExtSCPU U1 (
-      `RegFile_Regs_Arguments
       .clk(Clk_CPU),
       .rst(rst),
+      `RegFile_Regs_Arguments
+
+      .vga_rs1     (vga_rs1),
+      .vga_rs1_val (vga_rs1_val),
+      .vga_rs2     (vga_rs2),
+      .vga_rs2_val (vga_rs2_val),
+      .vga_imm     (vga_imm),
+      .vga_a_val   (vga_a_val),
+      .vga_b_val   (vga_b_val),
+      .vga_alu_ctrl(vga_alu_ctrl),
+
       .Addr_out(Addr_out),
       .Data_in(Cpu_data4bus),
       .Data_out(Data_out),
@@ -52,7 +87,7 @@ module CSSTE (
       .clka (~clk_100mhz),
       .dina (ram_data_in),
       .douta(douta),
-      .wea  (data_ram_we)
+      .wea  (data_ram_we & SW[15])
    );
 
    MIO_BUS U4 (
@@ -155,10 +190,20 @@ module CSSTE (
    );
 
    VGA U11 (
-      `RegFile_Regs_Arguments
       .clk_25m(clkdiv[1]),
       .clk_100m(clk_100mhz),
       .rst(rst),
+
+      .rs1     (vga_rs1),
+      .rs1_val (vga_rs1_val),
+      .rs2     (vga_rs2),
+      .rs2_val (vga_rs2_val),
+      .imm     (vga_imm),
+      .a_val   (vga_a_val),
+      .b_val   (vga_b_val),
+      .alu_ctrl(vga_alu_ctrl),
+
+      `RegFile_Regs_Arguments
       .pc(PC_out),
       .inst(spo),
       .alu_res(Addr_out),

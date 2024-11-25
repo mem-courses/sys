@@ -110,7 +110,7 @@ module SCPU_ctrl_more (
          end
          // jalr
          7'b1100111: begin
-            ImmSel <= ImmSel_J;
+            ImmSel   <= ImmSel_I; // not J-type!
             ALUSrc_B <= ALUSrc_B_Imm;
             ALU_op   <= ALU_op_Add;
             MemRW    <= 1'b0; // don't care
@@ -120,8 +120,8 @@ module SCPU_ctrl_more (
          // lui
          7'b0110111: begin
             ImmSel   <= ImmSel_U;
-            ALUSrc_B <= 1'b0;  // don't care
-            ALU_op   <= 2'b00; // don't care
+            ALUSrc_B <= ALUSrc_B_Imm;
+            ALU_op   <= ALU_op_Add;
             MemRW    <= 1'b0;  // don't care
             RegWrite <= 1'b1;
             MemtoReg <= MemtoReg_Imm;

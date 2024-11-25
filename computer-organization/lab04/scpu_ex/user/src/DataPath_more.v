@@ -16,14 +16,29 @@ module DataPath_more (
    input [ 2:0] ImmSel,         // ImmGen操作控制
 
    `RegFile_Regs_output
+
+   output wire [ 4:0] vga_rs1,
+   output wire [31:0] vga_rs1_val,
+   output wire [ 4:0] vga_rs2,
+   output wire [31:0] vga_rs2_val,
+   output wire [31:0] vga_imm,
+   output wire [31:0] vga_a_val,
+   output wire [31:0] vga_b_val,
+
    output [31:0] ALU_out,   // ALU运算输出
    output [31:0] Data_out,  // CPU数据输出
    output [31:0] PC_out     // PC指针输出
 );
 
-   wire [31:0] Rs1_data, ALU_B;
-   wire [31:0] Imm_out, Wt_data;
-   wire ALU_zero;
+   wire [31:0] Rs1_data;
+   wire [31:0] ALU_B;
+   wire [31:0] Imm_out;
+   wire [31:0] Wt_data;
+   wire        ALU_zero;
+
+   wire [ 4:0] Rs1_addr = inst_field[19:15];
+   wire [ 4:0] Rs2_addr = inst_field[24:20];
+   wire [ 4:0] Wt_addr = inst_field[11:7];
 
    // 寄存器堆
    Regs Regs_v1_0 (
@@ -31,9 +46,9 @@ module DataPath_more (
       .rst(rst),
 
       `RegFile_Regs_Arguments
-      .Rs1_addr(inst_field[19:15]),
-      .Rs2_addr(inst_field[24:20]),
-      .Wt_addr (inst_field[11:7]),
+      .Rs1_addr(Rs1_addr),
+      .Rs2_addr(Rs2_addr),
+      .Wt_addr (Wt_addr),
       .Wt_data (Wt_data),
       .RegWrite(RegWrite),
       .Rs1_data(Rs1_data),
@@ -47,7 +62,7 @@ module DataPath_more (
       .Imm_out   (Imm_out)
    );
 
-   // MUX                              (ALUSrc)
+   // MUX (ALUSrc)
    MUX2T1_32 MUX2T1_32_0 (
       .I0(Data_out),
       .I1(Imm_out),
@@ -105,5 +120,14 @@ module DataPath_more (
       .D  (PC_next_j),
       .Q  (PC_out)
    );
+
+   // for VGA debugger
+   assign vga_rs1     = Rs1_addr;
+   assign vga_rs1_val = Rs1_data;
+   assign vga_rs2     = Rs2_addr;
+   assign vga_rs2_val = Data_out;
+   assign vga_imm     = Imm_out;
+   assign vga_a_val   = Rs1_data;
+   assign vga_b_val   = ALU_B;
 
 endmodule

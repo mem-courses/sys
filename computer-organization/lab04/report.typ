@@ -391,6 +391,12 @@
   ]
 
 + #[
+    为了调用拓展后的 SCPU 模块，同时也为了能在 VGA 上显示更多输出信息，我们对 `CSSTE` 顶层模块也进行了修改：
+
+    #codex(read("./scpu_ex/user/src/CSSTE.v"), lang: "verilog")
+  ]
+
++ #[
     导入课件 P36 中给出的 `I_mem.coe` 文件：
 
     #codex(read("./scpu_ex/user/data/I_mem.coe"), lang: "text")
