@@ -253,7 +253,6 @@ class Assembler:
             opcode = '1101111'
             
             # 处理20位有符号数的补码表示
-            print(imm)
             if imm < 0:
                 imm = (1 << 21) + imm  # 转换为补码，使用21位
             

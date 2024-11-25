@@ -13,7 +13,7 @@ create_project -force $project_name $target_dir -part xc7a100tcsg324-1
 set source_dirs [list \
   "./user/src" \
   "../../public/ip" \
-  "../../public/VGA" 
+  "../../public/VGA"
 ]
 foreach source_dir $source_dirs {
   add_files -scan_for_includes -fileset sources_1 $source_dir
@@ -41,6 +41,29 @@ set_property -dict [list \
   CONFIG.data_width {32} \
   CONFIG.memory_type {rom} \
   ] [get_ips ROM_D]
+
+# create RAM_B with D_mem.coe
+create_ip -name blk_mem_gen \
+  -module_name RAM_B \
+  -vendor xilinx.com -library ip -version 8.4
+set_property -dict [list \
+  CONFIG.Memory_Type {Single_Port_RAM} \
+  CONFIG.Write_Width_A {32} \
+  CONFIG.Write_Depth_A {1024} \
+  CONFIG.Read_Width_A {32} \
+  CONFIG.Write_Width_B {32} \
+  CONFIG.Read_Width_B {32} \
+  CONFIG.Enable_A {Always_Enabled} \
+  CONFIG.Load_Init_File {true} \
+  CONFIG.Coe_File [file normalize ./user/data/D_mem.coe] \
+  CONFIG.Fill_Remaining_Memory_Locations {true} \
+  CONFIG.Remaining_Memory_Locations {0} \
+  CONFIG.Use_RSTA_Pin {false} \
+  CONFIG.Port_A_Write_Rate {50} \
+  CONFIG.Port_A_Clock {100} \
+  CONFIG.Port_A_Enable_Rate {100} \
+  CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
+] [get_ips RAM_B]
 
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
