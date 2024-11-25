@@ -49,20 +49,21 @@ create_ip -name blk_mem_gen \
   -vendor xilinx.com -library ip -version 8.4
 set_property -dict [list \
   CONFIG.Memory_Type {Single_Port_RAM} \
+  CONFIG.Operating_Mode_A {NO_CHANGE} \
   CONFIG.Write_Width_A {32} \
   CONFIG.Write_Depth_A {1024} \
-  CONFIG.Read_Width_A {32} \
   CONFIG.Enable_A {Always_Enabled} \
   CONFIG.Load_Init_File {true} \
   CONFIG.Coe_File [file normalize ./user/data/D_mem.coe] \
   CONFIG.Fill_Remaining_Memory_Locations {true} \
   CONFIG.Remaining_Memory_Locations {0} \
-  CONFIG.Use_RSTA_Pin {false} \
-  CONFIG.Port_A_Write_Rate {50} \
-  CONFIG.Port_A_Clock {100} \
-  CONFIG.Port_A_Enable_Rate {100} \
   CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
 ] [get_ips RAM_B]
+  # CONFIG.Read_Width_A {32} \
+  # CONFIG.Use_RSTA_Pin {false} \
+  # CONFIG.Port_A_Write_Rate {50} \
+  # CONFIG.Port_A_Clock {100} \
+  # CONFIG.Port_A_Enable_Rate {100} \
 
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
