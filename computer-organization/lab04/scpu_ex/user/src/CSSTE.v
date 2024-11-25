@@ -29,7 +29,7 @@ module CSSTE (
 
    `RegFile_Regs_Declaration
 
-   ExSCPU U1 (
+   ExtSCPU U1 (
       `RegFile_Regs_Arguments
       .clk(Clk_CPU),
       .rst(rst),

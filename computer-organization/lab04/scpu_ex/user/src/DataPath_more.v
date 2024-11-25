@@ -2,17 +2,18 @@
 `include "Defines.vh"
 
 module DataPath_more (
-   input        clk,          // 寄存器时钟
-   input        rst,          // 寄存器复位
-   input [31:0] inst_field,   // 指令数据域[31:7]
-   input        ALUSrc_B,     // ALU端口B输入选择
-   input [ 1:0] MemtoReg,     // Regs写入数据源控制
-   input        Jump,         // J指令
-   input        Branch,       // Beq指令
-   input        RegWrite,     // 寄存器写信号
-   input [31:0] Data_in,      // 存储器输入
-   input [ 2:0] ALU_Control,  // ALU操作控制
-   input [ 1:0] ImmSel,       // ImmGen操作控制
+   input        clk,            // 寄存器时钟
+   input        rst,            // 寄存器复位
+   input [31:0] inst_field,     // 指令数据域[31:7]
+   input        ALUSrc_B,       // ALU端口B输入选择
+   input [ 1:0] MemtoReg,       // Regs写入数据源控制
+   input [ 1:0] Jump,           // J指令
+   input        Branch,         // beq指令需要
+   input        BranchN,        // bneq指令需要
+   input        RegWrite,       // 寄存器写信号
+   input [31:0] Data_in,        // 存储器输入
+   input [ 3:0] ALU_operation,  // ALU操作控制
+   input [ 2:0] ImmSel,         // ImmGen操作控制
 
    `RegFile_Regs_output
    output [31:0] ALU_out,   // ALU运算输出
@@ -40,13 +41,13 @@ module DataPath_more (
    );
 
    // 立即数生成模块
-   ImmGen ImmGen_U (
-      .ImmSel(ImmSel),
+   ImmGen_more ImmGen_U (
+      .ImmSel    (ImmSel),
       .inst_field(inst_field),
-      .Imm_out(Imm_out)
+      .Imm_out   (Imm_out)
    );
 
-   // MUX (ALUSrc)
+   // MUX                              (ALUSrc)
    MUX2T1_32 MUX2T1_32_0 (
       .I0(Data_out),
       .I1(Imm_out),
@@ -54,13 +55,13 @@ module DataPath_more (
       .o (ALU_B)
    );
 
-   // ALU
-   ALU ALU_inst (
-      .A(Rs1_data),
-      .B(ALU_B),
-      .ALU_operation(ALU_Control),
-      .res(ALU_out),
-      .zero(ALU_zero)
+   // ALU_more
+   ALU_more ALU (
+      .A            (Rs1_data),
+      .B            (ALU_B),
+      .ALU_operation(ALU_operation),
+      .res          (ALU_out),
+      .zero         (ALU_zero)
    );
 
 
@@ -74,24 +75,26 @@ module DataPath_more (
    MUX2T1_32 MUX2T1_32_1 (
       .I0(PC_plus_4),
       .I1(PC_plus_imm),
-      .s (ALU_zero & Branch),
+      .s ((ALU_zero & Branch) | ((~ALU_zero) & BranchN)),
       .o (PC_next_b)
    );
 
    // MUX (jump)
-   MUX2T1_32 MUX2T1_32_3 (
+   MUX4T1_32 MUX2T1_3 (
       .I0(PC_next_b),
       .I1(PC_plus_imm),
+      .I2(ALU_out),
+      .I3(PC_plus_imm),
       .s (Jump),
       .o (PC_next_j)
    );
 
-   MUX4T1_32 MUX4T1_32_0 (
+   MUX4T1_32 MUX4T1_0 (
       .s (MemtoReg),
       .I0(ALU_out),
       .I1(Data_in),
       .I2(PC_plus_4),
-      .I3(PC_plus_4),
+      .I3(Imm_out),
       .o (Wt_data)
    );
 

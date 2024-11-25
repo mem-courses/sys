@@ -1,36 +1,36 @@
 `define RegFile_Regs_output \
-    output [31: 0] x0, \
-    output [31: 0] ra, \
-    output [31: 0] sp, \
-    output [31: 0] gp, \
-    output [31: 0] tp, \
-    output [31: 0] t0, \
-    output [31: 0] t1, \
-    output [31: 0] t2, \
-    output [31: 0] s0, \
-    output [31: 0] s1, \
-    output [31: 0] a0, \
-    output [31: 0] a1, \
-    output [31: 0] a2, \
-    output [31: 0] a3, \
-    output [31: 0] a4, \
-    output [31: 0] a5, \
-    output [31: 0] a6, \
-    output [31: 0] a7, \
-    output [31: 0] s2, \
-    output [31: 0] s3, \
-    output [31: 0] s4, \
-    output [31: 0] s5, \
-    output [31: 0] s6, \
-    output [31: 0] s7, \
-    output [31: 0] s8, \
-    output [31: 0] s9, \
-    output [31: 0] s10, \
-    output [31: 0] s11, \
-    output [31: 0] t3, \
-    output [31: 0] t4, \
-    output [31: 0] t5, \
-    output [31: 0] t6,
+    output wire [31: 0] x0, \
+    output wire [31: 0] ra, \
+    output wire [31: 0] sp, \
+    output wire [31: 0] gp, \
+    output wire [31: 0] tp, \
+    output wire [31: 0] t0, \
+    output wire [31: 0] t1, \
+    output wire [31: 0] t2, \
+    output wire [31: 0] s0, \
+    output wire [31: 0] s1, \
+    output wire [31: 0] a0, \
+    output wire [31: 0] a1, \
+    output wire [31: 0] a2, \
+    output wire [31: 0] a3, \
+    output wire [31: 0] a4, \
+    output wire [31: 0] a5, \
+    output wire [31: 0] a6, \
+    output wire [31: 0] a7, \
+    output wire [31: 0] s2, \
+    output wire [31: 0] s3, \
+    output wire [31: 0] s4, \
+    output wire [31: 0] s5, \
+    output wire [31: 0] s6, \
+    output wire [31: 0] s7, \
+    output wire [31: 0] s8, \
+    output wire [31: 0] s9, \
+    output wire [31: 0] s10, \
+    output wire [31: 0] s11, \
+    output wire [31: 0] t3, \
+    output wire [31: 0] t4, \
+    output wire [31: 0] t5, \
+    output wire [31: 0] t6,
 
 `define RegFile_Regs_Assignments \
     assign x0 = 0; \

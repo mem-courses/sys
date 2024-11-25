@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 `include "Defines.vh"
 
-module SCPU (
+module ExtSCPU (
    input wire clk,
    input wire rst,
    input wire MIO_ready,
@@ -17,26 +17,27 @@ module SCPU (
 );
 
    wire       ALUSrc_B;
-   wire [2:0] ALU_Control;
+   wire [3:0] ALU_operation;
    wire       Branch;
-   wire       Jump;
-   wire [1:0] ImmSel;
+   wire       BranchN;
+   wire [1:0] Jump;
+   wire [2:0] ImmSel;
    wire [1:0] MemtoReg;
    wire       RegWrite;
 
-   DataPath DataPath_inst (
-      // input
-      .clk        (clk),
-      .rst        (rst),
-      .ALUSrc_B   (ALUSrc_B),
-      .ALU_Control(ALU_Control),
-      .Branch     (Branch),
-      .Data_in    (Data_in),
-      .ImmSel     (ImmSel),
-      .Jump       (Jump),
-      .MemtoReg   (MemtoReg),
-      .RegWrite   (RegWrite),
-      .inst_field (inst_in),
+   DataPath_more DataPath_inst (
+      .clk          (clk),
+      .rst          (rst),
+      .ALUSrc_B     (ALUSrc_B),
+      .ALU_operation(ALU_operation),
+      .Branch       (Branch),
+      .BranchN      (BranchN),
+      .Data_in      (Data_in),
+      .ImmSel       (ImmSel),
+      .Jump         (Jump),
+      .MemtoReg     (MemtoReg),
+      .RegWrite     (RegWrite),
+      .inst_field   (inst_in),
 
       // output
       `RegFile_Regs_Arguments
@@ -45,9 +46,9 @@ module SCPU (
       .PC_out  (PC_out)
    );
 
-   SCPU_ctrl SCPU_ctrl_inst (
+   SCPU_ctrl_more SCPU_ctrl_inst (
       // input
-      .OPcode   (inst_in[6:2]),
+      .OPcode   (inst_in[6:0]),
       .Fun3     (inst_in[14:12]),
       .Fun7     (inst_in[30]),
       .MIO_ready(MIO_ready),
@@ -58,10 +59,10 @@ module SCPU (
       .MemtoReg   (MemtoReg),
       .Jump       (Jump),
       .Branch     (Branch),
+      .BranchN    (BranchN),
       .RegWrite   (RegWrite),
       .MemRW      (MemRW),
-      .ALU_Control(ALU_Control),
+      .ALU_Control(ALU_operation),
       .CPU_MIO    (CPU_MIO)
    );
-
 endmodule

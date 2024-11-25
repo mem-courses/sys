@@ -52,8 +52,6 @@ set_property -dict [list \
   CONFIG.Write_Width_A {32} \
   CONFIG.Write_Depth_A {1024} \
   CONFIG.Read_Width_A {32} \
-  CONFIG.Write_Width_B {32} \
-  CONFIG.Read_Width_B {32} \
   CONFIG.Enable_A {Always_Enabled} \
   CONFIG.Load_Init_File {true} \
   CONFIG.Coe_File [file normalize ./user/data/D_mem.coe] \

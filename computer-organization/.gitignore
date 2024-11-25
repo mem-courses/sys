@@ -1,4 +1,5 @@
 # debugging files
+*.zip
 tmp
 pixel_data.txt
 display_data.txt

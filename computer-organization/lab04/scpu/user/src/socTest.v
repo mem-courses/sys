@@ -73,7 +73,7 @@ module socTest (
 
    `define LOG_AND_DISPLAY(fd, fmt, var, last_var) \
       if (var != last_var) begin \
-         $fwrite(fd, fmt, var); \
+         $fwrite(fd, fmt + "\n", var); \
          $fflush(fd); \
          $display(fmt, var); \
          last_var = var; \

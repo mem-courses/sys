@@ -1,19 +1,19 @@
 `timescale 1ns / 1ps
 
 module SCPU_ctrl (
-   input wire [4:0] OPcode,
-   input wire [2:0] Fun3,
-   input wire Fun7,
-   input wire MIO_ready,
-   output reg [1:0] ImmSel,
-   output reg ALUSrc_B,
-   output reg [1:0] MemtoReg,
-   output reg Jump,
-   output reg Branch,
-   output reg RegWrite,
-   output reg MemRW,
-   output reg [2:0] ALU_Control,
-   output reg CPU_MIO
+   input  wire [4:0] OPcode,       // inst[6:2]
+   input  wire [2:0] Fun3,         // inst[14:12]
+   input  wire       Fun7,         // inst[30] / Func7[5]
+   input  wire       MIO_ready,
+   output reg  [1:0] ImmSel,
+   output reg        ALUSrc_B,
+   output reg  [1:0] MemtoReg,
+   output reg        Jump,
+   output reg        Branch,
+   output reg        RegWrite,
+   output reg        MemRW,
+   output reg  [2:0] ALU_Control,
+   output reg        CPU_MIO
 );
    reg [1:0] ALU_op;
 
@@ -92,15 +92,6 @@ module SCPU_ctrl (
             RegWrite <= 1'b1;
             MemtoReg <= MemtoReg_PC4;
          end
-         // lui
-         // 5'b01101: begin
-         //    ImmSel        <= ImmSel_U;
-         //    ALUSrc_B      <= ALUSrc_B_Imm;
-         //    MemRW         <= MemRW_Read;
-         //    RegWrite      <= 1'b1;
-         //    MemtoReg      <= MemtoReg_ALU;
-         //    ALU_op         <= 2'b11;
-         // end
          default: begin
             ImmSel   <= 2'b00;
             ALUSrc_B <= 1'b0;

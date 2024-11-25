@@ -309,7 +309,7 @@
 )
 
 // === 动态 Load & Store 测试
-// 
+//
 
 === 复杂程序测试
 
@@ -364,16 +364,30 @@
 == 实验实现方法与步骤
 
 + #[
-    实现扩展后的控制器模块 `SCPU_ctrl_more`：
+    为了实现更多运算，同时方便二级译码的过程，我们对 ALU 进行了功能扩充和操作编码的修改，修改后的 ALU 模块 `ALU_more` 模块如下：
+
+    #codex(read("./scpu_ex/user/src/ALU_more.v"), lang: "verilog")
   ]
 
++ #[
+    实现扩展后的控制器模块 `SCPU_ctrl_more`：
+    #codex(read("./scpu_ex/user/src/SCPU_ctrl_more.v"), lang: "verilog")
+  ]
+
++ #[
+    为了给新增的 `lui` 语句实现立即数生成，我们需要拓展一位 `ImmSel` 并重写 `ImmGen` 模块为 `ImmGen_more`：
+
+    #codex(read("./scpu_ex/user/src/ImmGen_more.v"), lang: "verilog")
+  ]
 
 + #[
     实现扩展后的数据通路模块 `DataPath_more`：
+    #codex(read("./scpu_ex/user/src/DataPath_more.v"), lang: "verilog")
   ]
 
 + #[
     将拓展后的模块装入新的 CPU 模块 `ExtSCPU` 中。
+    #codex(read("./scpu_ex/user/src/ExtSCPU.v"), lang: "verilog")
   ]
 
 + #[
@@ -383,8 +397,22 @@
   ]
 
 + #[
-    上板测试能否正常运行，并记录运行结果。
+    上板测试能否正常运行，并用表格的形式记录运行结果。将得到的运行结果与实验文档中给出的表格进行对比，可以验证 ExtSCPU 的正确性。
   ]
+
+== 实验结果与分析
+
+=== Demo 程序测试
+
+仿真测试的结果为（限于篇幅原因只展示了部分，但可以发现结果正确）：
+
+#align(center, image("images/2024-11-25-13-28-20.png", width: 100%))
+
+#align(center, image("images/2024-11-25-13-27-59.png", width: 100%))
+
+上板进行物理验证，可以正常运行，限于篇幅原因在下面用表格的形式呈现数据。可以发现和验收文档中给定的数据一致，由于记录的位置略微不同，`dmem_i_data` 等数据可能存在一个时钟周期的偏差，但是不影响实验结果是正确的。
+
+TODO：表格
 
 // =================================================================
 
