@@ -309,7 +309,7 @@ class Assembler:
 
 
 if __name__ == '__main__':
-    input_file = 'user/data/demo.s'
+    input_file = 'user/data/test_load_store.s'
     output_file = 'user/data/I_mem.coe'
     assembler = Assembler()
     assembler.assemble_file(input_file, output_file)

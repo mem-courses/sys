@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 `include "Defines.vh"
 
-module DataPath (
+module DataPath_more (
    input        clk,          // 寄存器时钟
    input        rst,          // 寄存器复位
    input [31:0] inst_field,   // 指令数据域[31:7]

@@ -1,6 +1,6 @@
 # run: vivado -mode tcl -source create_project.tcl
 
-set project_name "lab4-2"
+set project_name "lab4-3"
 set target_dir "./prj"
 
 # set project parameters

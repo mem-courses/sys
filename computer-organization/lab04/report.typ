@@ -69,13 +69,13 @@
 + #[
     在 `create_project.tcl` 中填入以下代码：
 
-    #codex(read("./cpu/create_project.tcl"), lang: "tcl")
+    #codex(read("./scpu/create_project.tcl"), lang: "tcl")
   ]
 
 + #[
     参考原理图完成 SCPU 模块构建。
 
-    #codex(read("./cpu/user/src/SCPU.v"), lang: "verilog")
+    #codex(read("./scpu/user/src/SCPU.v"), lang: "verilog")
   ]
 
 + #[
@@ -117,7 +117,7 @@
 + #[
     完成立即数生成模块 Imm Gen 的剩余实现：。
 
-    #codex(read("./cpu/user/src/ImmGen.v"), lang: "verilog")
+    #codex(read("./scpu/user/src/ImmGen.v"), lang: "verilog")
 
     这里的实现主要是根据 RISC-V 的指令格式来得到的，如下图：
 
@@ -129,13 +129,13 @@
 + #[
     设计 REG32 模块实现 32 位寄存器，这将用于 PC 寄存器的硬件实现中：
 
-    #codex(read("./cpu/user/src/REG32.v"), lang: "verilog")
+    #codex(read("./scpu/user/src/REG32.v"), lang: "verilog")
   ]
 
 + #[
     参考原理图 @datapath_diagram 完成数据通路顶层设计：
 
-    #codex(read("./cpu/user/src/DataPath.v"), lang: "verilog")
+    #codex(read("./scpu/user/src/DataPath.v"), lang: "verilog")
   ]
 
 + #[
@@ -143,7 +143,7 @@
 
     其中选用的测试程序为 Lab04-1 课件 P74 给出的 Demo 程序，内容如下：
 
-    #codex(read("./cpu/user/data/test_add.s"), lang: "asm")
+    #codex(read("./scpu/user/data/test_add.s"), lang: "asm")
 
     *注意*：这里的注释部分仅是课件中给出的结果，其从 `x17=000006D3` 开始的输出均有问题。
 
@@ -226,13 +226,13 @@
 + #[
     综上可以得到完整的 `SCPU_ctrl.v` 代码：
 
-    #codex(read("./cpu/user/src/SCPU_ctrl.v"), lang: "verilog")
+    #codex(read("./scpu/user/src/SCPU_ctrl.v"), lang: "verilog")
   ]
 
 + #[
     为 `SCPU_ctrl` 模块编写仿真代码 `SCPU_ctrl_tb.v`（根据 Lab04-2 课件 P35-36 给出的代码）：
 
-    #codex(read("./cpu/user/sim/SCPU_ctrl_tb.v"), lang: "verilog")
+    #codex(read("./scpu/user/sim/SCPU_ctrl_tb.v"), lang: "verilog")
   ]
 
 + #[
@@ -252,7 +252,7 @@
 // + #[
 //     利用给定的 Testbench 代码进行功能仿真：
 
-//     // #codex(read("./cpu/user/sim/SCPU_ctrl_tb.v"), lang: "verilog")
+//     // #codex(read("./scpu/user/sim/SCPU_ctrl_tb.v"), lang: "verilog")
 
 //     注意：可以在 Scope 窗口中添加观察信号。
 //   ]
@@ -266,7 +266,7 @@
 + #[
     根据课件 P47 的要求编写汇编程序进行对 ALU 指令的测试：
 
-    #codex(read("./cpu/user/data/demo.s"), lang: "asm")
+    #codex(read("./scpu/user/data/test_alu.s"), lang: "asm")
 
     先使用 socTest 模块进行仿真测试，然后上板进行物理验证，并用表格记录实验结果。
   ]
@@ -274,15 +274,15 @@
 // + #[
 //     根据课件 P48 的要求编写汇编程序完成对动态 Load & Store 指令的测试：
 
-//     #codex(read("./cpu/user/data/test_load_store.s"), lang: "asm")
+//     #codex(read("./scpu/user/data/test_load_store.s"), lang: "asm")
 
 //     先使用 socTest 模块进行仿真测试，然后上板进行物理验证。
 //   ]
 
 + #[
-    根据课件 P48 的要求编写汇编程序完成对动态 Load & Store 指令的测试：
+    自行编写更为复杂的程序，对 SCPU 的正确性进行验证。
 
-    #codex(read("./cpu/user/data/test_load_store.s"), lang: "asm")
+    #codex(read("./scpu/user/data/demo.s"), lang: "asm")
 
     先使用 socTest 模块进行仿真测试，然后上板进行物理验证。
   ]
@@ -308,7 +308,6 @@
   align(center, image("images/2024-11-25-00-48-26.png", height: 24em)), align(center, image("images/2024-11-25-00-48-31.png", height: 24em)),
 )
 
-=== 动态 Load & Store 测试
 // === 动态 Load & Store 测试
 // 
 
@@ -322,13 +321,13 @@
 
 上板进行物理验证，得到的结果为：
 
-#align(center, image("images/2024-11-25-02-07-11.png", width: 80%))
+#align(center, image("images/2024-11-25-02-47-43.png", width: 80%))
 
 可以发现，这些结果与我们在 Venus 模拟器中得到的如下结果一致，这可以说明我们在 Lab04-0/1/2 中的 CPU 实现是正确的。
 
 #grid(
   columns: (1fr, 1fr),
-  align(center, image("images/2024-11-25-01-47-50.png", height: 24em)), align(center, image("images/2024-11-25-01-47-58.png", height: 24em)),
+  align(center, image("images/2024-11-25-02-30-48.png", height: 24em)), align(center, image("images/2024-11-25-02-30-56.png", height: 24em)),
 )
 
 #pagebreak(weak: true)
@@ -378,9 +377,9 @@
   ]
 
 + #[
-    导入课件中的 `I_mem.coe` 文件：
+    导入课件 P36 中给出的 `I_mem.coe` 文件：
 
-    #codex(read("./cpu_more/user/data/I_mem.coe"), lang: "text")
+    #codex(read("./scpu_ex/user/data/I_mem.coe"), lang: "text")
   ]
 
 + #[
@@ -421,10 +420,10 @@
 
 == RV32 汇编脚本 <assembly_script>
 
-#codex(read("./cpu/assembly.py"), lang: "python")
+#codex(read("./scpu/assembly.py"), lang: "python")
 #pagebreak(weak: true)
 
 == CSSTE 仿真 <csste_tb>
 
-#codex(read("./cpu/user/sim/CSSTE_tb.v"), lang: "verilog")
+#codex(read("./scpu/user/sim/CSSTE_tb.v"), lang: "verilog")
 #pagebreak(weak: true)
