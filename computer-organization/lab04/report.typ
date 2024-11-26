@@ -164,7 +164,8 @@
 
 #grid(
   columns: (1fr, 1fr),
-  align(center, image("images/2024-11-21-16-21-44.png", height: 16em)), align(center, image("images/2024-11-21-16-24-47.png", height: 16em)),
+  align(center, image("images/2024-11-21-16-21-44.png", height: 16em)),
+  align(center, image("images/2024-11-21-16-24-47.png", height: 16em)),
 )
 
 说明实验结果正确。
@@ -181,8 +182,25 @@
 
 更详细的测试可以参考 Lab04-2 的测试部分。
 
-#pagebreak(weak: true)
+== 思考题
 
+#question[
+  扩展下列指令，数据通路将作如何修改：
+  - R-Type：`sra`, `sll`, `sltu`；
+  - I-Type：`srai`, `slli`, `sltiu`；
+  - B-Type：`bne`；
+  - U-Type：`lui`。
+]
+
+这其实就是 Lab04-3 的实验要求，这里就不再赘述。
+
+#question[
+  增加 I-Type 算术运算指令是否需要修改本章设计的数据通路？
+]
+
+不需要，因为 I-type 中的 ALU 运算指令和 R-type 中的对应指令的 `func3` 是相同的，对于位移运算，`func7[5]` 也是相同的，所以可以直接用同一套数据通路，具体可以参考我在 Lab04-3 中的实现。
+
+#pagebreak(weak: true)
 = Lab04-2：CPU设计之控制器
 
 == 实验目的
@@ -305,7 +323,8 @@
 
 #grid(
   columns: (1fr, 1fr),
-  align(center, image("images/2024-11-25-00-48-26.png", height: 24em)), align(center, image("images/2024-11-25-00-48-31.png", height: 24em)),
+  align(center, image("images/2024-11-25-00-48-26.png", height: 24em)),
+  align(center, image("images/2024-11-25-00-48-31.png", height: 24em)),
 )
 
 // === 动态 Load & Store 测试
@@ -327,12 +346,49 @@
 
 #grid(
   columns: (1fr, 1fr),
-  align(center, image("images/2024-11-25-02-30-48.png", height: 24em)), align(center, image("images/2024-11-25-02-30-56.png", height: 24em)),
+  align(center, image("images/2024-11-25-02-30-48.png", height: 24em)),
+  align(center, image("images/2024-11-25-02-30-56.png", height: 24em)),
 )
 
-#pagebreak(weak: true)
+== 思考题
 
-= Lab04-2：CPU设计之指令集扩展
+#question[
+  单周期控制器时序体现在那里？
+]
+
+虽然单周期控制器的控制逻辑可以通过组合电路实现，但是实际使用时单周期 CPU 的控制器需要在时钟上升沿到来时控制器进行控制信号的更新，其中需要用到的 opcode 和 func 信号需要在时钟上升沿到来之前保持稳定。并且控制器的输出信号在一个时钟周期内也需要保持稳定。所以单周期CPU的控制器在一个时钟周期内只能工作一次，这也解释了为什么单周期处理器的 CPI 为 1。
+
+#question[
+  设计 `bne` 指令需要增加控制信号吗？
+]
+
+不需要，因为 `bne` 指令的控制信号和 `beq` 指令的控制信号是相同的，只是判断跳转的条件不同。因此只需要在判断条件（就是接了 ALU 的 `zero` 信号的那里）里加一下到底是 `beq` 还是 `bne` 的判断即可。
+
+#question[
+  扩展下列指令，控制器将作如何修改：
+
+  - R-Type：`sra`, `sll`, `sltu`；
+  - I-Type：`srai`, `slli`, `sltiu`；
+  - B-Type：`bne`；
+  - U-Type：`lui`；
+
+  此时用二级译码有优势吗？
+]
+
+这其实就是 Lab04-3 的实验要求，这里就不再赘述。关于二级译码，我一直觉得没什么卵用。但在指令更多的现实应用场景中，二级译码确乎是有必要的。
+
+#question[
+  动态存储模块测试七段显示会出现什么问题？
+]
+
+这个动态存储模块我在上班测试时会出现以下问题，这个和七段数码管应该没关系但是严重影响我正常进行测试：
+
+在烧录程序后，即使我已经打开单步模式，板子仍有可能以最快的速度（可能导致指令译码错误的速度）随机执行一些指令，而当 ROM 中有 store 类指令时，就可能打乱内存中的部分数据，从而导致结果不符合预期。而使用 cpu reset 按钮并不会 reset 内存数据，所以这一问题暂时无解。因此这个实验我不能很好的进行物理测试，只能确保仿真正确。
+
+一个可能的解决方案是通过按钮控制内存的写入使能信号，这样在未 cpu reset 进行正式实验前可以避免内存数据被打乱。但觉得更好的解决方案应是在未完全初始化前给 CPU 一个 wait 信号，但是由于其他模块以 edf 的形式给出无法修改，只能作罢。（感谢 #text(fill: blue, link("https://cyrus28214.top/", [\@Cyrus])) 同学一起提出的方案）
+
+#pagebreak(weak: true)
+= Lab04-3：CPU设计之指令集扩展
 
 == 实验目的
 
@@ -367,6 +423,8 @@
     为了实现更多运算，同时方便二级译码的过程，我们对 ALU 进行了功能扩充和操作编码的修改，修改后的 ALU 模块 `ALU_more` 模块如下：
 
     #codex(read("./scpu_ex/user/src/ALU_more.v"), lang: "verilog")
+
+    需要注意的是，这里的 `ALU_operation` 直接和 R 型 / I 型 ALU 相关指令的 `{func7[5], func3[2:0]}` 对应，因此和 Lab04-2 中使用的 ALU 实现不兼容。
   ]
 
 + #[
@@ -403,7 +461,11 @@
   ]
 
 + #[
-    上板测试能否正常运行，并用表格的形式记录运行结果。将得到的运行结果与实验文档中给出的表格进行对比，可以验证 ExtSCPU 的正确性。
+    为了方便调试，我给 `VgaDebugger` 模块接入了更多信号，从而可以更方便的观察更多调试信息。具体请参考 @vga_module 。
+  ]
+
++ #[
+    上板测试能否正常运行，并用表格的形式记录运行结果。将得到的运行结果与实验文档中给出的表格进行对比，可以验证 `ExtSCPU` 的正确性。
   ]
 
 == 实验结果与分析
@@ -416,9 +478,31 @@
 
 #align(center, image("images/2024-11-25-13-27-59.png", width: 100%))
 
-上板进行物理验证，可以正常运行，限于篇幅原因在下面用表格的形式呈现数据。可以发现和验收文档中给定的数据一致，由于记录的位置略微不同，`dmem_i_data` 等数据可能存在一个时钟周期的偏差，但是不影响实验结果是正确的。
+上板进行物理验证，可以正常运行，限于篇幅原因用表格的形式呈现数据。可以发现和验收文档中给定的数据一致，由于记录的位置略微不同，`dmem_i_data` 等数据可能存在一个时钟周期的偏差，但是不影响实验结果是正确的。
 
-TODO：表格
+表格见：@demo_output_data 或报告末页。（注：本报告中所有蓝色的文本都是可点击的链接。）
+
+== 思考题
+
+#question[
+  指令扩展时控制器用二级译码设计存在什么问题？
+]
+
+在单周期 CPU 中使用二级译码的最大问题是会增加延迟，因为单周期 CPU 中每一个阶段都需要等待上一个阶段结束后再工作，所以使用二级译码的方式实际上是非常不划算的。
+
+另外，二级译码会增大设计的复杂性，这可能影响硬件实现上的复杂性和功耗。这种方式的实际效果可能也不如交给综合器来优化的效果好。
+
+#question[
+  设计 `bne` 指令需要增加控制信号吗？
+]
+
+不是，为什么同一道思考题会出现两次？
+
+#question[
+  设计 `srai` 时需要增加新的数据通道吗？
+]
+
+这条指令已经实现了，他在指令中多出来的一位信息刚好在 `func7[5]` 的位置，所以用想已有的 R 型指令的数据通道即可判断。
 
 // =================================================================
 
@@ -461,3 +545,8 @@ TODO：表格
 
 #codex(read("./scpu/user/sim/CSSTE_tb.v"), lang: "verilog")
 #pagebreak(weak: true)
+
+== Demo 程序运行结果 <demo_output_data>
+
+#include "./scpu_ex/result/demo_output_data.typ"
+
