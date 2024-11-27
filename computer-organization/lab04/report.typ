@@ -164,8 +164,7 @@
 
 #grid(
   columns: (1fr, 1fr),
-  align(center, image("images/2024-11-21-16-21-44.png", height: 16em)),
-  align(center, image("images/2024-11-21-16-24-47.png", height: 16em)),
+  align(center, image("images/2024-11-21-16-21-44.png", height: 16em)), align(center, image("images/2024-11-21-16-24-47.png", height: 16em)),
 )
 
 说明实验结果正确。
@@ -286,7 +285,7 @@
 
     #codex(read("./scpu/user/data/test_alu.s"), lang: "asm")
 
-    先使用 socTest 模块进行仿真测试，然后上板进行物理验证，并用表格记录实验结果。
+    先使用 socTest 模块进行仿真测试，然后上板进行物理验证。
   ]
 
 // + #[
@@ -323,12 +322,15 @@
 
 #grid(
   columns: (1fr, 1fr),
-  align(center, image("images/2024-11-25-00-48-26.png", height: 24em)),
-  align(center, image("images/2024-11-25-00-48-31.png", height: 24em)),
+  align(center, image("images/2024-11-25-00-48-26.png", height: 24em)), align(center, image("images/2024-11-25-00-48-31.png", height: 24em)),
 )
 
 // === 动态 Load & Store 测试
-//
+
+// 仿真测试的结果为：
+
+
+
 
 === 复杂程序测试
 
@@ -346,8 +348,7 @@
 
 #grid(
   columns: (1fr, 1fr),
-  align(center, image("images/2024-11-25-02-30-48.png", height: 24em)),
-  align(center, image("images/2024-11-25-02-30-56.png", height: 24em)),
+  align(center, image("images/2024-11-25-02-30-48.png", height: 24em)), align(center, image("images/2024-11-25-02-30-56.png", height: 24em)),
 )
 
 == 思考题
@@ -478,9 +479,21 @@
 
 #align(center, image("images/2024-11-25-13-27-59.png", width: 100%))
 
-上板进行物理验证，可以正常运行，限于篇幅原因用表格的形式呈现数据。可以发现和验收文档中给定的数据一致，由于记录的位置略微不同，`dmem_i_data` 等数据可能存在一个时钟周期的偏差，但是不影响实验结果是正确的。
+上板进行物理验证，可以正常运行，限于篇幅原因用表格的形式呈现数据，这里只截取部分截图：
 
-表格见：@demo_output_data 或报告末页。（注：本报告中所有蓝色的文本都是可点击的链接。）
+- #[
+    第一次运行时，PC 直接从 `0000 001c` 跳转到 `0000 002c`，因为 brench 指令的条件成立，发生了跳转。
+    #align(center, image("images/2024-11-27-14-30-49.png", width: 80%))
+  ]
+
+- #[
+    完整执行完一次程序后，寄存器的值如图所示，对比仿真结果可以发现一致。
+
+    #align(center, image("images/2024-11-27-14-31-43.png", width: 80%))
+  ]
+
+表格见：@demo_output_data 或报告末页。（注：本报告中所有蓝色的文本都是可点击的链接。）可以发现和验收文档中给定的数据一致，由于记录的顺序略微不同，`dmem_i_data` 等数据可能存在一个时钟周期的偏差，但是不影响我们断言实验结果是正确的。
+
 
 == 思考题
 
