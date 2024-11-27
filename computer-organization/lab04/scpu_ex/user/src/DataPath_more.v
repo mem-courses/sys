@@ -4,7 +4,7 @@
 module DataPath_more (
    input        clk,            // 寄存器时钟
    input        rst,            // 寄存器复位
-   input [31:0] inst_field,     // 指令数据域[31:7]
+   input [31:0] inst_field,     // 指令数据域[31:0]
    input        ALUSrc_B,       // ALU端口B输入选择
    input [ 1:0] MemtoReg,       // Regs写入数据源控制
    input [ 1:0] Jump,           // J指令
@@ -16,7 +16,6 @@ module DataPath_more (
    input [ 2:0] ImmSel,         // ImmGen操作控制
 
    `RegFile_Regs_output
-
    output wire [ 4:0] vga_rs1,
    output wire [31:0] vga_rs1_val,
    output wire [ 4:0] vga_rs2,

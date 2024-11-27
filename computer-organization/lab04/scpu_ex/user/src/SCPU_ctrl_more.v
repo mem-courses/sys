@@ -37,7 +37,8 @@ module SCPU_ctrl_more (
 
    parameter ALU_op_Add = 2'b00;
    parameter ALU_op_Sub = 2'b01;
-   parameter ALU_op_Func = 2'b10;
+   parameter ALU_op_Fun3 = 2'b10;
+   parameter ALU_op_Fun73 = 2'b11;
 
    always @(*) begin
       // branch control
@@ -58,7 +59,7 @@ module SCPU_ctrl_more (
          7'b0110011: begin
             ImmSel   <= 3'b00; // don't care
             ALUSrc_B <= ALUSrc_B_Reg;
-            ALU_op   <= ALU_op_Func;
+            ALU_op   <= ALU_op_Fun73;
             MemRW    <= MemRW_Read;
             RegWrite <= 1'b1;
             MemtoReg <= MemtoReg_ALU;
@@ -67,7 +68,7 @@ module SCPU_ctrl_more (
          7'b0010011: begin
             ImmSel   <= ImmSel_I;
             ALUSrc_B <= ALUSrc_B_Imm;
-            ALU_op   <= ALU_op_Func;
+            ALU_op   <= (Fun3 == 3'b001 || Fun3 == 3'b101) ? ALU_op_Fun73 : ALU_op_Fun3;
             MemRW    <= MemRW_Read;
             RegWrite <= 1'b1;
             MemtoReg <= MemtoReg_ALU;
@@ -140,9 +141,11 @@ module SCPU_ctrl_more (
    // 二级译码
    always @(*) begin
       case (ALU_op)
-         2'b00:   ALU_Control = 4'b0000;
-         2'b01:   ALU_Control = 4'b1000;
-         default: ALU_Control = {Fun7, Fun3};
+         ALU_op_Add:   ALU_Control = 4'b0000;
+         ALU_op_Sub:   ALU_Control = 4'b1000;
+         ALU_op_Fun3:  ALU_Control = {1'b0, Fun3};
+         ALU_op_Fun73: ALU_Control = {Fun7, Fun3};
       endcase
    end
 endmodule
+
