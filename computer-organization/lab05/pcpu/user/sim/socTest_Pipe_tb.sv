@@ -12,7 +12,7 @@ module socTest_Pipe_tb ();
    initial begin
 `ifdef SIM
       log_reset();
-      log_message("sim", "Start Simulation!");
+      log_msg("sim", "Start Simulation!");
 `endif
 
       clk = 1'b0;

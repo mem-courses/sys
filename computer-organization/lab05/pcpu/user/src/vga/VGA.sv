@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-
 import pcpu::*;
 
 module VGA (
@@ -15,7 +13,6 @@ module VGA (
    input wire [31:0] PC_ID,
    input wire [31:0] inst_ID,
    input wire [31:0] PC_Ex,
-   input wire        MemRW_Ex,
    input wire        MemRW_Mem,
    input wire [31:0] Data_out,
    input wire [31:0] Addr_out,
@@ -76,7 +73,7 @@ module VGA (
       .IdEx_imm       (),
       .Ex_forward_rs1 (),
       .Ex_forward_rs2 (),
-      .IdEx_mem_wen   (MemRW_Ex),
+      .IdEx_mem_wen   (  /* MemRW_EX */),
       .IdEx_mem_ren   (),
       .IdEx_is_branch (),
       .IdEx_is_jal    (),

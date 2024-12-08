@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-
 import pcpu::*;
 
 module Regs (
@@ -48,10 +46,6 @@ module Regs (
             Rs2_data <= (Rs2_addr == 0) ? 0 : register[Rs2_addr];
          end
       end
-
-      // $display("[ID:Regs] Wt_addr: %h, Wt_data: %h", Wt_addr, Wt_data);
-      // $display("[ID:Regs] Rs1_addr: %h, Rs1_data: %h %h", Rs1_addr, Rs1_data, (Rs1_addr == 0) ? 0 : register[Rs1_addr]);
-      // $display("[ID:Regs] Rs2_addr: %h, Rs2_data: %h %h", Rs2_addr, Rs2_data, (Rs2_addr == 0) ? 0 : register[Rs2_addr]);
    end
 
    // map to vga signals

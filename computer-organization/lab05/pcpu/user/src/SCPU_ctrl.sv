@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-
 module SCPU_ctrl (
    input      [6:0] OPcode,      // inst[6:0]
    input      [2:0] Fun3,        // inst[14:12]
@@ -7,7 +5,7 @@ module SCPU_ctrl (
    output reg [2:0] ImmSel,
    output reg       ALUSrc_B,
    output reg [1:0] MemtoReg,
-   output reg [1:0] Jump,
+   output reg       Jump,
    output reg       Branch,
    output reg       BranchN,
    output reg       RegWrite,
@@ -48,9 +46,7 @@ module SCPU_ctrl (
          BranchN <= 1'b0;
       end
 
-      // jump control
-      Jump[1] <= OPcode == 7'b1100111;
-      Jump[0] <= OPcode == 7'b1101111;
+      Jump <= OPcode == 7'b1100111;
 
       case (OPcode)
          // R-type ALU
@@ -98,15 +94,15 @@ module SCPU_ctrl (
             RegWrite <= 1'b0;
             MemtoReg <= 0; // don't care
          end
-         // jal
-         7'b1101111: begin  //J
-            ImmSel   <= ImmSel_J;
-            ALUSrc_B <= ALUSrc_B_Imm;
-            ALU_op   <= 2'b00; // don't care
-            MemRW    <= 1'b0;  // don't care
-            RegWrite <= 1'b1;
-            MemtoReg <= MemtoReg_PC4;
-         end
+         // // jal
+         // 7'b1101111: begin  //J
+         //    ImmSel   <= ImmSel_J;
+         //    ALUSrc_B <= ALUSrc_B_Imm;
+         //    ALU_op   <= 2'b00; // don't care
+         //    MemRW    <= 1'b0;  // don't care
+         //    RegWrite <= 1'b1;
+         //    MemtoReg <= MemtoReg_PC4;
+         // end
          // jalr
          7'b1100111: begin
             ImmSel   <= ImmSel_I; // not J-type!

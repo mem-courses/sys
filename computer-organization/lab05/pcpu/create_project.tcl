@@ -66,7 +66,7 @@ set_property -dict [list \
   CONFIG.Port_A_Clock {100} \
   CONFIG.Port_A_Enable_Rate {100} \
   CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
-] [get_ips RAM_B]
+  ] [get_ips RAM_B]
 
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1

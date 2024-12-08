@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-
 import pcpu::*;
 
 module CSSTE_Pipe (
@@ -169,7 +167,6 @@ module CSSTE_Pipe (
       .PC_out_ID  (PC_out_ID),
       .inst_ID    (inst_ID),
       .PC_out_EX  (PC_out_EX),
-      .MemRW_EX   (MemRW_EX),
       .MemRW_Mem  (MemRW_Mem),
       .Addr_out   (Addr_out),
       .Data_out   (Data_out),
@@ -192,7 +189,6 @@ module CSSTE_Pipe (
       .PC_ID      (PC_out_ID),
       .inst_ID    (inst_ID),
       .PC_Ex      (PC_out_Ex),
-      .MemRW_Ex   (MemRW_Ex),
       .MemRW_Mem  (MemRW_Mem),
       .Data_out   (Data_out),
       .Addr_out   (Addr_out),

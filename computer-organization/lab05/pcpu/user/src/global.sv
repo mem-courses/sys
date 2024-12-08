@@ -1,12 +1,6 @@
 package pcpu;
 
    typedef struct packed {
-      // note: 在 struct 中使用 packed 关键字确保结构体中的数据是紧密排列的
-      logic [31:0] PC;
-      logic [31:0] inst;
-   } Debug_t;
-
-   typedef struct packed {
       logic [31:0] x0;
       logic [31:0] ra;
       logic [31:0] sp;
@@ -53,7 +47,16 @@ package pcpu;
       logic [31:0] IdEx_imm;
    } vga_signals_t;
 
+   // ===================== debugger =====================
+
    localparam string log_filename = "sim_log.txt";
+
+   typedef struct packed {
+      // note: 在 struct 中使用 packed 关键字确保结构体中的数据是紧密排列的
+      logic [31:0] PC;
+      logic [31:0] inst;
+   } Debug_t;
+   localparam Debug_t empty_dbg = '{PC: 0, inst: 0};
 
    function void log_reset();
       integer file;
@@ -66,8 +69,9 @@ package pcpu;
    endfunction
 
    function void log_plain(string text);
-      // $display(text);
-      integer log_file;
+      integer log_file;  // note: 函数内定义的局部变量需要放在函数开头吗？不放就没法过编译
+
+      $display(text);
       log_file = $fopen(log_filename, "a");  // append mode is required
       if (log_file) begin
          $fwrite(log_file, text);
@@ -78,16 +82,26 @@ package pcpu;
       end
    endfunction
 
-   function void log_data(string stage, string name, int val);
-      string message;
-      message = $sformatf("[%3s] %s: %d", stage, name, val);
-      log_plain(message);
+   function void log_msg(string stage, string msg, Debug_t dbg = empty_dbg);
+      string plain;
+      if (dbg != empty_dbg) begin
+         plain = $sformatf("[%3s] %8h %8h %s", stage, dbg.PC, dbg.inst, msg);
+      end else begin
+         plain = $sformatf("[%3s] %17s %s", stage, "", msg);
+      end
+      log_plain(plain);
    endfunction
 
-   function void log_message(string stage, string message);
-      string message;
-      message = $sformatf("[%3s] %s", stage, message);
-      log_plain(message);
-   endfunction
+   function void log_data(string stage, string name, int val, Debug_t dbg = empty_dbg);
+      string msg;
 
+      // Check if val contains X or Z
+      if ($isunknown(val)) begin
+         $error("Value '%s' contains X or Z", name);
+         $finish;
+      end
+
+      msg = $sformatf("%8s: %8h", name, val);
+      log_msg(stage, msg, dbg);
+   endfunction
 endpackage
