@@ -19,7 +19,6 @@ module Pipeline_CPU (
 );
 
    // =========== debugging signals ===========
-`ifdef SIM
    Debug_t debug_out_IFID;
    Debug_t debug_out_ID;
    Debug_t debug_out_IDEX;
@@ -28,7 +27,6 @@ module Pipeline_CPU (
    Debug_t debug_out_Mem;
    Debug_t debug_out_MemWB;
    Debug_t debug_out_WB;
-`endif
    // =========== debugging signals ===========
 
 

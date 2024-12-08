@@ -82,6 +82,7 @@ package pcpu;
    localparam Debug_t empty_dbg = '{PC: 0, inst: 0};
 
    function void log_reset();
+`ifdef SIM
       integer file;
       file = $fopen(log_filename, "w");  // this will make the file empty
       if (file) begin
@@ -89,9 +90,11 @@ package pcpu;
       end else begin
          $display("Error: Unable to open file %s", log_filename);
       end
+`endif
    endfunction
 
    function void log_plain(string text);
+`ifdef SIM
       integer log_file;  // note: 函数内定义的局部变量需要放在函数开头吗？不放就没法过编译
 
       $display(text);
@@ -103,9 +106,11 @@ package pcpu;
       end else begin
          $display("Error: Unable to open file %s", log_filename);
       end
+`endif
    endfunction
 
    function void log_msg(string stage, string msg, Debug_t dbg = empty_dbg);
+`ifdef SIM
       string plain;
       if (dbg != empty_dbg) begin
          plain = $sformatf("[%3s] %8h %8h %s", stage, dbg.PC, dbg.inst, msg);
@@ -113,9 +118,11 @@ package pcpu;
          plain = $sformatf("[%3s] %17s %s", stage, "", msg);
       end
       log_plain(plain);
+`endif
    endfunction
 
    function void log_data(string stage, string name, int val, Debug_t dbg = empty_dbg);
+`ifdef SIM
       string msg;
 
       // Check if val contains X or Z
@@ -126,5 +133,6 @@ package pcpu;
 
       msg = $sformatf("%8s: %8h", name, val);
       log_msg(stage, msg, dbg);
+`endif
    endfunction
 endpackage
