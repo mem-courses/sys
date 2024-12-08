@@ -1,10 +1,8 @@
 import pcpu::*;
 
 module Ex_reg_Mem (
-`ifdef SIM
    input  Debug_t debug_in_EXMem,
    output Debug_t debug_out_EXMem,
-`endif
 
    input        clk_EXMem,
    input        rst_EXMem,
@@ -35,14 +33,12 @@ module Ex_reg_Mem (
    output reg [ 1:0] MemtoReg_out_EXMem,
    output reg        RegWrite_out_EXMem
 );
-`ifdef SIM
    always @(posedge clk_EXMem) begin
       debug_out_EXMem <= debug_in_EXMem;
       if (MemRW_in_EXMem) begin
          log_data("Mem", "Address", ALU_in_EXMem, debug_in_EXMem);
       end
    end
-`endif
 
    always @(posedge clk_EXMem or posedge rst_EXMem) begin
       if (rst_EXMem == 1) begin

@@ -18,7 +18,8 @@ module socTest_Pipe (
    wire [31:0] Data_out_WB;
 
    always @(0);  // this line is to make formatter happy
-   RV32_Regs_t regs;
+   RV32_Regs_t   regs;
+   VGA_Signals_t vga_signals;
 
    Pipeline_CPU U1 (
       .clk        (clk),

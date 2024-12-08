@@ -1,10 +1,8 @@
 import pcpu::*;
 
 module Pipeline_ID (
-`ifdef SIM
    input  Debug_t debug_in_ID,
    output Debug_t debug_out_ID,
-`endif
 
    input         clk_ID,
    input         rst_ID,
@@ -27,9 +25,7 @@ module Pipeline_ID (
 
    output RV32_Regs_t regs
 );
-`ifdef SIM
    assign debug_out_ID = debug_in_ID;
-`endif
 
    Regs Regs_inst (
       .clk         (clk_ID),
@@ -68,5 +64,5 @@ module Pipeline_ID (
       .ALU_Control(ALU_control_ID)
    );
 
-   assign Rd_addr_out_ID = Inst_in_ID[11:7];
+   assign Rd_addr_out_ID = Inst_in_ID[11:7];  // 这里的rd要传递一圈传递回来再生效
 endmodule

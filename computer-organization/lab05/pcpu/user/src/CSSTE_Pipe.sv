@@ -155,7 +155,7 @@ module CSSTE_Pipe (
    );
 
    RV32_Regs_t   regs;
-   vga_signals_t vga_signals;
+   VGA_Signals_t vga_signals;
 
    Pipeline_CPU U1 (
       .clk(Clk_CPU),

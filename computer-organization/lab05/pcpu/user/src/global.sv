@@ -37,6 +37,7 @@ package pcpu;
 
    typedef struct packed {
       // ID/EX
+      logic [31:0] IdEx_inst;
       logic [4:0]  IdEx_rd;
       logic [4:0]  IdEx_rs1;
       logic [4:0]  IdEx_rs2;
@@ -45,7 +46,29 @@ package pcpu;
       logic        IdEx_reg_wen;
       logic        IdEx_is_imm;
       logic [31:0] IdEx_imm;
-   } vga_signals_t;
+      logic [31:0] Ex_forward_rs1;
+      logic [31:0] Ex_forward_rs2;
+      logic        IdEx_mem_wen;
+      logic        IdEx_mem_ren;
+      logic        IdEx_is_branch;
+      logic        IdEx_is_jal;
+      logic        IdEx_is_jalr;
+      logic        IdEx_is_auipc;
+      logic        IdEx_is_lui;
+      logic [3:0]  IdEx_alu_ctrl;
+      logic [2:0]  IdEx_cmp_ctrl;
+      logic [31:0] ExMa_pc;
+      logic [31:0] ExMa_inst;
+      logic [4:0]  ExMa_rd;
+      logic        ExMa_reg_wen;
+      logic        ExMa_mem_ren;
+      logic        ExMa_is_jal;
+      logic        ExMa_is_jalr;
+      logic [31:0] MaWb_pc;
+      logic [31:0] MaWb_inst;
+      logic [4:0]  MaWb_rd;
+      logic        MaWb_reg_wen;
+   } VGA_Signals_t;
 
    // ===================== debugger =====================
 

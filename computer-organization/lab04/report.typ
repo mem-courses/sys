@@ -562,4 +562,3 @@
 == Demo 程序运行结果 <demo_output_data>
 
 #include "./scpu_ex/result/demo_output_data.typ"
-

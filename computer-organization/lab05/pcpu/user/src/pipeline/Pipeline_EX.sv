@@ -1,8 +1,6 @@
 module Pipeline_EX (
-`ifdef SIM
    input  Debug_t debug_in_EX,
    output Debug_t debug_out_EX,
-`endif
 
    input [31:0] PC_in_EX,
    input [31:0] Rs1_in_EX,
@@ -17,9 +15,7 @@ module Pipeline_EX (
    output [31:0] Rs2_out_EX,
    output        zero_out_EX
 );
-`ifdef SIM
    assign debug_out_EX = debug_in_EX;
-`endif
 
    wire [31:0] Data_out;
    MUX2T1_32 MUX2T1_32_inst (

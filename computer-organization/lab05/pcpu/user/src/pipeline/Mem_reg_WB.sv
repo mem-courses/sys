@@ -1,8 +1,6 @@
 module Mem_reg_WB (
-`ifdef SIM
    input  Debug_t debug_in_MemWB,
    output Debug_t debug_out_MemWB,
-`endif
 
    input        clk_MemWB,
    input        rst_MemWB,
@@ -21,11 +19,9 @@ module Mem_reg_WB (
    output reg [ 1:0] MemtoReg_out_MemWB,
    output reg        RegWrite_out_MemWB
 );
-`ifdef SIM
    always @(posedge clk_MemWB) begin
       debug_out_MemWB <= debug_in_MemWB;
    end
-`endif
 
    always @(posedge clk_MemWB or posedge rst_MemWB)
       if (rst_MemWB == 1) begin

@@ -15,7 +15,7 @@ module Pipeline_CPU (
    output wire [31:0] Data_out_WB,
 
    output wire RV32_Regs_t   regs,
-   output wire vga_signals_t vga_signals
+   output wire VGA_Signals_t vga_signals
 );
 
    // =========== debugging signals ===========
@@ -45,9 +45,7 @@ module Pipeline_CPU (
    wire [31:0] PC_out_IFID;
    wire [31:0] inst_out_IFID;
    IF_reg_ID IF_reg_ID (
-`ifdef SIM
       .debug_out_IFID(debug_out_IFID),
-`endif
 
       .clk_IFID    (clk),
       .rst_IFID    (rst),
@@ -72,11 +70,10 @@ module Pipeline_CPU (
    wire        RegWrite_out_ID;
    wire [ 3:0] ALU_control_ID;
    wire [ 1:0] MemtoReg_ID;
+
    Pipeline_ID Instruction_Decoder (
-`ifdef SIM
       .debug_in_ID (debug_out_IFID),
       .debug_out_ID(debug_out_ID),
-`endif
 
       .clk_ID         (clk),
       .rst_ID         (rst),
@@ -112,11 +109,10 @@ module Pipeline_CPU (
    wire        MemRW_out_IDEX;
    wire        Jump_out_IDEX;
    wire        RegWrite_out_IDEX;
+
    ID_reg_Ex ID_reg_Ex (
-`ifdef SIM
       .debug_in_IDEX (debug_out_ID),
       .debug_out_IDEX(debug_out_IDEX),
-`endif
 
       .clk_IDEX           (clk),
       .rst_IDEX           (rst),
@@ -155,11 +151,10 @@ module Pipeline_CPU (
    wire [31:0] ALU_out_EX;
    wire [31:0] Rs2_out_EX;
    wire        zero_out_EX;
+
    Pipeline_EX Execute (
-`ifdef SIM
       .debug_in_EX (debug_out_IDEX),
       .debug_out_EX(debug_out_EX),
-`endif
 
       .PC_in_EX         (PC_out_IDEX),
       .Rs1_in_EX        (Rs1_out_IDEX),
@@ -188,11 +183,10 @@ module Pipeline_CPU (
    wire        MemRW_out_EXMem;
    wire        Jump_out_EXMem;
    wire        RegWrite_out_EXMem;
+
    Ex_reg_Mem Ex_reg_Mem (
-`ifdef SIM
       .debug_in_EXMem (debug_out_EX),
       .debug_out_EXMem(debug_out_EXMem),
-`endif
 
       .clk_EXMem        (clk),
       .rst_EXMem        (rst),
@@ -226,11 +220,10 @@ module Pipeline_CPU (
 
 
    wire PCSrc_out_Mem;
+
    Pipeline_Mem Memory_Access (
-`ifdef SIM
       .debug_in_Mem (debug_out_EX),
       .debug_out_Mem(debug_out_Mem),
-`endif
 
       .zero_in_Mem   (zero_out_EXMem),
       .Branch_in_Mem (Branch_out_EXMem),
@@ -246,11 +239,10 @@ module Pipeline_CPU (
    wire [ 4:0] Rd_addr_out_MemWB;
    wire [ 1:0] MemtoReg_out_MemWB;
    wire        RegWrite_out_MemWB;
+
    Mem_reg_WB Mem_reg_WB (
-`ifdef SIM
       .debug_in_MemWB (debug_out_Mem),
       .debug_out_MemWB(debug_out_MemWB),
-`endif
 
       .clk_MemWB        (clk),
       .rst_MemWB        (rst),
@@ -272,10 +264,8 @@ module Pipeline_CPU (
 
 
    Pipeline_WB Write_Back (
-`ifdef SIM
       .debug_in_WB (debug_out_MemWB),
       .debug_out_WB(debug_out_WB),
-`endif
 
       .PC4_in_WB     (PC4_out_MemWB),
       .ALU_in_WB     (ALU_out_MemWB),
@@ -285,8 +275,41 @@ module Pipeline_CPU (
    );
 
    assign PC_out_ID = PC_out_IFID;
-   assign inst_ID   = inst_out_IFID;
-   assign Addr_out  = ALU_out_EXMem;
-   assign Data_out  = Rs2_out_EXMem;
+   assign inst_ID = inst_out_IFID;
+   assign Addr_out = ALU_out_EXMem;
+   assign Data_out = Rs2_out_EXMem;
    assign MemRW_Mem = MemRW_out_EXMem;
+
+   // vga singals
+   assign vga_signals.IdEx_inst = debug_out_IDEX.inst;
+   assign vga_signals.IdEx_rd = debug_out_IDEX.inst[11:7];
+   assign vga_signals.IdEx_rs1 = debug_out_IDEX.inst[19:15];
+   assign vga_signals.IdEx_rs2 = debug_out_IDEX.inst[24:20];
+   assign vga_signals.IdEx_rs1_val = Rs1_out_IDEX;
+   assign vga_signals.IdEx_rs2_val = Rs2_out_IDEX;
+   assign vga_signals.IdEx_reg_wen = RegWrite_out_IDEX;
+   assign vga_signals.IdEx_is_imm = 1'b1;
+   assign vga_signals.IdEx_imm = Imm_out_IDEX;
+   // assign vga_signals.Ex_forward_rs1 = ;
+   // assign vga_signals.Ex_forward_rs2 = ;
+   assign vga_signals.IdEx_mem_wen = MemRW_out_IDEX;
+   assign vga_signals.IdEx_mem_ren = 1'b1;
+   assign vga_signals.IdEx_is_branch = Branch_out_IDEX;
+   assign vga_signals.IdEx_is_jal = 1'b0;
+   assign vga_signals.IdEx_is_jalr = Jump_out_IDEX;
+   assign vga_signals.IdEx_is_auipc = 1'b0;
+   assign vga_signals.IdEx_is_lui = 1'b0;
+   assign vga_signals.IdEx_alu_ctrl = ALU_control_out_IDEX;
+   assign vga_signals.IdEx_cmp_ctrl = 3'b0;
+   assign vga_signals.ExMa_pc = debug_out_EXMem.PC;
+   assign vga_signals.ExMa_inst = debug_out_EXMem.inst;
+   assign vga_signals.ExMa_rd = Rd_addr_out_EXMem;
+   assign vga_signals.ExMa_reg_wen = RegWrite_out_EXMem;
+   assign vga_signals.ExMa_mem_ren = 1'b1;
+   assign vga_signals.ExMa_is_jal = 1'b0;
+   assign vga_signals.ExMa_is_jalr = Jump_out_EXMem;
+   assign vga_signals.MaWb_pc = debug_out_MemWB.PC;
+   assign vga_signals.MaWb_inst = debug_out_MemWB.inst;
+   assign vga_signals.MaWb_rd = Rd_addr_out_MemWB;
+   assign vga_signals.MaWb_reg_wen = RegWrite_out_MemWB;
 endmodule
