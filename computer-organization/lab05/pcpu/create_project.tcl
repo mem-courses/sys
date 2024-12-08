@@ -1,6 +1,6 @@
 # run: vivado -mode tcl -source create_project.tcl
 
-set project_name "lab4-3"
+set project_name "lab5"
 set target_dir "./prj"
 
 # set project parameters
@@ -13,8 +13,7 @@ create_project -force $project_name $target_dir -part xc7a100tcsg324-1
 set source_dirs [list \
   "./user/src" \
   "../../public/common" \
-  "../../public/ip" \
-  "../../public/VGA"
+  "../../public/ip"
 ]
 foreach source_dir $source_dirs {
   add_files -scan_for_includes -fileset sources_1 $source_dir
@@ -29,7 +28,7 @@ add_files -scan_for_includes -fileset sim_1 ./user/sim
 add_files -scan_for_includes -fileset constrs_1 ./user/data
 
 # set socTest_tb.v as top module when simulation
-set_property top "socTest_tb" [get_filesets sim_1]
+set_property top "socTest_Pipe_tb" [get_filesets sim_1]
 set_property top_lib xil_defaultlib [get_filesets sim_1]
 
 # create ROM_D with I_mem.coe
@@ -49,21 +48,22 @@ create_ip -name blk_mem_gen \
   -vendor xilinx.com -library ip -version 8.4
 set_property -dict [list \
   CONFIG.Memory_Type {Single_Port_RAM} \
-  CONFIG.Operating_Mode_A {NO_CHANGE} \
   CONFIG.Write_Width_A {32} \
   CONFIG.Write_Depth_A {1024} \
+  CONFIG.Read_Width_A {32} \
+  CONFIG.Write_Width_B {32} \
+  CONFIG.Read_Width_B {32} \
   CONFIG.Enable_A {Always_Enabled} \
   CONFIG.Load_Init_File {true} \
   CONFIG.Coe_File [file normalize ./user/data/D_mem.coe] \
   CONFIG.Fill_Remaining_Memory_Locations {true} \
   CONFIG.Remaining_Memory_Locations {0} \
+  CONFIG.Use_RSTA_Pin {false} \
+  CONFIG.Port_A_Write_Rate {50} \
+  CONFIG.Port_A_Clock {100} \
+  CONFIG.Port_A_Enable_Rate {100} \
   CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
 ] [get_ips RAM_B]
-  # CONFIG.Read_Width_A {32} \
-  # CONFIG.Use_RSTA_Pin {false} \
-  # CONFIG.Port_A_Write_Rate {50} \
-  # CONFIG.Port_A_Clock {100} \
-  # CONFIG.Port_A_Enable_Rate {100} \
 
 update_compile_order -fileset sources_1
 update_compile_order -fileset sim_1
