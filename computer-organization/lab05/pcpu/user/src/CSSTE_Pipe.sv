@@ -42,6 +42,30 @@ module CSSTE_Pipe (
    wire        counter1_OUT;
    wire        counter2_OUT;
 
+   always @(0);  // this line is to make the formatter happy
+   RV32_Regs_t   regs;
+   VGA_Signals_t vga_signals;
+
+   Pipeline_CPU U1 (
+      .clk(Clk_CPU),
+      .rst(rst),
+
+      .Data_in    (Cpu_data4bus),
+      .inst_IF    (inst_IF),
+      .PC_out_IF  (PC_out_IF),
+      .PC_out_ID  (PC_out_ID),
+      .inst_ID    (inst_ID),
+      .PC_out_EX  (PC_out_EX),
+      .MemRW_Mem  (MemRW_Mem),
+      .Addr_out   (Addr_out),
+      .Data_out   (Data_out),
+      .Data_out_WB(Data_out_WB),
+
+      // external vga singals
+      .vga_signals(vga_signals),
+      .regs       (regs)
+   );
+
    ROM_D U2 (  // instruction memory
       .a  (PC_out_IF[11:2]),  // address
       .spo(inst_IF)           // instruction output
@@ -153,30 +177,6 @@ module CSSTE_Pipe (
       .counter2_OUT(counter2_OUT),
       .counter_out (counter_out)
    );
-
-   RV32_Regs_t   regs;
-   VGA_Signals_t vga_signals;
-
-   Pipeline_CPU U1 (
-      .clk(Clk_CPU),
-      .rst(rst),
-
-      .Data_in    (Cpu_data4bus),
-      .inst_IF    (inst_IF),
-      .PC_out_IF  (PC_out_IF),
-      .PC_out_ID  (PC_out_ID),
-      .inst_ID    (inst_ID),
-      .PC_out_EX  (PC_out_EX),
-      .MemRW_Mem  (MemRW_Mem),
-      .Addr_out   (Addr_out),
-      .Data_out   (Data_out),
-      .Data_out_WB(Data_out_WB),
-
-      // external vga singals
-      .vga_signals(vga_signals),
-      .regs       (regs)
-   );
-
 
    VGA U11 (
       .clk_25m (clkdiv[1]),

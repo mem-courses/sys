@@ -17,7 +17,7 @@ module socTest_Pipe (
    wire [31:0] Data_out;
    wire [31:0] Data_out_WB;
 
-   always @(0);  // this line is to make formatter happy
+   always @(0);  // this line is to make the formatter happy
    RV32_Regs_t   regs;
    VGA_Signals_t vga_signals;
 
