@@ -1,7 +1,12 @@
 package pcpu;
 
    typedef struct packed {
-      // 使用 packed 关键字确保结构体中的数据是紧密排列的
+      // note: 在 struct 中使用 packed 关键字确保结构体中的数据是紧密排列的
+      logic [31:0] PC;
+      logic [31:0] inst;
+   } Debug_t;
+
+   typedef struct packed {
       logic [31:0] x0;
       logic [31:0] ra;
       logic [31:0] sp;
@@ -34,7 +39,7 @@ package pcpu;
       logic [31:0] t4;
       logic [31:0] t5;
       logic [31:0] t6;
-   } rv32_regs_t;
+   } RV32_Regs_t;
 
    typedef struct packed {
       // ID/EX
@@ -46,6 +51,43 @@ package pcpu;
       logic        IdEx_reg_wen;
       logic        IdEx_is_imm;
       logic [31:0] IdEx_imm;
-   } vga_singals_t;
+   } vga_signals_t;
+
+   localparam string log_filename = "sim_log.txt";
+
+   function void log_reset();
+      integer file;
+      file = $fopen(log_filename, "w");  // this will make the file empty
+      if (file) begin
+         $fclose(file);
+      end else begin
+         $display("Error: Unable to open file %s", log_filename);
+      end
+   endfunction
+
+   function void log_plain(string text);
+      // $display(text);
+      integer log_file;
+      log_file = $fopen(log_filename, "a");  // append mode is required
+      if (log_file) begin
+         $fwrite(log_file, text);
+         $fwrite(log_file, "\n");
+         $fclose(log_file);
+      end else begin
+         $display("Error: Unable to open file %s", log_filename);
+      end
+   endfunction
+
+   function void log_data(string stage, string name, int val);
+      string message;
+      message = $sformatf("[%3s] %s: %d", stage, name, val);
+      log_plain(message);
+   endfunction
+
+   function void log_message(string stage, string message);
+      string message;
+      message = $sformatf("[%3s] %s", stage, message);
+      log_plain(message);
+   endfunction
 
 endpackage

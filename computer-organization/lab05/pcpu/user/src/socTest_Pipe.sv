@@ -18,6 +18,9 @@ module socTest_Pipe (
    wire [31:0] Data_out;
    wire [31:0] Data_out_WB;
 
+   always @(0);
+   RV32_Regs_t regs;
+
    Pipeline_CPU U1 (
       .clk        (clk),
       .rst        (rst),
@@ -34,7 +37,7 @@ module socTest_Pipe (
       .Data_out_WB(Data_out_WB),
 
       .regs       (regs),
-      .vga_singals(vga_singals)
+      .vga_signals(vga_signals)
    );
 
    // instruction memory
@@ -51,7 +54,11 @@ module socTest_Pipe (
       .dina (Data_out),
       .douta(spo_RAM)
    );
-
+   always @(posedge clk) begin
+      if (MemRW_Ex) begin
+         $display("[mem] write with => Addr_out: %h, Data_out: %h", Addr_out, Data_out);
+      end
+   end
 
 endmodule
 

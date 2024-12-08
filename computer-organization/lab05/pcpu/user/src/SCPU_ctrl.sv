@@ -4,7 +4,6 @@ module SCPU_ctrl (
    input      [6:0] OPcode,      // inst[6:0]
    input      [2:0] Fun3,        // inst[14:12]
    input            Fun7,        // inst[30] / Func7[5]
-   input            MIO_ready,   // CPU Wait
    output reg [2:0] ImmSel,
    output reg       ALUSrc_B,
    output reg [1:0] MemtoReg,

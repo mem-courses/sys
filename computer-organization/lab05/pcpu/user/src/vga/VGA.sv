@@ -7,7 +7,7 @@ module VGA (
    input wire clk_100m,
    input wire rst,
 
-   input wire rv32_regs_t   regs,
+   input wire RV32_Regs_t   regs,
    input wire vga_signals_t vga_signals,
 
    input wire [31:0] PC_IF,

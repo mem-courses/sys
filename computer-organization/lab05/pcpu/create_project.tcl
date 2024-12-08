@@ -31,6 +31,9 @@ add_files -scan_for_includes -fileset constrs_1 ./user/data
 set_property top "socTest_Pipe_tb" [get_filesets sim_1]
 set_property top_lib xil_defaultlib [get_filesets sim_1]
 
+# set defines for simulation
+set_property verilog_define SIM=SIM [get_filesets sim_1]
+
 # create ROM_D with I_mem.coe
 create_ip -name dist_mem_gen \
   -module_name ROM_D \
