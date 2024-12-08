@@ -2,9 +2,9 @@
 `include "Defines.vh"
 
 module ExtSCPU (
-   input wire clk,
-   input wire rst,
-   input wire MIO_ready,
+   input wire        clk,
+   input wire        rst,
+   input wire        MIO_ready,
    input wire [31:0] inst_in,
    input wire [31:0] Data_in,
 
@@ -19,8 +19,8 @@ module ExtSCPU (
    output wire [31:0] vga_b_val,
    output wire [ 3:0] vga_alu_ctrl,
 
-   output wire CPU_MIO,
-   output wire MemRW,
+   output wire        CPU_MIO,
+   output wire        MemRW,
    output wire [31:0] PC_out,
    output wire [31:0] Data_out,
    output wire [31:0] Addr_out
@@ -59,9 +59,9 @@ module ExtSCPU (
       .vga_a_val  (vga_a_val),
       .vga_b_val  (vga_b_val),
 
-      .ALU_out    (Addr_out),
-      .Data_out   (Data_out),
-      .PC_out     (PC_out)
+      .ALU_out (Addr_out),
+      .Data_out(Data_out),
+      .PC_out  (PC_out)
    );
 
    SCPU_ctrl_more SCPU_ctrl_inst (

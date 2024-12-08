@@ -2,13 +2,13 @@
 `include "Defines.vh"
 
 module Regs (
-   input clk,
-   input rst,
-   input [4:0] Rs1_addr,
-   input [4:0] Rs2_addr,
-   input [4:0] Wt_addr,
+   input        clk,
+   input        rst,
+   input [ 4:0] Rs1_addr,
+   input [ 4:0] Rs2_addr,
+   input [ 4:0] Wt_addr,
    input [31:0] Wt_data,
-   input RegWrite,
+   input        RegWrite,
 
    `RegFile_Regs_output
    output [31:0] Rs1_data,
