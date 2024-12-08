@@ -1,3 +1,5 @@
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets RSTN_IBUF]
+
 set_property IOSTANDARD LVCMOS33  [get_ports  clk_100mhz]
 set_property PACKAGE_PIN E3     [get_ports  clk_100mhz]
 set_property IOSTANDARD LVCMOS33  [get_ports  RSTN]

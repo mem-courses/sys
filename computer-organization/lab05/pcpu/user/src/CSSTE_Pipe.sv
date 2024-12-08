@@ -26,8 +26,12 @@ module CSSTE_Pipe (
    wire [31:0] clkdiv;
    wire [31:0] Addr_out;
    wire [31:0] Data_out;
+   wire [31:0] Data_out_WB;
    wire [31:0] PC_out_IF;
+   wire [31:0] PC_out_ID;
+   wire [31:0] PC_out_EX;
    wire [31:0] inst_IF;
+   wire [31:0] inst_ID;
    wire [31:0] Cpu_data4bus;
    wire [31:0] douta;
    wire [31:0] ram_data_in;
@@ -188,7 +192,7 @@ module CSSTE_Pipe (
       .inst_IF    (inst_IF),
       .PC_ID      (PC_out_ID),
       .inst_ID    (inst_ID),
-      .PC_Ex      (PC_out_Ex),
+      .PC_Ex      (PC_out_EX),
       .MemRW_Mem  (MemRW_Mem),
       .Data_out   (Data_out),
       .Addr_out   (Addr_out),

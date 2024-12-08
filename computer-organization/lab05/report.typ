@@ -114,7 +114,7 @@
 
 #pagebreak(weak: true)
 
-= Lab05-2 流水线处理器—IF、ID设计与集成
+= Lab05-2：IF、ID设计与集成
 
 == 实验目的
 
@@ -182,7 +182,7 @@
 
 #pagebreak(weak: true)
 
-= Lab05-3 流水线处理器—EX、MEM、WB设计与集成
+= Lab05-3：EX、MEM、WB设计与集成
 
 == 实验目的
 
@@ -264,6 +264,13 @@
 如下图所示，程序 P 的仿真结果与预期一致。
 
 #align(center, image("images/2024-12-08-22-55-29.png", width: 120%))
+
+=== 程序 P 的上板验证
+
+如下图所示，所有指令执行完成后，寄存器的值与预期一致。
+
+#align(center, image("images/2024-12-09-01-25-12.png", width: 100%))
+
 
 #pagebreak(weak: true)
 

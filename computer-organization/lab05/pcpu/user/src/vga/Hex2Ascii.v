@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 
 module Hex2Ascii (
    input  wire [3:0] hex,

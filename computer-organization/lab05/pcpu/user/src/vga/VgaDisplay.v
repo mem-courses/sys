@@ -12,7 +12,7 @@ module VgaDisplay (
 );
 
    (* ram_style = "block" *) reg [7:0] display_data[0:4095];
-   initial $readmemh("src/vga/vga_debugger.mem", display_data);
+   initial $readmemh("`__FILE__/../vga_debugger.mem", display_data);
 
    wire [11:0] text_index = (vga_y / 16) * 80 + vga_x / 8;
    // I don't know why I need this '- (vga_y / 16)' ...
@@ -22,7 +22,7 @@ module VgaDisplay (
    wire [11:0] font_addr = text_ascii * 16 + font_y;
 
    (* ram_style = "block" *) reg [7:0] fonts_data[0:4095];
-   initial $readmemh("src/vga/font_8x16.mem", fonts_data);
+   initial $readmemh("`__FILE__/../font_8x16.mem", fonts_data);
    wire [7:0] font_data = fonts_data[font_addr];
 
    assign {vga_r, vga_g, vga_b} = (video_on & font_data[7-font_x]) ? 12'hfff : 12'h0;

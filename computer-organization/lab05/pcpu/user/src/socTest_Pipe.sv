@@ -12,7 +12,7 @@ module socTest_Pipe (
    wire [31:0] PC_out_ID;
    wire [31:0] PC_out_IF;
    wire [31:0] inst_ID;
-   wire [31:0] PC_out_Ex;
+   wire [31:0] PC_out_EX;
    wire [31:0] Addr_out;
    wire [31:0] Data_out;
    wire [31:0] Data_out_WB;
@@ -29,7 +29,7 @@ module socTest_Pipe (
       .PC_out_IF  (PC_out_IF),
       .PC_out_ID  (PC_out_ID),
       .inst_ID    (inst_ID),
-      .PC_out_EX  (PC_out_Ex),
+      .PC_out_EX  (PC_out_EX),
       .MemRW_Mem  (MemRW_Mem),
       .Addr_out   (Addr_out),
       .Data_out   (Data_out),

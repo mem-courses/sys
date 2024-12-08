@@ -27,8 +27,14 @@ module Pipeline_CPU (
    Debug_t debug_out_Mem;
    Debug_t debug_out_MemWB;
    Debug_t debug_out_WB;
+   always @(0);  // this line is to make the formatter happy
    // =========== debugging signals ===========
 
+   // reversed signals
+   wire        PCSrc_out_Mem;
+   wire [31:0] PC_out_EXMem;
+   wire [ 4:0] Rd_addr_out_MemWB;
+   wire        RegWrite_out_MemWB;
 
    Pipeline_IF Instruction_Fetch (
       .clk_IF   (clk),
@@ -169,7 +175,6 @@ module Pipeline_CPU (
    );
 
 
-   wire [31:0] PC_out_EXMem;
    wire [31:0] PC4_out_EXMem;
    wire [31:0] ALU_out_EXMem;
    wire [31:0] Rs2_out_EXMem;
@@ -216,9 +221,6 @@ module Pipeline_CPU (
       .RegWrite_out_EXMem(RegWrite_out_EXMem)
    );
 
-
-   wire PCSrc_out_Mem;
-
    Pipeline_Mem Memory_Access (
       .debug_in_Mem (debug_out_EX),
       .debug_out_Mem(debug_out_Mem),
@@ -234,9 +236,7 @@ module Pipeline_CPU (
    wire [31:0] PC4_out_MemWB;
    wire [31:0] ALU_out_MemWB;
    wire [31:0] DMem_data_out_MemWB;
-   wire [ 4:0] Rd_addr_out_MemWB;
    wire [ 1:0] MemtoReg_out_MemWB;
-   wire        RegWrite_out_MemWB;
 
    Mem_reg_WB Mem_reg_WB (
       .debug_in_MemWB (debug_out_Mem),
