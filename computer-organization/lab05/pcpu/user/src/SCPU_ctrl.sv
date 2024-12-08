@@ -46,7 +46,7 @@ module SCPU_ctrl (
          BranchN <= 1'b0;
       end
 
-      Jump <= OPcode == 7'b1100111;
+      Jump <= (OPcode == 7'b1101111) ? 1'b1 : 1'b0;  // 本实验中只需要实现jal，不需要实现jalr
 
       case (OPcode)
          // R-type ALU
@@ -94,24 +94,24 @@ module SCPU_ctrl (
             RegWrite <= 1'b0;
             MemtoReg <= 0; // don't care
          end
-         // // jal
-         // 7'b1101111: begin  //J
-         //    ImmSel   <= ImmSel_J;
-         //    ALUSrc_B <= ALUSrc_B_Imm;
-         //    ALU_op   <= 2'b00; // don't care
-         //    MemRW    <= 1'b0;  // don't care
-         //    RegWrite <= 1'b1;
-         //    MemtoReg <= MemtoReg_PC4;
-         // end
-         // jalr
-         7'b1100111: begin
-            ImmSel   <= ImmSel_I; // not J-type!
+         // jal
+         7'b1101111: begin  //J
+            ImmSel   <= ImmSel_J;
             ALUSrc_B <= ALUSrc_B_Imm;
-            ALU_op   <= ALU_op_Add;
-            MemRW    <= 1'b0; // don't care
+            ALU_op   <= 2'b00; // don't care
+            MemRW    <= 1'b0;  // don't care
             RegWrite <= 1'b1;
             MemtoReg <= MemtoReg_PC4;
          end
+         // jalr
+         // 7'b1100111: begin
+         //    ImmSel   <= ImmSel_I; // not J-type!
+         //    ALUSrc_B <= ALUSrc_B_Imm;
+         //    ALU_op   <= ALU_op_Add;
+         //    MemRW    <= 1'b0; // don't care
+         //    RegWrite <= 1'b1;
+         //    MemtoReg <= MemtoReg_PC4;
+         // end
          // lui
          7'b0110111: begin
             ImmSel   <= ImmSel_U;
