@@ -13,7 +13,6 @@ create_project -force $project_name $target_dir -part xc7a100tcsg324-1
 set source_dirs [list \
   "./user/src" \
   "../../public/common" \
-  "../../public/VGA_pipeline" \
   "../../public/ip"
 ]
 foreach source_dir $source_dirs {

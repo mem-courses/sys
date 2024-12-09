@@ -26,8 +26,4 @@ module Pipeline_IF (
    );
 
    assign PC_out_IF = Q;
-
-   //    always @(posedge clk_IF) begin
-   //       $display("[IF] PC_in: %h; PC_out: %h", PC_in_IF, PC_out_IF);
-   //    end
 endmodule

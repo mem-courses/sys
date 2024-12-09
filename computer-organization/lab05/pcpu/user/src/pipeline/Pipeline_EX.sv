@@ -9,8 +9,8 @@ module Pipeline_EX (
    input        ALUSrc_B_in_EX,
    input [ 3:0] ALU_control_in_EX,
 
-   output [31:0] PC_out_EX,
-   output [31:0] PC4_out_EX,
+   output [31:0] PC_out_EX,   // PC + imm
+   output [31:0] PC4_out_EX,  // PC + 4
    output [31:0] ALU_out_EX,
    output [31:0] Rs2_out_EX,
    output        zero_out_EX

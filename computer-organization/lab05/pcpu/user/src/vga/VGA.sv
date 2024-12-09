@@ -16,7 +16,6 @@ module VGA (
    input wire        MemRW_Mem,
    input wire [31:0] Data_out,
    input wire [31:0] Addr_out,
-   input wire [31:0] Data_out_WB,
 
    output wire       hs,
    output wire       vs,
@@ -61,9 +60,9 @@ module VGA (
       .inst          (inst_IF),
 
       // 各阶段调试输出
-      .IfId_pc        (PC_ID),
-      .IfId_inst      (inst_ID),
-      .IdEx_pc        (PC_Ex),
+      .IfId_pc        (vga_signals.IfId_pc),
+      .IfId_inst      (vga_signals.IfId_inst),
+      .IdEx_pc        (vga_signals.IdEx_pc),
       .IdEx_inst      (vga_signals.IdEx_inst),
       .IdEx_rd        (vga_signals.IdEx_rd),
       .IdEx_rs1       (vga_signals.IdEx_rs1),
@@ -98,7 +97,7 @@ module VGA (
       .MaWb_inst      (vga_signals.MaWb_inst),
       .MaWb_rd        (vga_signals.MaWb_rd),
       .MaWb_reg_wen   (vga_signals.MaWb_reg_wen),
-      .MaWb_reg_i_data(Data_out_WB),
+      .MaWb_reg_i_data(vga_signals.MaWb_reg_i_data),
 
       // 寄存器相关接口
       .x0 (regs.x0),

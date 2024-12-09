@@ -1,24 +1,21 @@
 import pcpu::*;
 
 module Pipeline_CPU (
-   input  wire        clk,
-   input  wire        rst,
-   input  wire [31:0] Data_in,
-   input  wire [31:0] inst_IF,
+   input wire        clk,
+   input wire        rst,
+   input wire [31:0] Data_in,
+   input wire [31:0] inst_IF,
+
    output wire [31:0] PC_out_IF,
-   output wire [31:0] PC_out_ID,
-   output wire [31:0] inst_ID,
-   output wire [31:0] PC_out_EX,
    output wire        MemRW_Mem,
    output wire [31:0] Addr_out,
    output wire [31:0] Data_out,
-   output wire [31:0] Data_out_WB,
 
    output RV32_Regs_t   regs,
    output VGA_Signals_t vga_signals
 );
 
-   // =========== debugging signals ===========
+   // debugging signals
    Debug_t debug_out_IFID;
    Debug_t debug_out_ID;
    Debug_t debug_out_IDEX;
@@ -28,14 +25,15 @@ module Pipeline_CPU (
    Debug_t debug_out_MemWB;
    Debug_t debug_out_WB;
    always @(0);  // this line is to make the formatter happy
-   // =========== debugging signals ===========
 
    // reversed signals
    wire        PCSrc_out_Mem;
    wire [31:0] PC_out_EXMem;
    wire [ 4:0] Rd_addr_out_MemWB;
    wire        RegWrite_out_MemWB;
+   wire [31:0] Data_out_WB;
 
+   // IF
    Pipeline_IF Instruction_Fetch (
       .clk_IF   (clk),
       .rst_IF   (rst),
@@ -45,9 +43,10 @@ module Pipeline_CPU (
       .PC_out_IF(PC_out_IF)
    );
 
-
+   // IF/ID
    wire [31:0] PC_out_IFID;
    wire [31:0] inst_out_IFID;
+
    IF_reg_ID IF_reg_ID (
       .debug_out_IFID(debug_out_IFID),
 
@@ -61,7 +60,7 @@ module Pipeline_CPU (
       .inst_out_IFID(inst_out_IFID)
    );
 
-
+   // ID
    wire [ 4:0] Rd_addr_out_ID;
    wire [31:0] Rs1_out_ID;
    wire [31:0] Rs2_out_ID;
@@ -100,6 +99,7 @@ module Pipeline_CPU (
       .regs           (regs)
    );
 
+   // ID/EX
    wire [31:0] PC_out_IDEX;
    wire [31:0] Rs1_out_IDEX;
    wire [31:0] Rs2_out_IDEX;
@@ -150,7 +150,7 @@ module Pipeline_CPU (
       .RegWrite_out_IDEX   (RegWrite_out_IDEX)
    );
 
-
+   // EX
    wire [31:0] PC4_out_EX;
    wire [31:0] ALU_out_EX;
    wire [31:0] Rs2_out_EX;
@@ -167,14 +167,14 @@ module Pipeline_CPU (
       .ALUSrc_B_in_EX   (ALUSrc_B_out_IDEX),
       .ALU_control_in_EX(ALU_control_out_IDEX),
 
-      .PC_out_EX  (PC_out_EX),
-      .PC4_out_EX (PC4_out_EX),
+      .PC_out_EX  (PC_out_EX),    // PC + imm
+      .PC4_out_EX (PC4_out_EX),   // PC + 4
       .zero_out_EX(zero_out_EX),
       .ALU_out_EX (ALU_out_EX),
       .Rs2_out_EX (Rs2_out_EX)
    );
 
-
+   // EX/Mem
    wire [31:0] PC4_out_EXMem;
    wire [31:0] ALU_out_EXMem;
    wire [31:0] Rs2_out_EXMem;
@@ -221,6 +221,7 @@ module Pipeline_CPU (
       .RegWrite_out_EXMem(RegWrite_out_EXMem)
    );
 
+   // Mem
    Pipeline_Mem Memory_Access (
       .debug_in_Mem (debug_out_EXMem),
       .debug_out_Mem(debug_out_Mem),
@@ -232,7 +233,7 @@ module Pipeline_CPU (
       .PCSrc_out_Mem (PCSrc_out_Mem)
    );
 
-
+   // Mem/WB
    wire [31:0] PC4_out_MemWB;
    wire [31:0] ALU_out_MemWB;
    wire [31:0] DMem_data_out_MemWB;
@@ -260,7 +261,7 @@ module Pipeline_CPU (
       .RegWrite_out_MemWB (RegWrite_out_MemWB)
    );
 
-
+   // WB
    Pipeline_WB Write_Back (
       .debug_in_WB (debug_out_MemWB),
       .debug_out_WB(debug_out_WB),
@@ -272,13 +273,14 @@ module Pipeline_CPU (
       .Data_out_WB   (Data_out_WB)
    );
 
-   assign PC_out_ID = PC_out_IFID;
-   assign inst_ID = inst_out_IFID;
    assign Addr_out = ALU_out_EXMem;
    assign Data_out = Rs2_out_EXMem;
    assign MemRW_Mem = MemRW_out_EXMem;
 
    // vga singals
+   assign vga_signals.IfId_pc = debug_out_IFID.PC;
+   assign vga_signals.IfId_inst = debug_out_IFID.inst;
+   assign vga_signals.IdEx_pc = debug_out_IDEX.PC;
    assign vga_signals.IdEx_inst = debug_out_IDEX.inst;
    assign vga_signals.IdEx_rd = debug_out_IDEX.inst[11:7];
    assign vga_signals.IdEx_rs1 = debug_out_IDEX.inst[19:15];
@@ -310,4 +312,5 @@ module Pipeline_CPU (
    assign vga_signals.MaWb_inst = debug_out_MemWB.inst;
    assign vga_signals.MaWb_rd = Rd_addr_out_MemWB;
    assign vga_signals.MaWb_reg_wen = RegWrite_out_MemWB;
+   assign vga_signals.MaWb_reg_i_data = Data_out_WB;
 endmodule

@@ -36,7 +36,11 @@ package pcpu;
    } RV32_Regs_t;
 
    typedef struct packed {
+      // IF/ID
+      logic [31:0] IfId_pc;
+      logic [31:0] IfId_inst;
       // ID/EX
+      logic [31:0] IdEx_pc;
       logic [31:0] IdEx_inst;
       logic [4:0]  IdEx_rd;
       logic [4:0]  IdEx_rs1;
@@ -57,6 +61,7 @@ package pcpu;
       logic        IdEx_is_lui;
       logic [3:0]  IdEx_alu_ctrl;
       logic [2:0]  IdEx_cmp_ctrl;
+      // EX/Mem
       logic [31:0] ExMa_pc;
       logic [31:0] ExMa_inst;
       logic [4:0]  ExMa_rd;
@@ -64,10 +69,12 @@ package pcpu;
       logic        ExMa_mem_ren;
       logic        ExMa_is_jal;
       logic        ExMa_is_jalr;
+      // Mem/WB
       logic [31:0] MaWb_pc;
       logic [31:0] MaWb_inst;
       logic [4:0]  MaWb_rd;
       logic        MaWb_reg_wen;
+      logic [31:0] MaWb_reg_i_data;
    } VGA_Signals_t;
 
    // ===================== debugger =====================
