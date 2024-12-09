@@ -12,6 +12,7 @@ create_project -force $project_name $target_dir -part xc7a100tcsg324-1
 # add source files
 set source_dirs [list \
   "./user/src" \
+  "../pcpu/user/src" \
   "../../public/common" \
   "../../public/VGA_pipeline" \
   "../../public/ip"
@@ -29,7 +30,7 @@ add_files -scan_for_includes -fileset sim_1 ./user/sim
 add_files -scan_for_includes -fileset constrs_1 ./user/data
 
 # set socTest_tb.v as top module when simulation
-set_property top "socTest_Pipe_tb" [get_filesets sim_1]
+set_property top "socTest_Pipe_stall_tb" [get_filesets sim_1]
 set_property top_lib xil_defaultlib [get_filesets sim_1]
 
 # set defines for simulation
