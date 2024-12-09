@@ -37,7 +37,7 @@ module Ex_reg_Mem_stall (
 );
    always_ff @(posedge clk_EXMem) begin
       debug_out_EXMem <= debug_in_EXMem;
-      log_msg("Mem", "EX -> Mem", debug_in_EXMem);
+      log_data("Mem", "ALU_res", ALU_in_EXMem, debug_in_EXMem);
       if (MemRW_in_EXMem) begin
          log_data("Mem", "Address", ALU_in_EXMem, debug_in_EXMem);
       end

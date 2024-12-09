@@ -330,4 +330,44 @@
     #codex(read("./pcpu_stall/user/src/pipeline/Pipeline_ID_stall.sv"), lang: "systemverilog")
   ]
 
++ #[
+    修改 `ID_reg_EX` 模块，同样需要支持插入 NOP 指令的功能。
+
+    #codex(read("./pcpu_stall/user/src/pipeline/ID_reg_EX_stall.sv"), lang: "systemverilog")
+  ]
+
++ #[
+    此外，`EX_reg_Mem`、`Mem_reg_WB` 模块也需要进行更改，不过只需要把 valid 信号传递出去即可，这里就不上代码了。
+  ]
+
++ #[
+    将上述的修改应用到 `Pipeline_CPU_stall` 模块中：
+
+    #codex(read("./pcpu_stall/user/src/Pipeline_CPU_stall.sv"), lang: "systemverilog")
+  ]
+
++ #[
+    将 ROM 软核的初始内容替换为下发的 `H.coe` 文件并进行仿真测试：
+
+    #codex(read("./requirements/h.coe"), lang: "text")
+  ]
+
++ #[
+    仿真测试通过后，进行物理验证。
+
+    另外，上一实验中的程序 `P.coe` 程序也需要进行仿真测试和上板验证。
+  ]
+
 == 实验结果与分析
+
+=== 程序 P 的仿真验证
+
+=== 程序 P 的仿真验证
+
+=== 程序 H 的仿真验证
+
+#align(center, image("images/2024-12-09-19-32-43.png", width: 120%))
+
+#align(center, image("images/2024-12-09-19-32-48.png", width: 120%))
+
+=== 程序 H 的仿真验证

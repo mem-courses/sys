@@ -8,7 +8,7 @@ module Mem_reg_WB (
    input [31:0] PC4_in_MemWB,
    input [ 4:0] Rd_addr_MemWB,
    input [31:0] ALU_in_MemWB,
-   input [31:0] DMem_data_MemWB,
+   input [31:0] DMem_data_in_MemWB,
    input [ 1:0] MemtoReg_in_MemWB,
    input        RegWrite_in_MemWB,
 
@@ -36,7 +36,7 @@ module Mem_reg_WB (
          PC4_out_MemWB <= PC4_in_MemWB;
          Rd_addr_out_MemWB <= Rd_addr_MemWB;
          ALU_out_MemWB <= ALU_in_MemWB;
-         DMem_data_out_MemWB <= DMem_data_MemWB;
+         DMem_data_out_MemWB <= DMem_data_in_MemWB;
          MemtoReg_out_MemWB <= MemtoReg_in_MemWB;
          RegWrite_out_MemWB <= RegWrite_in_MemWB;
       end
