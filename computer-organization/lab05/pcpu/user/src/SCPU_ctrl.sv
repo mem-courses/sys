@@ -46,7 +46,7 @@ module SCPU_ctrl (
          BranchN <= 1'b0;
       end
 
-      Jump <= (OPcode == 7'b1101111) ? 1'b1 : 1'b0;  // 本实验中只需要实现jal，不需要实现jalr
+      Jump <= (OPcode == 7'b1101111) || (OPcode == 7'b1100111);
 
       case (OPcode)
          // R-type ALU

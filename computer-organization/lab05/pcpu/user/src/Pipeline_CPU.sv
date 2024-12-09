@@ -14,8 +14,8 @@ module Pipeline_CPU (
    output wire [31:0] Data_out,
    output wire [31:0] Data_out_WB,
 
-   output wire RV32_Regs_t   regs,
-   output wire VGA_Signals_t vga_signals
+   output RV32_Regs_t   regs,
+   output VGA_Signals_t vga_signals
 );
 
    // =========== debugging signals ===========
@@ -222,7 +222,7 @@ module Pipeline_CPU (
    );
 
    Pipeline_Mem Memory_Access (
-      .debug_in_Mem (debug_out_EX),
+      .debug_in_Mem (debug_out_EXMem),
       .debug_out_Mem(debug_out_Mem),
 
       .zero_in_Mem   (zero_out_EXMem),

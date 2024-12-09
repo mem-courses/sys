@@ -1,13 +1,13 @@
 import pcpu::*;
 
 module Regs (
-   input wire        clk,
-   input wire        rst,
-   input wire [ 4:0] Rs1_addr,
-   input wire [ 4:0] Rs2_addr,
-   input wire [ 4:0] Wt_addr,
-   input wire [31:0] Wt_data,
-   input wire        RegWrite,
+   input        clk,
+   input        rst,
+   input [ 4:0] Rs1_addr,
+   input [ 4:0] Rs2_addr,
+   input [ 4:0] Wt_addr,
+   input [31:0] Wt_data,
+   input        RegWrite,
 
    output reg [31:0] Rs1_data,
    output reg [31:0] Rs2_data,

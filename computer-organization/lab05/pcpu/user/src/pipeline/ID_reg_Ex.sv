@@ -35,7 +35,7 @@ module ID_reg_Ex (
    output reg [ 1:0] MemtoReg_out_IDEX,
    output reg        RegWrite_out_IDEX
 );
-   always @(posedge clk_IDEX) begin
+   always_ff @(posedge clk_IDEX) begin
       debug_out_IDEX <= debug_in_IDEX;
       log_data("EX", "Rs1", Rs1_in_IDEX, debug_in_IDEX);
       log_data("EX", "Rs2", Rs2_in_IDEX, debug_in_IDEX);
@@ -43,7 +43,7 @@ module ID_reg_Ex (
       log_data("EX", "ALU_ctrl", ALU_control_in_IDEX, debug_in_IDEX);
    end
 
-   always @(posedge clk_IDEX or posedge rst_IDEX) begin
+   always_ff @(posedge clk_IDEX or posedge rst_IDEX) begin
       if (rst_IDEX) begin
          PC_out_IDEX <= 32'b0;
          Rd_addr_out_IDEX <= 5'b0;

@@ -33,15 +33,16 @@ module Ex_reg_Mem (
    output reg [ 1:0] MemtoReg_out_EXMem,
    output reg        RegWrite_out_EXMem
 );
-   always @(posedge clk_EXMem) begin
+   always_ff @(posedge clk_EXMem) begin
       debug_out_EXMem <= debug_in_EXMem;
+      log_msg("Mem", "EX -> Mem", debug_in_EXMem);
       if (MemRW_in_EXMem) begin
          log_data("Mem", "Address", ALU_in_EXMem, debug_in_EXMem);
       end
    end
 
-   always @(posedge clk_EXMem or posedge rst_EXMem) begin
-      if (rst_EXMem == 1) begin
+   always_ff @(posedge clk_EXMem or posedge rst_EXMem) begin
+      if (rst_EXMem) begin
          PC_out_EXMem <= 32'b0;
          PC4_out_EXMem <= 32'b0;
          Rd_addr_out_EXMem <= 5'b0;

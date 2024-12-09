@@ -274,7 +274,7 @@
 
 #pagebreak(weak: true)
 
-= Lab05-4 流水线处理器—冒险与stall
+= Lab05-4：冒险与stall
 
 == 实验目的
 

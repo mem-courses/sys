@@ -19,12 +19,13 @@ module Mem_reg_WB (
    output reg [ 1:0] MemtoReg_out_MemWB,
    output reg        RegWrite_out_MemWB
 );
-   always @(posedge clk_MemWB) begin
+   always_ff @(posedge clk_MemWB) begin
       debug_out_MemWB <= debug_in_MemWB;
+      log_msg("WB", "Mem -> WB", debug_in_MemWB);
    end
 
-   always @(posedge clk_MemWB or posedge rst_MemWB)
-      if (rst_MemWB == 1) begin
+   always_ff @(posedge clk_MemWB or posedge rst_MemWB)
+      if (rst_MemWB) begin
          PC4_out_MemWB <= 32'b0;
          Rd_addr_out_MemWB <= 5'b0;
          ALU_out_MemWB <= 32'b0;
