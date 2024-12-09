@@ -50,8 +50,6 @@ package pcpu;
       logic        IdEx_reg_wen;
       logic        IdEx_is_imm;
       logic [31:0] IdEx_imm;
-      logic [31:0] Ex_forward_rs1;
-      logic [31:0] Ex_forward_rs2;
       logic        IdEx_mem_wen;
       logic        IdEx_mem_ren;
       logic        IdEx_is_branch;

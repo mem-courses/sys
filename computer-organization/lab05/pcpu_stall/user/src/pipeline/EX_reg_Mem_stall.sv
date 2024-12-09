@@ -19,7 +19,9 @@ module Ex_reg_Mem_stall (
    input        Jump_in_EXMem,
    input [ 1:0] MemtoReg_in_EXMem,
    input        RegWrite_in_EXMem,
+   input        valid_in_EXMem,     //有效
 
+   output reg [31:0] valid_out_EXMem,     //有效
    output reg [31:0] PC_out_EXMem,
    output reg [31:0] PC4_out_EXMem,
    output reg [ 4:0] Rd_addr_out_EXMem,
@@ -43,6 +45,7 @@ module Ex_reg_Mem_stall (
 
    always_ff @(posedge clk_EXMem or posedge rst_EXMem) begin
       if (rst_EXMem) begin
+         valid_out_EXMem <= 1'b0;
          PC_out_EXMem <= 32'b0;
          PC4_out_EXMem <= 32'b0;
          Rd_addr_out_EXMem <= 5'b0;
@@ -56,6 +59,7 @@ module Ex_reg_Mem_stall (
          MemtoReg_out_EXMem <= 2'b0;
          RegWrite_out_EXMem <= 1'b0;
       end else if (en_EXMem) begin
+         valid_out_EXMem <= valid_in_EXMem;
          PC_out_EXMem <= PC_in_EXMem;
          PC4_out_EXMem <= PC4_in_EXMem;
          Rd_addr_out_EXMem <= Rd_addr_EXMem;

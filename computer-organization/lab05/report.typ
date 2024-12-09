@@ -298,8 +298,36 @@
 
 == 实验实现方法与步骤
 
-+ #[
+#note[
+  这里为了区分，改动的模块都是以 `_stall` 结尾的。另外，我们给新增的输入输出信号都添加了注释，以作区分。
+]
 
++ #[
+    实现 stall 控制模块 `Stall_ctrl`，用于判断何时需要 stall 并插入 NOP 指令。
+
+    参考实验课件中的相关部分实现 Data Hazard 的 stall 处理：
+
+    #align(center, image("images/2024-12-09-16-43-28.png", width: 80%))
+
+    #align(center, image("images/2024-12-09-16-43-37.png", width: 80%))
+
+    参考实验课件中的相关部分实现 Control Hazard 的 stall 处理：
+
+    #align(center, image("images/2024-12-09-16-44-01.png", width: 70%))
+
+    #codex(read("./pcpu_stall/user/src/Stall_ctrl.sv"), lang: "systemverilog")
+  ]
+
++ #[
+    修改 `IF_reg_ID` 模块，实现插入 NOP 指令的功能。
+
+    #codex(read("./pcpu_stall/user/src/pipeline/IF_reg_ID_stall.sv"), lang: "systemverilog")
+  ]
+
++ #[
+    修改 ID 阶段的处理模块，引出判断判断寄存器是否被使用的信号，以及寄存器索引，供 stall 控制模块进行判断。
+
+    #codex(read("./pcpu_stall/user/src/pipeline/Pipeline_ID_stall.sv"), lang: "systemverilog")
   ]
 
 == 实验结果与分析

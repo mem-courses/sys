@@ -1,6 +1,6 @@
 # run: vivado -mode tcl -source create_project.tcl
 
-set project_name "lab5"
+set project_name "PCPU"
 set target_dir "./prj"
 
 # set project parameters

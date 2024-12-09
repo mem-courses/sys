@@ -1,6 +1,6 @@
 # run: vivado -mode tcl -source create_project.tcl
 
-set project_name "lab5"
+set project_name "PCPU_Stall"
 set target_dir "./prj"
 
 # set project parameters
@@ -29,7 +29,7 @@ add_files -scan_for_includes -fileset sim_1 ./user/sim
 add_files -scan_for_includes -fileset constrs_1 ./user/data
 
 # set CSSTE with stall as top module
-set_property top "socTest_Pipe_stall" [get_filesets sources_1]
+set_property top "CSSTE_Pipe_stall" [get_filesets sources_1]
 set_property top_lib xil_defaultlib [get_filesets sources_1]
 
 # set SOC test module as top when simulation

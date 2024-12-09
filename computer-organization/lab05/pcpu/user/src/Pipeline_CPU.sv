@@ -290,8 +290,6 @@ module Pipeline_CPU (
    assign vga_signals.IdEx_reg_wen = RegWrite_out_IDEX;
    assign vga_signals.IdEx_is_imm = 1'b1;
    assign vga_signals.IdEx_imm = Imm_out_IDEX;
-   // assign vga_signals.Ex_forward_rs1 = ;
-   // assign vga_signals.Ex_forward_rs2 = ;
    assign vga_signals.IdEx_mem_wen = MemRW_out_IDEX;
    assign vga_signals.IdEx_mem_ren = 1'b1;
    assign vga_signals.IdEx_is_branch = Branch_out_IDEX;

@@ -37,7 +37,7 @@ module socTest_Pipe_stall (
 
    // instruction memory
    ROM_D U2 (
-      .a  (PC_out_ID[11:2]),
+      .a  (PC_out_IF[11:2]),
       .spo(spo_ROM)
    );
 
