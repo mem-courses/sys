@@ -46,7 +46,7 @@ module Stall_ctrl (
    //    assign NOP_IDEX = (Data_stall) || (Control_stall);
    //    assign NOP_IFID = (Control_stall);
 
-   always @(*) begin
+   always_comb begin
       if ((Jump_out_EXMem || Branch_out_EXMem || BranchN_out_EXMem) && PCSrc) en_IF = (!Data_stall);
       else en_IF = (!Data_stall) && (!Control_stall);
       en_IFID  = (!Data_stall);

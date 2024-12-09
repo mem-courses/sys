@@ -1,6 +1,6 @@
 import pcpu::*;
 
-module IF_reg_ID (
+module IF_reg_ID_stall (
    output Debug_t debug_out_IFID,
 
    input        clk_IFID,      //寄存器时钟

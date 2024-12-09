@@ -1,6 +1,6 @@
 import pcpu::*;
 
-module Pipeline_ID (
+module Pipeline_ID_stall (
    input  Debug_t debug_in_ID,
    output Debug_t debug_out_ID,
 

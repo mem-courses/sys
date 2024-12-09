@@ -1,10 +1,10 @@
 import pcpu::*;
 
-module socTest_Pipe_tb ();
+module socTest_Pipe_stall_tb ();
    reg clk;
    reg rst;
 
-   socTest_Pipe m0 (
+   socTest_Pipe_stall m0 (
       .clk(clk),
       .rst(rst)
    );

@@ -1,4 +1,4 @@
-module Mem_reg_WB (
+module Mem_reg_WB_stall (
    input  Debug_t debug_in_MemWB,
    output Debug_t debug_out_MemWB,
 

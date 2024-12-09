@@ -1,6 +1,6 @@
 import pcpu::*;
 
-module Ex_reg_Mem (
+module Ex_reg_Mem_stall (
    input  Debug_t debug_in_EXMem,
    output Debug_t debug_out_EXMem,
 

@@ -26,12 +26,8 @@ module CSSTE_Pipe_stall (
    wire [31:0] clkdiv;
    wire [31:0] Addr_out;
    wire [31:0] Data_out;
-   wire [31:0] Data_out_WB;
    wire [31:0] PC_out_IF;
-   wire [31:0] PC_out_ID;
-   wire [31:0] PC_out_EX;
    wire [31:0] inst_IF;
-   wire [31:0] inst_ID;
    wire [31:0] Cpu_data4bus;
    wire [31:0] douta;
    wire [31:0] ram_data_in;
@@ -50,20 +46,16 @@ module CSSTE_Pipe_stall (
    RV32_Regs_t   regs;
    VGA_Signals_t vga_signals;
 
-   Pipeline_CPU U1 (
+   Pipeline_CPU_stall U1 (
       .clk(Clk_CPU),
       .rst(rst),
 
-      .Data_in    (Cpu_data4bus),
-      .inst_IF    (inst_IF),
-      .PC_out_IF  (PC_out_IF),
-      .PC_out_ID  (PC_out_ID),
-      .inst_ID    (inst_ID),
-      .PC_out_EX  (PC_out_EX),
-      .MemRW_Mem  (MemRW_Mem),
-      .Addr_out   (Addr_out),
-      .Data_out   (Data_out),
-      .Data_out_WB(Data_out_WB),
+      .Data_in  (Cpu_data4bus),
+      .inst_IF  (inst_IF),
+      .PC_out_IF(PC_out_IF),
+      .MemRW_Mem(MemRW_Mem),
+      .Addr_out (Addr_out),
+      .Data_out (Data_out),
 
       // external vga singals
       .vga_signals(vga_signals),
@@ -187,16 +179,12 @@ module CSSTE_Pipe_stall (
       .clk_100m(clk_100mhz),
       .rst     (rst),
 
-      // signals (need to implement by requirements)
-      .PC_IF      (PC_out_IF),
-      .inst_IF    (inst_IF),
-      .PC_ID      (PC_out_ID),
-      .inst_ID    (inst_ID),
-      .PC_Ex      (PC_out_EX),
-      .MemRW_Mem  (MemRW_Mem),
-      .Data_out   (Data_out),
-      .Addr_out   (Addr_out),
-      .Data_out_WB(Data_out_WB),
+      // required signals
+      .PC_IF    (PC_out_IF),
+      .inst_IF  (inst_IF),
+      .MemRW_Mem(MemRW_Mem),
+      .Data_out (Data_out),
+      .Addr_out (Addr_out),
 
       // external packed signals (just for better debugging experience)
       .regs       (regs),

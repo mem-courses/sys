@@ -1,6 +1,6 @@
 import pcpu::*;
 
-module ID_reg_Ex (
+module ID_reg_EX_stall (
    input  Debug_t debug_in_IDEX,
    output Debug_t debug_out_IDEX,
 

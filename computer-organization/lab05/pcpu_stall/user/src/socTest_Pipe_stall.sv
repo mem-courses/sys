@@ -21,19 +21,15 @@ module socTest_Pipe_stall (
    RV32_Regs_t   regs;
    VGA_Signals_t vga_signals;
 
-   Pipeline_CPU U1 (
-      .clk        (clk),
-      .rst        (rst),
-      .inst_IF    (spo_ROM),
-      .Data_in    (spo_RAM),
-      .PC_out_IF  (PC_out_IF),
-      .PC_out_ID  (PC_out_ID),
-      .inst_ID    (inst_ID),
-      .PC_out_EX  (PC_out_EX),
-      .MemRW_Mem  (MemRW_Mem),
-      .Addr_out   (Addr_out),
-      .Data_out   (Data_out),
-      .Data_out_WB(Data_out_WB),
+   Pipeline_CPU_stall U1 (
+      .clk      (clk),
+      .rst      (rst),
+      .Data_in  (spo_RAM),
+      .inst_IF  (spo_ROM),
+      .PC_out_IF(PC_out_IF),
+      .MemRW_Mem(MemRW_Mem),
+      .Addr_out (Addr_out),
+      .Data_out (Data_out),
 
       .regs       (regs),
       .vga_signals(vga_signals)
