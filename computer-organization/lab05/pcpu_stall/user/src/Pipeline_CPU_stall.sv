@@ -171,6 +171,7 @@ module Pipeline_CPU_stall (
    );
 
    // EX
+   wire [31:0] PC_out_EX;
    wire [31:0] PC4_out_EX;
    wire [31:0] ALU_out_EX;
    wire [31:0] Rs2_out_EX;

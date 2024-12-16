@@ -20,7 +20,7 @@ module Pipeline_IF (
    REG32 PC (
       .clk(clk_IF),
       .rst(rst_IF),
-      .CE (en_IF),
+      .CE (en_IF | PCSrc),
       .D  (o),
       .Q  (Q)
    );

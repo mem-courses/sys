@@ -42,9 +42,6 @@ module Stall_ctrl (
       || (Branch_out_IDEX === true || BranchN_out_IDEX === true || Jump_out_IDEX === true)  //
       || (Branch_out_EXMem === true || BranchN_out_EXMem === true || Jump_out_EXMem === true);
 
-   // if ((Jump_out_EXMem || Branch_out_EXMem || BranchN_out_EXMem) && PCSrc) en_IF = (!Data_stall);
-   // else en_IF = (!Data_stall) && (!Control_stall);
-
    assign en_IF = Data_stall !== true && Control_stall !== true;
    assign en_IFID = Data_stall !== true;
    assign NOP_IFID = Control_stall === true;
