@@ -1,11 +1,12 @@
 # extract_images.py
 # description: 通过约定的方式提取课件中的图片
 # author: memset0 (with help from LLM)
-# version: 2.0.2 (2025-03-31)
+# version: 3.0.0 (2025-04-01)
 
 import os
 import sys
 import fitz  # PyMuPDF
+from PIL import Image
 
 
 def get_page_filename(page_num):
@@ -121,6 +122,101 @@ def extract_images(input_file, output_folder, clip, dpi=300, columns=2, rows=4, 
 def flatten(x): return [y for l in x for y in flatten(l)] if type(x) is list else [x]
 
 
+def analyze_image_whitespace(image_path):
+    """
+    分析图片，获取宽度、高度以及顶部和底部的纯白色区域高度。
+
+    Args:
+        image_path (str): 图片文件的完整路径。
+
+    Returns:
+        dict: 包含图片信息的字典 {'width': W, 'height': H, 'top_white_height': TWH, 'bottom_white_height': BWH}
+              如果图片无法打开或不是有效图片，则返回 None。
+    """
+    try:
+        with Image.open(image_path) as img:
+            # 尝试转换为RGB模式以便统一处理像素值
+            # 如果图片本身不是RGB兼容模式（如索引调色板），转换可能改变原始像素
+            # 但对于检查纯白 (255, 255, 255) 来说，转换为RGB是常用做法
+            # 如果需要严格保持原始模式检查，逻辑会更复杂
+            try:
+                img_rgb = img.convert('RGB')
+            except OSError:
+                # 有些特殊格式可能无法直接转换，例如某些灰度图，尝试直接获取像素
+                if img.mode == 'L':  # 灰度图
+                    img_rgb = img  # 直接使用，白色是 255
+                elif img.mode == 'RGBA':  # 带 Alpha 通道的图
+                    img_rgb = img.convert('RGB')  # 丢弃 Alpha，检查 RGB 是否为白
+                else:
+                    print(f"警告: 无法将图片 '{os.path.basename(image_path)}' (模式: {img.mode}) 转换为 RGB，可能跳过或结果不准确。")
+                    # 尝试直接获取像素，但这可能不适用于所有模式
+                    img_rgb = img
+
+            width, height = img_rgb.size
+            top_white_height = 0
+            bottom_white_height = 0
+
+            # --- 分析顶部白色区域 ---
+            for y in range(height):
+                is_row_white = True
+                for x in range(width):
+                    pixel = img_rgb.getpixel((x, y))
+                    # 检查是否为白色 (RGB 或 灰度)
+                    # 注意：对于非 RGB/L 模式，getpixel 返回值可能不同
+                    is_white = False
+                    if isinstance(pixel, int):  # 灰度图 (L mode)
+                        is_white = (pixel == 255)
+                    elif isinstance(pixel, tuple) and len(pixel) >= 3:  # RGB 或 RGBA 等
+                        is_white = (pixel[0] == 255 and pixel[1] == 255 and pixel[2] == 255)
+
+                    if not is_white:
+                        is_row_white = False
+                        break  # 这一行不是纯白，停止检查这一行
+
+                if is_row_white:
+                    top_white_height += 1
+                else:
+                    break  # 遇到第一个非纯白行，停止向上检查
+
+            # --- 分析底部白色区域 ---
+            for y in range(height - 1, -1, -1):  # 从倒数第一行开始向上检查
+                is_row_white = True
+                for x in range(width):
+                    pixel = img_rgb.getpixel((x, y))
+                    # 检查是否为白色 (RGB 或 灰度)
+                    is_white = False
+                    if isinstance(pixel, int):  # 灰度图 (L mode)
+                        is_white = (pixel == 255)
+                    elif isinstance(pixel, tuple) and len(pixel) >= 3:  # RGB 或 RGBA 等
+                        is_white = (pixel[0] == 255 and pixel[1] == 255 and pixel[2] == 255)
+
+                    if not is_white:
+                        is_row_white = False
+                        break  # 这一行不是纯白，停止检查这一行
+
+                if is_row_white:
+                    bottom_white_height += 1
+                else:
+                    break  # 遇到第一个非纯白行，停止向下检查
+
+            return {
+                'width': width,
+                'height': height,
+                'top_white_height': top_white_height,
+                'bottom_white_height': bottom_white_height
+            }
+
+    except FileNotFoundError:
+        print(f"错误: 文件未找到 '{image_path}'")
+        return None
+    except Image.UnidentifiedImageError:
+        print(f"错误: 无法识别或打开图片文件 '{image_path}'，可能文件已损坏或不是有效的图片格式。")
+        return None
+    except Exception as e:
+        print(f"处理图片 '{image_path}' 时发生意外错误: {e}")
+        return None
+
+
 if __name__ == '__main__':
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -129,7 +225,9 @@ if __name__ == '__main__':
 
     slides = list(map(lambda x: x[:-4], filter(lambda x: x.endswith('.pdf'), os.listdir(os.path.join(source, 'translated')))))
     print('slides:', slides)
+
     clip = {'up': 0.01, 'down': 0.05, 'left': 0.03, 'right': 0.03}
+    blank_space = 0.03
 
     pdf_files = flatten([
         ['merged/%s.pdf' % slide, 'translated/%s.pdf' % slide]
@@ -145,7 +243,7 @@ if __name__ == '__main__':
 
         extract_images(input_file, output_dir, clip=clip, dpi=100)
 
-    SLIDE2X = '#slide2x([{page}], image("../public/merged-{slide}/{page0}.jpg"), image("../public/translated-{slide}/{page0}.jpg"))'
+    SLIDE2X = '#slide2x([{page}], image("../public/merged-{slide}/{page0}.jpg"), image("../public/translated-{slide}/{page0}.jpg"){params})'
 
     for slide_id in slides:
         dir1 = 'merged-%s' % slide_id
@@ -158,12 +256,39 @@ if __name__ == '__main__':
         )
         print(slide_id, 'num:', num)
 
+        analysis_results = {}
+        for filename in os.listdir(dir1_imgs):
+            if filename.lower().endswith(".jpg"):
+                file_path = os.path.join(dir1_imgs, filename)
+
+                print(f"\n--- 正在分析图片: {filename} ---")
+                analysis_results[filename] = analyze_image_whitespace(file_path)
+
+                if analysis_results[filename]:
+                    print(f"  宽度 (Width): {analysis_results[filename]['width']} px")
+                    print(f"  高度 (Height): {analysis_results[filename]['height']} px")
+                    print(f"  顶部纯白高度 (Top White Height): {analysis_results[filename]['top_white_height']} px")
+                    print(f"  底部纯白高度 (Bottom White Height): {analysis_results[filename]['bottom_white_height']} px")
+                else:
+                    print(f"  无法分析图片 {filename}。")
+
         output = ''
         for i in range(1, num + 1):
+            filename = '%04d.jpg' % i
+            ct = analysis_results[filename]['top_white_height'] / float(analysis_results[filename]['height'])
+            cb = analysis_results[filename]['bottom_white_height'] / float(analysis_results[filename]['height'])
+
+            params = ''
+            if ct > blank_space:
+                params += ', ct: %.2f' % max(min(ct - blank_space, 0.5), 0.01)
+            if cb > blank_space:
+                params += ', cb: %.2f' % max(min(cb - blank_space, 0.5), 0.01)
+
             output += SLIDE2X.format(
                 page=i,
                 slide=slide_id,
                 page0='%04d' % i,
+                params=params,
             )
             output += '\n\n'
 
