@@ -1,1 +1,6 @@
 *.pdf
+assets/merged
+notes/**/*.pdf
+~$*.ppt
+~$*.pptx
+*.pyc
