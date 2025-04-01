@@ -4,10 +4,17 @@ import tempfile
 import re
 from abc import ABC
 
+SETTINGS = {
+    "CDN_ROOT": "https://course.cdn.memset0.cn/ca/",
+}
+
 
 TAG_BEGIN_BEGIN = '😡'
 TAG_BEGIN_END = '🥶'
 TAG_END = '🐯'
+
+RESOURCE_BEGIN = TAG_BEGIN_BEGIN + "resource" + TAG_END
+RESOURCE_END = TAG_BEGIN_END + "resource" + TAG_END
 
 IMAGE_BEGIN = TAG_BEGIN_BEGIN + "image" + TAG_END
 IMAGE_END = TAG_BEGIN_END + "image" + TAG_END
@@ -66,14 +73,17 @@ class Images(Feature):
     def pre_process(content):
         return content, f'''
         #let image(src, width: 100%) = [
-            {IMAGE_BEGIN}src="#src;" width="#width;"{IMAGE_END}
+            {IMAGE_BEGIN}src="{RESOURCE_BEGIN}#src;{RESOURCE_END}" width="#width;"{IMAGE_END}
         ]
         '''
 
     @staticmethod
     def post_process(content):
-        return content.replace(IMAGE_BEGIN, "<img ") \
-                      .replace(IMAGE_END, " />")
+        # 替换图片标签
+        content = content.replace(IMAGE_BEGIN, "<img ")
+        content = content.replace(IMAGE_END, " />")
+
+        return content
 
 
 class MarkStyle(Feature):
@@ -275,9 +285,19 @@ def pre_process(content, features=FEATURE_LIST):
     return content
 
 
-def post_process(content, features=FEATURE_LIST):
+def post_process(content, source_dir, features=FEATURE_LIST):
     for feature in reversed(features):
         content = feature.post_process(content)
+
+    # 处理CDN资源
+    def get_cdn_url(match):
+        path = match.group(1)
+        file_path = os.path.abspath(os.path.join(source_dir, path))
+        rel_path = os.path.relpath(file_path, '.')
+        return SETTINGS["CDN_ROOT"] + rel_path.replace('\\', '/')
+
+    resource_pattern = re.compile(f'{RESOURCE_BEGIN}(.*?){RESOURCE_END}', re.DOTALL)
+    content = resource_pattern.sub(get_cdn_url, content)
 
     # 处理剩余的特殊token
     content = content.replace(TAG_BEGIN_BEGIN, '<')
@@ -344,7 +364,7 @@ def convert(source_file, target_file):
     content = open(source_file, encoding='utf8').read()
     content = pre_process(content)
     content = pandoc_process(content, source_dir)
-    content = post_process(content)
+    content = post_process(content, source_dir)
 
     if not content:
         print("转换失败，未生成有效内容")
