@@ -358,7 +358,7 @@ $
 
 #slide2x([31], image("../public/merged-2-2/0031.jpg"), image("../public/translated-2-2/0031.jpg"), cb: 0.1)
 
-- *问题*：在计算机中尝尝需要使用虚拟地址来访问内存，然而#mark[cache是基于物理地址的]，需要page table进行转换——相当于每次访问都需要进行两次内存操作。
+- *问题*：在计算机中尝尝需要使用虚拟地址来访问内存，然而 #mark[cache 是基于物理地址的]，需要page table进行转换——相当于每次访问都需要进行两次内存操作。
 
 #slide2x([35], image("../public/merged-2-2/0035.jpg"), image("../public/translated-2-2/0035.jpg"), cb: 0.3)
 
