@@ -1,7 +1,10 @@
 import os
-import subprocess
-import tempfile
 import re
+import json
+import yaml
+import base64
+import tempfile
+import subprocess
 from abc import ABC
 
 SETTINGS = {
@@ -28,8 +31,11 @@ MARK_END = TAG_BEGIN_END + "mark" + TAG_END
 QUOTE_BEGIN = TAG_BEGIN_BEGIN + "quote" + TAG_END
 QUOTE_END = TAG_BEGIN_END + "quote" + TAG_END
 
-CALLOUT_TYPE_BEGIN = TAG_BEGIN_BEGIN + "callout" + TAG_END
-CALLOUT_TYPE_END = TAG_BEGIN_END + "callout" + TAG_END
+CALLOUT_BEGIN = TAG_BEGIN_BEGIN + "callout" + TAG_END
+CALLOUT_END = TAG_BEGIN_END + "callout" + TAG_END
+
+FRONTMATTER_BEGIN = TAG_BEGIN_BEGIN + "frontmatter" + TAG_END
+FRONTMATTER_END = TAG_BEGIN_END + "frontmatter" + TAG_END
 
 
 class Feature(ABC):
@@ -64,7 +70,45 @@ class TypstRefine(Feature):
         # 处理数学公式
         content = content.replace('$$', '\n$$\n')
 
+        # 删除空白注释
+        content = re.sub(r'\<\!\-\-\s+\-\-\>', '', content)
+
         return content
+
+
+class FrontMatter(Feature):
+    '''
+    处理front matter
+    '''
+
+    @staticmethod
+    def dump(content):
+        data = yaml.safe_load(content)
+        json_str = json.dumps(data, ensure_ascii=False)
+        hash = base64.b64encode(json_str.encode()).decode()
+        return f'{FRONTMATTER_BEGIN}{hash}{FRONTMATTER_END}'
+
+    @staticmethod
+    def load(hash):
+        json_str = base64.b64decode(hash).decode()
+        data = json.loads(json_str)
+        return yaml.safe_dump(data, allow_unicode=True)
+
+    @staticmethod
+    def pre_process(content):
+        frontmatter_pattern = re.compile(r'\/\*(.*?)\*\/', re.DOTALL)
+        content = frontmatter_pattern.sub(lambda x: FrontMatter.dump(x.group(1)), content)
+        return content
+
+    @staticmethod
+    def post_process(content):
+        frontmatter_pattern = re.compile(f'{FRONTMATTER_BEGIN}(.*?){FRONTMATTER_END}', re.DOTALL)
+
+        match = frontmatter_pattern.search(content)
+        frontmatter = FrontMatter.load(match.group(1))
+        content = frontmatter_pattern.sub('', content)
+
+        return '---\n' + frontmatter.strip() + '\n---\n\n' + content
 
 
 class Headings(Feature):
@@ -168,7 +212,7 @@ class QuoteAndCallout(Feature):
         for callout_type in QuoteAndCallout.CALLOUT_TYPES:
             template += f'''
             #let {callout_type} = (body, title: "{callout_type.capitalize()}") => [
-                {QUOTE_BEGIN} {CALLOUT_TYPE_BEGIN}{callout_type}{CALLOUT_TYPE_END} #title
+                {QUOTE_BEGIN} {CALLOUT_BEGIN}{callout_type}{CALLOUT_END} #title
                 
                 #body
                 
@@ -184,8 +228,8 @@ class QuoteAndCallout(Feature):
         content = quote_pattern.sub(lambda x: '\n'.join(['> ' + l for l in x.group(1).split('\n')]), content)
 
         # 处理callout type
-        content = content.replace(CALLOUT_TYPE_BEGIN, '[!')
-        content = content.replace(CALLOUT_TYPE_END, ']')
+        content = content.replace(CALLOUT_BEGIN, '[!')
+        content = content.replace(CALLOUT_END, ']')
 
         return content
 
@@ -280,6 +324,7 @@ class NoSlidePreview(Feature):
 
 FEATURE_LIST = [
     TypstRefine,
+    FrontMatter,
     Headings,
     Images,
     MarkStyle,
