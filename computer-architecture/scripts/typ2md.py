@@ -13,6 +13,9 @@ TAG_BEGIN_BEGIN = '😡'
 TAG_BEGIN_END = '🥶'
 TAG_END = '🐯'
 
+HEADING_BEGIN = TAG_BEGIN_BEGIN + "heading" + TAG_END
+HEADING_END = TAG_BEGIN_END + "heading" + TAG_END
+
 RESOURCE_BEGIN = TAG_BEGIN_BEGIN + "resource" + TAG_END
 RESOURCE_END = TAG_BEGIN_END + "resource" + TAG_END
 
@@ -60,6 +63,47 @@ class TypstRefine(Feature):
 
         # 处理数学公式
         content = content.replace('$$', '\n$$\n')
+
+        return content
+
+
+class Headings(Feature):
+    '''
+    处理标题
+    '''
+
+    @staticmethod
+    def pre_process(content):
+        return content, f'''
+        #show heading: it => {{
+            [{HEADING_BEGIN}];it.fields().level;[{HEADING_END}] it.fields().body
+        }}
+        '''
+
+    @staticmethod
+    def post_process(content):
+        counter = [0] * 6
+        min_level = 6
+
+        def get_min_level(match):
+            nonlocal min_level
+            level = int(match.group(1).strip())
+            if level < min_level:
+                min_level = level
+            return match.group(0)
+
+        def get_numbering(match):
+            level = int(match.group(1).strip())
+            counter[level - 1] += 1
+            for i in range(level, 6):
+                counter[i] = 0
+            prefix = '#' * (2 - min_level + level)
+            numbering = '.'.join(map(str, counter[:level])) + '. '
+            return '\n\n' + prefix + ' ' + numbering
+
+        heading_pattern = re.compile(f'{HEADING_BEGIN}(.*?){HEADING_END}', re.DOTALL)
+        content = heading_pattern.sub(get_min_level, content)
+        content = heading_pattern.sub(get_numbering, content)
 
         return content
 
@@ -236,8 +280,9 @@ class NoSlidePreview(Feature):
 
 FEATURE_LIST = [
     TypstRefine,
-    MarkStyle,
+    Headings,
     Images,
+    MarkStyle,
     QuoteAndCallout,
     SlidePreview,
     NoSlidePreview,
