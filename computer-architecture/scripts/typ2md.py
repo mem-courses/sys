@@ -72,16 +72,19 @@ class Images(Feature):
     @staticmethod
     def pre_process(content):
         return content, f'''
-        #let image(src, width: 100%) = [
-            {IMAGE_BEGIN}src="{RESOURCE_BEGIN}#src;{RESOURCE_END}" width="#width;"{IMAGE_END}
-        ]
+        #let image(src, width: 100%) = {{
+            [{IMAGE_BEGIN}]
+            [src="{RESOURCE_BEGIN}#src;{RESOURCE_END}" ]
+            [width="#width;" ]
+            [{IMAGE_END}]
+        }}
         '''
 
     @staticmethod
     def post_process(content):
         # 替换图片标签
         content = content.replace(IMAGE_BEGIN, "<img ")
-        content = content.replace(IMAGE_END, " />")
+        content = content.replace(IMAGE_END, "/>")
 
         return content
 
@@ -175,10 +178,10 @@ class SlidePreview(Feature):
             crop-bottom += cb
         }}
         
-        [{TAG_BEGIN_BEGIN}div class="slide2x" style="--crop-top: #crop-top;; --crop-bottom: #crop-bottom;"{TAG_END}
-            {TAG_BEGIN_BEGIN}div class="slide1x"{TAG_END}#img1;{TAG_BEGIN_END}div{TAG_END}
-            {TAG_BEGIN_BEGIN}div class="slide1x"{TAG_END}#img2;{TAG_BEGIN_END}div{TAG_END}
-        {TAG_BEGIN_END}div{TAG_END}]
+        [{TAG_BEGIN_BEGIN}div class="slide2x" style="--crop-top: #crop-top;; --crop-bottom: #crop-bottom;"{TAG_END}]
+        [{TAG_BEGIN_BEGIN}div class="slide1x"{TAG_END}#img1;{TAG_BEGIN_END}div{TAG_END}]
+        [{TAG_BEGIN_BEGIN}div class="slide1x"{TAG_END}#img2;{TAG_BEGIN_END}div{TAG_END}]
+        [{TAG_BEGIN_END}div{TAG_END}]
     }}
     '''
 
