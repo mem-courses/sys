@@ -1,0 +1,56 @@
+name: Deploy to Public Repository
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # 添加权限
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # 获取完整历史记录
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install PyMuPDF  # fitz
+          pip install pillow  # PIL
+
+      - name: Run build script
+        run: |
+          chmod +x ./.github/scripts/build.sh
+          ./.github/scripts/build.sh
+
+      - name: Run deploy script
+        run: |
+          chmod +x ./.github/scripts/deploy.sh
+          ./.github/scripts/deploy.sh
+
+      - name: Push assets
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.PAT_TOKEN }}
+        with:
+          source-directory: computer-architecture/upload
+          destination-github-username: memset0
+          destination-repository-name: courses-public
+          target-branch: main
+          target-directory: ca
+          user-email: ci@memset0.cn
