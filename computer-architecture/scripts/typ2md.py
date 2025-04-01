@@ -55,6 +55,7 @@ class TypstRefine(Feature):
     TEMPLATE = '''
     #let align(pos, body) = body
     #let no-par-margin = (..) => par[]
+    #show "。": "．"
     '''
 
     @staticmethod
