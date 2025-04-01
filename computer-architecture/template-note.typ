@@ -33,6 +33,7 @@
 
   // 文档基本信息
   set document(author: authors.map(a => a.name), title: title)
+
   set page(
     paper: "a4",
     margin: page-margin,
@@ -42,30 +43,28 @@
 
   // 页眉
   set page(
-    header: {
-      locate(loc => {
-        if (counter(page).at(loc).at(0) == 1) {
-          return none
-        }
+    header: context {
+      if (counter(page).get().at(0) == 1) {
+        return none
+      }
 
-        set text(font: font_song, 10pt, baseline: 8pt, spacing: 3pt)
+      set text(font: font_song, 10pt, baseline: 8pt, spacing: 3pt)
 
-        grid(
-          columns: (1fr, 1fr, 1fr),
-          align(left, course),
-          [] /* align(center, title)*/,
-          align(right, date),
-        )
+      grid(
+        columns: (1fr, 1fr, 1fr),
+        align(left, course),
+        [] /* align(center, title)*/,
+        align(right, date),
+      )
 
-        line(length: 100%, stroke: 0.5pt)
-      })
+      line(length: 100%, stroke: 0.5pt)
     },
   )
 
 
   // 页脚
   set page(
-    footer: {
+    footer: context {
       set text(font: font_song, 10pt, baseline: 8pt, spacing: 3pt)
       set align(center)
 
