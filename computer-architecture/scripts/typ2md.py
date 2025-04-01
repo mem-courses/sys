@@ -2,6 +2,7 @@ import os
 import subprocess
 import tempfile
 import re
+from abc import ABC
 
 
 TAG_BEGIN_BEGIN = '😡'
@@ -20,97 +21,216 @@ QUOTE_END = TAG_BEGIN_END + "quote" + TAG_END
 CALLOUT_TYPE_BEGIN = TAG_BEGIN_BEGIN + "callout" + TAG_END
 CALLOUT_TYPE_END = TAG_BEGIN_END + "callout" + TAG_END
 
-CALLOUT_TYPES = ['note', 'tip', 'example', 'quote']
+
+class Feature(ABC):
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def pre_process(content):
+        return content
+
+    @staticmethod
+    def post_process(content):
+        return content
 
 
-STYLE = '''
-:root {
-    --slide-width: 1254;
-    --slide-height: 706;
-}
-.slide2x {
-    width: 100%;
-    display: flex;
-    border: 1px solid black;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 6px;
-}
-.slide2x .slide1x {
-    width: 50%;
-    height: auto;
-  aspect-ratio: calc(var(--slide-width)) / calc(var(--slide-height) * (1 - var(--crop-top) - var(--crop-bottom)));
-  overflow: hidden;
-  position: relative;
-}
-.slide2x .slide1x img {
-  position: absolute;
-  top: calc(100% * var(--crop-top));
-  left: 0;
-  width: 100%;
-  height: auto;
-}
-'''
-
-template = f'''
-#let project = (body, ..) => body
-#let mark = (it) => {{
-    text("{MARK_BEGIN}")
-    it
-    text("{MARK_END}")
-}}
-#let image(src, width: 100%) = [
-    {IMAGE_BEGIN}src="#src;" width="#width;"{IMAGE_END}
-]
-#let align(pos, body) = body
-#let slide2x = (
-    page,
-    img1,
-    img2,
-    crop: none,
-    header: true,
-    h: none,
-    ct: none,
-    cb: none,
-) => {{
-    let crop-top = 0 // within [0, 1)
-    let crop-bottom = 0 // within [0, 1)
-
-    if h == false or header == false {{
-        crop-top += slide-header-height.get()
-    }}
-    if crop != none {{
-        crop-bottom += 1 - crop
-    }}
-    if ct != none {{
-        crop-top += ct
-    }}
-    if cb != none {{
-        crop-bottom += cb
-    }}
-    
-    [{TAG_BEGIN_BEGIN}div class="slide2x" style="--crop-top: #crop-top;; --crop-bottom: #crop-bottom;"{TAG_END}
-        {TAG_BEGIN_BEGIN}div class="slide1x"{TAG_END}#img1;{TAG_BEGIN_END}div{TAG_END}
-        {TAG_BEGIN_BEGIN}div class="slide1x"{TAG_END}#img2;{TAG_BEGIN_END}div{TAG_END}
-    {TAG_BEGIN_END}div{TAG_END}]
-}}
-#let no-par-margin = (..) => par[]
-'''
-
-
-for callout_type in CALLOUT_TYPES:
-    template += f'''
-    #let {callout_type} = (body) => [
-        {QUOTE_BEGIN} {CALLOUT_TYPE_BEGIN}{callout_type}{CALLOUT_TYPE_END}
-        
-        #body
-        
-        {QUOTE_END}
-    ]
+class TypstRefine(Feature):
+    TEMPLATE = '''
+    #let align(pos, body) = body
+    #let no-par-margin = (..) => par[]
     '''
 
+    @staticmethod
+    def pre_process(content):
+        content = TypstRefine.TEMPLATE + '\n\n' + content
+        return content
 
-def pre_process(content):
+    @staticmethod
+    def post_process(content):
+        # 处理破折号
+        content = content.replace('------', '——')
+
+        # 处理数学公式
+        content = content.replace('$$', '\n$$\n')
+
+        return content
+
+
+class Images(Feature):
+    '''
+    处理图片
+    '''
+
+    @staticmethod
+    def pre_process(content):
+        return content, f'''
+        #let image(src, width: 100%) = [
+            {IMAGE_BEGIN}src="#src;" width="#width;"{IMAGE_END}
+        ]
+        '''
+
+    @staticmethod
+    def post_process(content):
+        return content.replace(IMAGE_BEGIN, "<img ") \
+                      .replace(IMAGE_END, " />")
+
+
+class MarkStyle(Feature):
+    '''
+    处理标记语法
+    - Example: #mark[...]
+    '''
+
+    @staticmethod
+    def pre_process(content):
+        return content, f'''
+        #let mark = (it) => {{
+            text("{MARK_BEGIN}")
+            it
+            text("{MARK_END}")
+        }}
+        '''
+
+    @staticmethod
+    def post_process(content):
+        return content.replace(MARK_BEGIN, "<mark>") \
+                      .replace(MARK_END, "</mark>")
+
+
+class QuoteAndCallout(Feature):
+    '''
+    处理引用和 callout 语法
+    '''
+
+    CALLOUT_TYPES = ['note', 'tip', 'example', 'quote']
+
+    @staticmethod
+    def pre_process(content):
+        template = ''
+        for callout_type in QuoteAndCallout.CALLOUT_TYPES:
+            template += f'''
+            #let {callout_type} = (body) => [
+                {QUOTE_BEGIN} {CALLOUT_TYPE_BEGIN}{callout_type}{CALLOUT_TYPE_END}
+                
+                #body
+                
+                {QUOTE_END}
+            ]
+            '''
+        return content, template
+
+    @staticmethod
+    def post_process(content):
+        # 处理quote（用正则表达式找出来并用lambda函数进行处理）
+        quote_pattern = re.compile(f'{QUOTE_BEGIN}(.*?){QUOTE_END}', re.DOTALL)
+        content = quote_pattern.sub(lambda x: '\n'.join(['> ' + l for l in x.group(1).split('\n')]), content)
+
+        # 处理callout type
+        content = content.replace(CALLOUT_TYPE_BEGIN, '[!')
+        content = content.replace(CALLOUT_TYPE_END, ']')
+
+        return content
+
+
+class SlidePreview(Feature):
+    '''
+    处理幻灯片预览
+    '''
+
+    TEMPLATE = f'''
+    #let slide2x = (
+        page,
+        img1,
+        img2,
+        crop: none,
+        header: true,
+        h: none,
+        ct: none,
+        cb: none,
+    ) => {{
+        let crop-top = 0 // within [0, 1)
+        let crop-bottom = 0 // within [0, 1)
+
+        if h == false or header == false {{
+            crop-top += slide-header-height.get()
+        }}
+        if crop != none {{
+            crop-bottom += 1 - crop
+        }}
+        if ct != none {{
+            crop-top += ct
+        }}
+        if cb != none {{
+            crop-bottom += cb
+        }}
+        
+        [{TAG_BEGIN_BEGIN}div class="slide2x" style="--crop-top: #crop-top;; --crop-bottom: #crop-bottom;"{TAG_END}
+            {TAG_BEGIN_BEGIN}div class="slide1x"{TAG_END}#img1;{TAG_BEGIN_END}div{TAG_END}
+            {TAG_BEGIN_BEGIN}div class="slide1x"{TAG_END}#img2;{TAG_BEGIN_END}div{TAG_END}
+        {TAG_BEGIN_END}div{TAG_END}]
+    }}
+    '''
+
+    STYLE = '''
+    :root {
+        --slide-width: 1254;
+        --slide-height: 706;
+    }
+    .slide2x {
+        width: 100%;
+        display: flex;
+        border: 1px solid black;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 6px;
+    }
+    .slide2x .slide1x {
+        width: 50%;
+        height: auto;
+        aspect-ratio: calc(var(--slide-width)) / calc(var(--slide-height) * (1 - var(--crop-top) - var(--crop-bottom)));
+        overflow: hidden;
+        position: relative;
+    }
+    .slide2x .slide1x img {
+        position: absolute;
+        top: calc(100% * var(--crop-top));
+        left: 0;
+        width: 100%;
+        height: auto;
+    }
+    '''
+
+    @staticmethod
+    def pre_process(content):
+        return content, SlidePreview.TEMPLATE
+
+    @staticmethod
+    def post_process(content):
+        return '<style>' + SlidePreview.STYLE + '</style>\n\n' + content
+
+
+class NoSlidePreview(Feature):
+    '''
+    不处理幻灯片预览
+    '''
+
+    @staticmethod
+    def pre_process(content):
+        return content, '#let slide2x = (..) => par[]'
+
+
+FEATURE_LIST = [
+    TypstRefine,
+    MarkStyle,
+    Images,
+    QuoteAndCallout,
+    SlidePreview,
+    # NoSlidePreview,
+]
+
+
+def pre_process(content, features=FEATURE_LIST):
     # 处理对slide-width和slide-height的修改
     content = '\n'.join([line for line in content.split('\n') if not line.startswith('#slide-')])
     # TBD: 处理对slide-width和slide-height的修改
@@ -124,7 +244,6 @@ def pre_process(content):
     filtered_lines = []
     skip_mode = False
     bracket_count = 0
-
     for line in lines:
         if not skip_mode:
             if line.strip().startswith('#show: project.with'):
@@ -143,42 +262,27 @@ def pre_process(content):
                 skip_mode = False
     content = '\n'.join(filtered_lines)
 
+    template = ''
+    for feature in features:
+        result = feature.pre_process(content)
+        if isinstance(result, tuple):
+            content, new_template = result
+            template += new_template + '\n\n'
+        else:
+            content = result
     content = template + '\n\n' + content
 
-    print(content[:10000])
     return content
 
 
-def post_process(content):
-    # 添加样式
-    content = '<style>' + STYLE + '</style>\n\n' + content
+def post_process(content, features=FEATURE_LIST):
+    for feature in reversed(features):
+        content = feature.post_process(content)
 
-    # 处理mark
-    content = content.replace(MARK_BEGIN, "<mark>")
-    content = content.replace(MARK_END, "</mark>")
-
-    # 处理image
-    content = content.replace(IMAGE_BEGIN, "<img ")
-    content = content.replace(IMAGE_END, " />")
-
-    # 处理quote（用正则表达式找出来并用lambda函数进行处理）
-    quote_pattern = re.compile(f'{QUOTE_BEGIN}(.*?){QUOTE_END}', re.DOTALL)
-    content = quote_pattern.sub(lambda x: '\n'.join(['> ' + l for l in x.group(1).split('\n')]), content)
-
-    # 处理callout type
-    content = content.replace(CALLOUT_TYPE_BEGIN, '[!')
-    content = content.replace(CALLOUT_TYPE_END, ']')
-
-    # 处理破折号
-    content = content.replace('------', '——')
-
-    # 处理剩余的
+    # 处理剩余的特殊token
     content = content.replace(TAG_BEGIN_BEGIN, '<')
     content = content.replace(TAG_BEGIN_END, '</')
     content = content.replace(TAG_END, '>')
-    
-    # 处理数学公式
-    content = content.replace('$$', '\n$$\n')
 
     return content
 
