@@ -116,15 +116,15 @@ class QuoteAndCallout(Feature):
     处理引用和 callout 语法
     '''
 
-    CALLOUT_TYPES = ['note', 'tip', 'example', 'quote']
+    CALLOUT_TYPES = ['example', 'proof', 'abstract', 'summary', 'info', 'note', 'tip', 'hint', 'success', 'help', 'warning', 'attention', 'caution', 'failure', 'danger', 'error', 'bug', 'quote', 'cite']
 
     @staticmethod
     def pre_process(content):
         template = ''
         for callout_type in QuoteAndCallout.CALLOUT_TYPES:
             template += f'''
-            #let {callout_type} = (body) => [
-                {QUOTE_BEGIN} {CALLOUT_TYPE_BEGIN}{callout_type}{CALLOUT_TYPE_END}
+            #let {callout_type} = (body, title: "{callout_type.capitalize()}") => [
+                {QUOTE_BEGIN} {CALLOUT_TYPE_BEGIN}{callout_type}{CALLOUT_TYPE_END} #title
                 
                 #body
                 
@@ -196,6 +196,7 @@ class SlidePreview(Feature):
         border: 1px solid black;
         margin-left: auto;
         margin-right: auto;
+        overflow: hidden;
         border-radius: 6px;
     }
     .slide2x .slide1x {
@@ -239,7 +240,7 @@ FEATURE_LIST = [
     Images,
     QuoteAndCallout,
     SlidePreview,
-    # NoSlidePreview,
+    NoSlidePreview,
 ]
 
 

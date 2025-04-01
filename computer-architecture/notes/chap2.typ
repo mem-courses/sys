@@ -52,9 +52,7 @@ slug: /course/ca/note/2
 
 #slide2x([7], image("../public/merged-2-1/0007.jpg"), image("../public/translated-2-1/0007.jpg"))
 
-#quote[
-  *内存层次结构*
-
+#quote(title: [内存层次结构])[
   #align(center, image("images/2025-03-31-20-35-33.png", width: 56%))
 ]
 
@@ -68,10 +66,8 @@ slug: /course/ca/note/2
 
 #slide2x([12], image("../public/merged-2-1/0012.jpg"), image("../public/translated-2-1/0012.jpg"), ct: 0.01, cb: 0.69)
 
-#slide2x([13], image("../public/merged-2-1/0013.jpg"), image("../public/translated-2-1/0013.jpg"), ct: 0.01, cb: 0.04)
-
-#example[
-  *回顾：和 cache 相关的概念与名词*。
+#example(title: [回顾：和 cache 相关的概念与名词])[
+  #align(center, image("../public/merged-2-1/0013.jpg", width: 60%))
 ]
 
 #slide2x([14], image("../public/merged-2-1/0014.jpg"), image("../public/translated-2-1/0014.jpg"))
