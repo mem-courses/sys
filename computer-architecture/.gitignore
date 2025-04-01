@@ -1,6 +1,7 @@
 /assets/merged/
 /*.pdf
 /notes/**/*.pdf
+/notes/**/*.md
 /labs/**/*.pdf
 /public
 ~$*.ppt
