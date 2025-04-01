@@ -22,6 +22,36 @@ CALLOUT_TYPE_END = TAG_BEGIN_END + "callout" + TAG_END
 
 CALLOUT_TYPES = ['note', 'tip', 'example', 'quote']
 
+
+STYLE = '''
+:root {
+    --slide-width: 1254;
+    --slide-height: 706;
+}
+.slide2x {
+    width: 100%;
+    display: flex;
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 6px;
+}
+.slide2x .slide1x {
+    width: 50%;
+    height: auto;
+  aspect-ratio: calc(var(--slide-width)) / calc(var(--slide-height) * (1 - var(--crop-top) - var(--crop-bottom)));
+  overflow: hidden;
+  position: relative;
+}
+.slide2x .slide1x img {
+  position: absolute;
+  top: calc(100% * var(--crop-top));
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+'''
+
 template = f'''
 #let project = (body, ..) => body
 #let mark = (it) => {{
@@ -33,9 +63,40 @@ template = f'''
     {IMAGE_BEGIN}src="#src;" width="#width;"{IMAGE_END}
 ]
 #let align(pos, body) = body
-#let slide2x = (..) => par[]
+#let slide2x = (
+    page,
+    img1,
+    img2,
+    crop: none,
+    header: true,
+    h: none,
+    ct: none,
+    cb: none,
+) => {{
+    let crop-top = 0 // within [0, 1)
+    let crop-bottom = 0 // within [0, 1)
+
+    if h == false or header == false {{
+        crop-top += slide-header-height.get()
+    }}
+    if crop != none {{
+        crop-bottom += 1 - crop
+    }}
+    if ct != none {{
+        crop-top += ct
+    }}
+    if cb != none {{
+        crop-bottom += cb
+    }}
+    
+    [{TAG_BEGIN_BEGIN}div class="slide2x" style="--crop-top: #crop-top;; --crop-bottom: #crop-bottom;"{TAG_END}
+        {TAG_BEGIN_BEGIN}div class="slide1x"{TAG_END}#img1;{TAG_BEGIN_END}div{TAG_END}
+        {TAG_BEGIN_BEGIN}div class="slide1x"{TAG_END}#img2;{TAG_BEGIN_END}div{TAG_END}
+    {TAG_BEGIN_END}div{TAG_END}]
+}}
 #let no-par-margin = (..) => par[]
 '''
+
 
 for callout_type in CALLOUT_TYPES:
     template += f'''
@@ -51,7 +112,7 @@ for callout_type in CALLOUT_TYPES:
 
 def pre_process(content):
     # 处理对slide-width和slide-height的修改
-    content = '\n'.join([line for line in content.split('\n') if not line.startswith('#slide')])
+    content = '\n'.join([line for line in content.split('\n') if not line.startswith('#slide-')])
     # TBD: 处理对slide-width和slide-height的修改
 
     # 过滤掉所有#import、#outline开头的行
@@ -84,11 +145,14 @@ def pre_process(content):
 
     content = template + '\n\n' + content
 
-    print(content[:1000])
+    print(content[:10000])
     return content
 
 
 def post_process(content):
+    # 添加样式
+    content = '<style>' + STYLE + '</style>\n\n' + content
+
     # 处理mark
     content = content.replace(MARK_BEGIN, "<mark>")
     content = content.replace(MARK_END, "</mark>")
@@ -100,13 +164,21 @@ def post_process(content):
     # 处理quote（用正则表达式找出来并用lambda函数进行处理）
     quote_pattern = re.compile(f'{QUOTE_BEGIN}(.*?){QUOTE_END}', re.DOTALL)
     content = quote_pattern.sub(lambda x: '\n'.join(['> ' + l for l in x.group(1).split('\n')]), content)
-    
+
     # 处理callout type
     content = content.replace(CALLOUT_TYPE_BEGIN, '[!')
     content = content.replace(CALLOUT_TYPE_END, ']')
-    
+
     # 处理破折号
     content = content.replace('------', '——')
+
+    # 处理剩余的
+    content = content.replace(TAG_BEGIN_BEGIN, '<')
+    content = content.replace(TAG_BEGIN_END, '</')
+    content = content.replace(TAG_END, '>')
+    
+    # 处理数学公式
+    content = content.replace('$$', '\n$$\n')
 
     return content
 
