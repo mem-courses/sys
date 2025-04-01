@@ -33,6 +33,11 @@ jobs:
           pip install PyMuPDF  # fitz
           pip install pillow  # PIL
 
+      - name: Install Pandoc
+        run: |
+          chmod +x ./.github/scripts/install_pandoc.sh
+          ./.github/scripts/install_pandoc.sh
+
       - name: Run build script
         run: |
           chmod +x ./.github/scripts/build.sh
