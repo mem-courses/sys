@@ -10,7 +10,8 @@ cd ../../../
 
 # 将 typst 文件转换为 markdown 文件
 cd computer-architecture/
-python scripts/typ2md.py
+python scripts/typ2md.py notes/chap1.typ
+python scripts/typ2md.py notes/chap2.typ
 cd ../
 
 # 使用 Prettier 格式化 markdown 文件

@@ -1,3 +1,10 @@
+/*
+title: "I. Introduction"
+create-date: "2025-03-31"
+update-date: "2025-04-01"
+slug: /course/ca/note/1
+*/
+
 #import "../template-note.typ": *
 
 #show: project.with(
