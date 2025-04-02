@@ -13,6 +13,7 @@ import subprocess
 from abc import ABC
 
 SETTINGS = {
+    "VERSION": "2.1.0",
     "CDN_ROOT": "https://course.cdn.memset0.cn/ca/",
 }
 
@@ -478,13 +479,22 @@ def convert(source_file, target_file):
 
 
 if __name__ == "__main__":
+    print(f'typ2md.py @ {SETTINGS["VERSION"]}')
+    
     dirname = os.path.abspath(os.path.dirname(__file__))
+    print('  argv:', sys.argv)
+    print('  dirname:', dirname)
+
     if len(sys.argv) > 1:
         source_file = os.path.abspath(sys.argv[1])
     else:
         source_file = os.path.abspath(os.path.join(dirname, '../notes/chap2.typ'))
+    print('  source_file:', source_file)
+
     if len(sys.argv) > 2:
         target_file = os.path.abspath(sys.argv[2])
     else:
         target_file = source_file.replace('.typ', '.md')
+    print('  target_file:', target_file)
+
     convert(source_file, target_file)
