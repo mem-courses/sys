@@ -47,6 +47,12 @@ jobs:
           ./.github/scripts/install_pandoc.sh
           source ~/.bashrc
 
+      - name: Install Prettier
+        run: |
+          chmod +x ./.github/scripts/install_prettier.sh
+          ./.github/scripts/install_prettier.sh
+          source ~/.bashrc
+
       - name: Run build script
         run: |
           chmod +x ./.github/scripts/build.sh

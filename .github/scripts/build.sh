@@ -13,5 +13,8 @@ cd computer-architecture/
 python scripts/typ2md.py
 cd ../
 
+# 使用 Prettier 格式化 markdown 文件
+prettier --write computer-architecture/*.md
+
 # 将 markdown 文件发布到 blog-posts 仓库
 python .github/scripts/publish_to_blog.py posts/ computer-architecture/
