@@ -32,7 +32,7 @@ slug: /course/ca/note/2
 #outline(title: [TOC], indent: 2em)
 // #let slide2x = (..) => par[]
 
-= Introduction to Memory Hierarchy
+= Introduction to Memory Hierarchy | 导论
 
 #slide2x([3], image("../public/merged-2-1/0003.jpg"), image("../public/translated-2-1/0003.jpg"), ct: 0.01, cb: 0.06)
 
@@ -72,7 +72,7 @@ slug: /course/ca/note/2
 
 #slide2x([14], image("../public/merged-2-1/0014.jpg"), image("../public/translated-2-1/0014.jpg"))
 
-= Four Questions for Memory Hierarchy Designers
+= Four Questions for Memory Hierarchy Designers | 四个关键问题
 
 #slide2x([15], image("../public/merged-2-1/0015.jpg"), image("../public/translated-2-1/0015.jpg"), cb: 0.03)
 
@@ -82,7 +82,7 @@ slug: /course/ca/note/2
   - Q3: Which block should be replaced on a Cache/main memory miss? (Block replacement)
   - Q4: What happens on a write? (Write strategy)
 
-== Block Placement | 块的存放位置
+== Block Placement | 块的放置
 
 #slide2x([16], image("../public/merged-2-1/0016.jpg"), image("../public/translated-2-1/0016.jpg"), cb: 0.05)
 
@@ -264,7 +264,7 @@ $
 #slide-width.update(x => 940)
 #slide-height.update(x => 706)
 
-= Improve DRAM Performance
+= Improve DRAM Performance | 提升DRAM性能
 
 #slide2x([2], image("../public/merged-2-2/0002.jpg"), image("../public/translated-2-2/0002.jpg"), ct: 0.02, cb: 0.12)
 
@@ -350,7 +350,7 @@ $
 - *优点*：减少 hit time；减少功耗。
 - *缺点*：加大了实现流水线化 cache 的难度。
 
-=== Avoiding Address Translation during Indexing
+=== Avoiding Address Translation during Indexing | 减少地址转换
 
 #slide2x([31], image("../public/merged-2-2/0031.jpg"), image("../public/translated-2-2/0031.jpg"), cb: 0.1)
 
