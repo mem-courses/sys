@@ -45,6 +45,7 @@ jobs:
         run: |
           chmod +x ./.github/scripts/install_pandoc.sh
           ./.github/scripts/install_pandoc.sh
+          source ~/.bashrc
 
       - name: Run build script
         run: |
