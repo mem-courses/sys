@@ -27,6 +27,13 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Clone Target Repo
+        uses: actions/checkout@v4
+        with:
+          repository: memset0/blog-posts
+          path: posts
+          token: ${{ secrets.PAT_TOKEN }}
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -60,3 +67,14 @@ jobs:
           target-branch: main
           target-directory: ca
           user-email: ci@memset0.cn
+
+      - name: Publish to Blog
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.PAT_TOKEN }}
+        with:
+          source-directory: posts
+          destination-github-username: "memset0"
+          destination-repository-name: "blog-posts"
+          user-email: ci@memset0.cn
+          target-branch: master

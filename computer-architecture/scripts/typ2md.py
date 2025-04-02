@@ -1,5 +1,10 @@
+# typ2md.py
+# author: memset0
+# version: 2.1.0 (2024-04-02)
+
 import os
 import re
+import sys
 import json
 import yaml
 import base64
@@ -473,5 +478,13 @@ def convert(source_file, target_file):
 
 
 if __name__ == "__main__":
-    os.chdir(os.path.join(os.path.dirname(__file__), '..'))
-    convert('notes/chap2.typ', 'notes/chap2.md')
+    dirname = os.path.abspath(os.path.dirname(__file__))
+    if len(sys.argv) > 1:
+        source_file = os.path.abspath(sys.argv[1])
+    else:
+        source_file = os.path.abspath(os.path.join(dirname, '../notes/chap2.typ'))
+    if len(sys.argv) > 2:
+        target_file = os.path.abspath(sys.argv[2])
+    else:
+        target_file = source_file.replace('.typ', '.md')
+    convert(source_file, target_file)
