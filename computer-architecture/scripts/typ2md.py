@@ -1,6 +1,6 @@
 # typ2md.py
 # author: memset0
-# version: 2.1.0 (2024-04-02)
+# version: 2.1.1 (2024-04-02)
 
 import os
 import re
@@ -42,6 +42,9 @@ CALLOUT_END = TAG_BEGIN_END + "callout" + TAG_END
 
 FRONTMATTER_BEGIN = TAG_BEGIN_BEGIN + "frontmatter" + TAG_END
 FRONTMATTER_END = TAG_BEGIN_END + "frontmatter" + TAG_END
+
+WIDTH_BEGIN = TAG_BEGIN_BEGIN + "width" + TAG_END
+WIDTH_END = TAG_BEGIN_END + "width" + TAG_END
 
 
 class Feature(ABC):
@@ -170,7 +173,7 @@ class Images(Feature):
         #let image(src, width: 100%) = {{
             [{IMAGE_BEGIN}]
             [src="{RESOURCE_BEGIN}#src;{RESOURCE_END}" ]
-            [width="#width;" ]
+            [style="width: {WIDTH_BEGIN}#width;{WIDTH_END}" ]
             [{IMAGE_END}]
         }}
         '''
@@ -181,6 +184,13 @@ class Images(Feature):
         content = content.replace(IMAGE_BEGIN, "<img ")
         content = content.replace(IMAGE_END, "/>")
 
+        # 处理宽度标签
+        def get_width(match):
+            width = match.group(1).strip()
+            if width.endswith('%') and width != '100%':
+                return f'calc({float(width[:-1]) / 100} * 50em)'
+            return width
+        content = re.sub(WIDTH_BEGIN + '(.*?)' + WIDTH_END, get_width, content)
         return content
 
 
@@ -480,7 +490,7 @@ def convert(source_file, target_file):
 
 if __name__ == "__main__":
     print(f'typ2md.py @ {SETTINGS["VERSION"]}')
-    
+
     dirname = os.path.abspath(os.path.dirname(__file__))
     print('  argv:', sys.argv)
     print('  dirname:', dirname)
