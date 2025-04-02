@@ -22,10 +22,13 @@ jobs:
         with:
           fetch-depth: 0 # 获取完整历史记录
 
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Clone Target Repo
         uses: actions/checkout@v4
@@ -41,16 +44,15 @@ jobs:
           pip install PyMuPDF  # fitz
           pip install pillow  # PIL
 
+      - name: Install Prettier
+        run: |
+          npm install -g prettier
+          prettier --version
+
       - name: Install Pandoc
         run: |
           chmod +x ./.github/scripts/install_pandoc.sh
           ./.github/scripts/install_pandoc.sh
-          source ~/.bashrc
-
-      - name: Install Prettier
-        run: |
-          chmod +x ./.github/scripts/install_prettier.sh
-          ./.github/scripts/install_prettier.sh
           source ~/.bashrc
 
       - name: Run build script
