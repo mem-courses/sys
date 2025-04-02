@@ -34,6 +34,8 @@ slug: /course/ca/note/1
 
 = Introduction to Computer Architecture
 
+#align(center, image("images/2025-04-02-11-34-10.png", width: 75%))
+
 #slide2x([2], image("../public/merged-1-1/0002.jpg"), image("../public/translated-1-1/0002.jpg"), cb: 0.01)
 
 #slide2x([4], image("../public/merged-1-1/0004.jpg"), image("../public/translated-1-1/0004.jpg"), ct: 0.01, cb: 0.12)
