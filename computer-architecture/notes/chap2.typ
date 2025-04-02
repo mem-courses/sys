@@ -574,9 +574,7 @@ $
 
 #slide2x([107], image("../public/merged-2-2/0107.jpg"), image("../public/translated-2-2/0107.jpg"))
 
-#note[
-  *cache 流程总结*
-
+#note(title: [cache 流程总结])[
   #no-par-margin
   #align(center, image("images/2025-03-31-22-19-56.png", width: 50%))
 ]
