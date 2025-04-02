@@ -34,7 +34,8 @@ slug: /course/ca/note/1
 
 = Introduction to Computer Architecture
 
-#align(center, image("images/2025-04-02-11-34-10.png", width: 75%))
+#no-par-margin
+#align(center, image("images/2025-04-02-11-34-10.png", width: 64%))
 
 #slide2x([2], image("../public/merged-1-1/0002.jpg"), image("../public/translated-1-1/0002.jpg"), cb: 0.01)
 
@@ -496,7 +497,7 @@ TBD
 
 #slide2x([25], image("../public/merged-1-3/0025.jpg"), image("../public/translated-1-3/0025.jpg"), ct: 0.02, cb: 0.05)
 
-=== 控制冒险
+=== Control Hazards | 控制冒险
 
 #slide2x([26], image("../public/merged-1-3/0026.jpg"), image("../public/translated-1-3/0026.jpg"), ct: 0.01)
 

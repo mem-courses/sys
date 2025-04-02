@@ -1,6 +1,6 @@
 # typ2md.py
 # author: memset0
-# version: 2.1.1 (2024-04-02)
+# version: 2.2.0 (2024-04-02)
 
 import os
 import re
@@ -21,6 +21,8 @@ SETTINGS = {
 TAG_BEGIN_BEGIN = '😡'
 TAG_BEGIN_END = '🥶'
 TAG_END = '🐯'
+
+NEWLINE = TAG_BEGIN_BEGIN + "newline" + TAG_END
 
 HEADING_BEGIN = TAG_BEGIN_BEGIN + "heading" + TAG_END
 HEADING_END = TAG_BEGIN_END + "heading" + TAG_END
@@ -82,6 +84,9 @@ class TypstRefine(Feature):
 
         # 删除空白注释
         content = re.sub(r'\<\!\-\-\s+\-\-\>', '', content)
+        
+        # 处理换行
+        content = content.replace(NEWLINE, '\n\n')
 
         return content
 
@@ -130,7 +135,7 @@ class Headings(Feature):
     def pre_process(content):
         return content, f'''
         #show heading: it => {{
-            [{HEADING_BEGIN}];it.fields().level;[{HEADING_END}] it.fields().body
+            [{HEADING_BEGIN}];it.fields().level;[{HEADING_END}] it.fields().body;[{NEWLINE}]
         }}
         '''
 
@@ -498,7 +503,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         source_file = os.path.abspath(sys.argv[1])
     else:
-        source_file = os.path.abspath(os.path.join(dirname, '../notes/chap2.typ'))
+        source_file = os.path.abspath(os.path.join(dirname, '../notes/chap1.typ'))
     print('  source_file:', source_file)
 
     if len(sys.argv) > 2:
