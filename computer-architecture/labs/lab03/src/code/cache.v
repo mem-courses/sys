@@ -10,7 +10,7 @@ module cache (
    input  wire                 store,      // set valid to 1 and reset dirty to 0
    input  wire                 edit,       // set dirty to 1
    input  wire                 invalid,    // reset valid to 0
-   input  wire [          2:0] u_b_h_w,    // select signed or not & data width: 是否有load指令
+   input  wire [          2:0] u_b_h_w,    // select signed or not & data width: 读数据的位宽
                                            // please refer to definition of LB, LH, LW, LBU, LHU in RV32I Instruction Set  
    input  wire [         31:0] din,        // data write in: 用于写入缓存的数据
    output reg                  hit = 0,    // hit or not: 输出是否命中
@@ -65,8 +65,8 @@ module cache (
    assign word2         = inner_data[addr_word2];  //need to fill in
    assign half_word1    = addr[1] ? word1[31:16] : word1[15:0];
    assign half_word2    = addr[1] ? word2[31:16] : word2[15:0];  //need to fill in
-   assign byte1         = addr[1] ? addr[0] ? word1[31:24] : word1[23:16] : addr[0] ? word1[15:8] : word1[7:0];
-   assign byte2         = addr[1] ? addr[0] ? word2[31:24] : word2[23:16] : addr[0] ? word2[15:8] : word2[7:0];  //need to fill in
+   assign byte1         = addr[1] ? (addr[0] ? word1[31:24] : word1[23:16]) : (addr[0] ? word1[15:8] : word1[7:0]);
+   assign byte2         = addr[1] ? (addr[0] ? word2[31:24] : word2[23:16]) : (addr[0] ? word2[15:8] : word2[7:0]);  //need to fill in
 
    // 缓存状态解析
    assign recent1       = inner_recent[addr_element1];
@@ -106,15 +106,7 @@ module cache (
 
       if (edit) begin
          if (hit1) begin
-            inner_data[addr_word1] <= u_b_h_w[1] ?  // word?
-            din : u_b_h_w[0] ?  // half word?
-            addr[1] ?  // upper / lower?
-            {din[15:0], word1[15:0]} : {word1[31:16], din[15:0]} :  // byte
-            addr[1] ? addr[0] ? {din[7:0], word1[23:0]}  // 11
-            : {word1[31:24], din[7:0], word1[15:0]}  // 10
-            : addr[0] ? {word1[31:16], din[7:0], word1[7:0]}  // 01
-            : {word1[31:8], din[7:0]}  // 00
-            ;
+            inner_data[addr_word1] <=  u_b_h_w[1] ?  din : u_b_h_w[0] ?addr[1] ? {din[15:0], word1[15:0]} : {word1[31:16], din[15:0]} : addr[1] ? addr[0] ? {din[7:0], word1[23:0]}  : {word1[31:24], din[7:0], word1[15:0]}  : addr[0] ? {word1[31:16], din[7:0], word1[7:0]}        : {word1[31:8], din[7:0]}     ;
             inner_dirty[addr_element1] <= 1'b1;
             inner_recent[addr_element1] <= 1'b1;
             inner_recent[addr_element2] <= 1'b0;
