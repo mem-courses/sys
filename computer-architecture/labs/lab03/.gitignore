@@ -1,0 +1,7 @@
+*.pdf
+!slide.pdf
+
+src/*
+!src/
+!src/code/
+!src/code/**
