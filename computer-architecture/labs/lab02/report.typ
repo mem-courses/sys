@@ -13,17 +13,7 @@
   teacher: "陈文智",
 )
 
-#lab_header(name: [Lab1: Pipelined CPU supporting RISC-V RV32I Instructions], place: "紫金港 东4-511", date: "2025年3月11日")
-
-#show heading.where(level: 2): it => {
-  v(1em)
-  it
-  v(0.5em)
-}
-#show heading.where(level: 3): it => {
-  it
-  v(0.5em)
-}
+#lab_header(name: [Lab2: Pipelined CPU supporting RISC-V RV32I Instructions], place: "紫金港 东4-511", date: "2025年3月11日")
 
 == 实验目的和要求
 
@@ -129,7 +119,7 @@ mstatus寄存器中值与机器状态有关，比如MIE为1时代表现在可以
 
 === 代码（ExceptionUnit.v）
 
-#codex(read("./src/code/core/ExceptionUnit.v"), border: true, lang: "verilog")
+#codex(read("./src/code/core/ExceptionUnit.v"), lang: "verilog")
 
 == 实验结果分析
 
