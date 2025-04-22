@@ -137,7 +137,7 @@ module cache (
          end else begin
             // recent2 == 1 => replace 1
             // recent2 == 0 => no data in this set, place to 1
-            nner_data[addr_word1] <= din;
+            inner_data[addr_word1] <= din;
             inner_valid[addr_element1] <= 1'b1;
             inner_dirty[addr_element1] <= 1'b0;
             inner_tag[addr_element1] <= addr_tag;
