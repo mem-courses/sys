@@ -53,7 +53,11 @@ module cmu (
       .tag    (cache_tag)
    );
 
-   localparam S_IDLE = 0, S_PRE_BACK = 1, S_BACK = 2, S_FILL = 3, S_WAIT = 4;
+   localparam S_IDLE = 0;
+   localparam S_PRE_BACK = 1;
+   localparam S_BACK = 2;
+   localparam S_FILL = 3;
+   localparam S_WAIT = 4;
 
    reg [2:0] state = 0;
    reg [2:0] next_state = 0;
@@ -80,9 +84,13 @@ module cmu (
          case (state)
             S_IDLE: begin
                if (en_r || en_w) begin
-                  if (cache_hit) next_state = S_IDLE;  // 如果cache hit，说明CMU无需额外操作，继续保持在IDLE状态
-                  else if (cache_valid && cache_dirty) next_state = S_PRE_BACK;  // 如果cache miss & dirty，说明需要先写回主存再取出，进入PRE_BACK状态
-                  else next_state = S_FILL;  // 如果cache miss & !dirty，说明直接从内存中取出即可
+                  if (cache_hit) begin
+                     next_state = S_IDLE;  // 如果cache hit，说明CMU无需额外操作，继续保持在IDLE状态
+                  end else if (cache_valid && cache_dirty) begin
+                     next_state = S_PRE_BACK;  // 如果cache miss & dirty，说明需要先写回主存再取出，进入PRE_BACK状态
+                  end else begin
+                     next_state = S_FILL;  // 如果cache miss & !dirty，说明直接从内存中取出即可
+                  end
                end
                next_word_count = 2'b00;
             end
@@ -93,20 +101,29 @@ module cmu (
             end
 
             S_BACK: begin
-               if (mem_ack_i && word_count == {ELEMENT_WORDS_WIDTH{1'b1}})  // 2'b11 in default case
+               if (mem_ack_i && word_count == {ELEMENT_WORDS_WIDTH{1'b1}}) begin
+                  // 2'b11 in default case
                   next_state = S_FILL;
-               else next_state = S_BACK;
+               end else begin
+                  next_state = S_BACK;
+               end
 
                if (mem_ack_i) next_word_count = word_count + 1;
                else next_word_count = word_count;
             end
 
             S_FILL: begin
-               if (mem_ack_i && word_count == {ELEMENT_WORDS_WIDTH{1'b1}}) next_state = S_FILL;
-               else next_state = S_BACK;
+               if (mem_ack_i && word_count == {ELEMENT_WORDS_WIDTH{1'b1}}) begin
+                  next_state = S_WAIT;
+               end else begin
+                  next_state = S_FILL;
+               end
 
-               if (mem_ack_i) next_word_count = word_count + 1;
-               else next_word_count = word_count;
+               if (mem_ack_i) begin
+                  next_word_count = word_count + 1;
+               end else begin
+                  next_word_count = word_count;
+               end
             end
 
             S_WAIT: begin
