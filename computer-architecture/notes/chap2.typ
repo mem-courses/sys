@@ -3,6 +3,8 @@ title: "II. Memory Hierarchy"
 create-date: "2025-03-31"
 update-date: "2025-04-01"
 slug: /course/ca/note/2
+blog-cssclasses:
+  - m-mubu
 */
 
 #import "../template-note.typ": *

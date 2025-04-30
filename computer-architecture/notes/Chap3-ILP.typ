@@ -2,6 +2,8 @@
 title: "III. Instruction-Level Parallelism"
 create-date: "2025-04-29"
 slug: /course/ca/note/3
+blog-cssclasses:
+  - m-mubu
 */
 
 #import "../template-note.typ": *
@@ -52,13 +54,53 @@ slug: /course/ca/note/3
 
 #example(title: [浮点数流水线中功能单元的时延与启动间隔])[
   #align(center, image("images/2025-04-30-20-05-26.png", width: 40%))
+  #no-par-margin
 
   这里 `FP add` 是四级流水线（$"latency = function unit time - 1 = 3"$），并且是完全流水线的功能模块，所以启动间隔为 $1$。
+  
+  #no-par-margin
+  #align(center, image("images/2025-04-30-21-06-00.png", width: 50%))
 ]
 
-#slide2x([8], image("../public/merged-3-0/0008.jpg"), image("../public/translated-3-0/0008.jpg"), cb: 0.02)
-
 #slide2x([9], image("../public/merged-3-0/0009.jpg"), image("../public/translated-3-0/0009.jpg"), ct: 0.01, cb: 0.10)
+
+#slide2x([2], image("../public/merged-3-1/0002.jpg"), image("../public/translated-3-1/0002.jpg"), ct: 0.01, cb: 0.12)
+
+- *基本块(basic block)*：一段连续的、直线执行的代码。只有一个入口和一个出口，没有分支。
+
+#slide2x([3], image("../public/merged-3-1/0003.jpg"), image("../public/translated-3-1/0003.jpg"), ct: 0.01, cb: 0.01)
+
+#slide2x([4], image("../public/merged-3-1/0004.jpg"), image("../public/translated-3-1/0004.jpg"), ct: 0.01, cb: 0.27)
+
+#slide2x([5], image("../public/merged-3-1/0005.jpg"), image("../public/translated-3-1/0005.jpg"), ct: 0.01, cb: 0.06)
+
+#slide2x([6], image("../public/merged-3-1/0006.jpg"), image("../public/translated-3-1/0006.jpg"))
+
+#slide2x([7], image("../public/merged-3-1/0007.jpg"), image("../public/translated-3-1/0007.jpg"), ct: 0.01, cb: 0.22)
+
+#slide2x([8], image("../public/merged-3-1/0008.jpg"), image("../public/translated-3-1/0008.jpg"), ct: 0.01, cb: 0.07)
+
+#slide2x([9], image("../public/merged-3-1/0009.jpg"), image("../public/translated-3-1/0009.jpg"), cb: 0.07)
+
+#slide2x([10], image("../public/merged-3-1/0010.jpg"), image("../public/translated-3-1/0010.jpg"), cb: 0.10)
+
+#slide2x([11], image("../public/merged-3-1/0011.jpg"), image("../public/translated-3-1/0011.jpg"), ct: 0.01, cb: 0.04)
+
+#slide2x([12], image("../public/merged-3-1/0012.jpg"), image("../public/translated-3-1/0012.jpg"), ct: 0.02, cb: 0.17)
+
+#slide2x([13], image("../public/merged-3-1/0013.jpg"), image("../public/translated-3-1/0013.jpg"), ct: 0.01, cb: 0.23)
+
+#slide2x([14], image("../public/merged-3-1/0014.jpg"), image("../public/translated-3-1/0014.jpg"), cb: 0.12)
+
+#slide2x([15], image("../public/merged-3-1/0015.jpg"), image("../public/translated-3-1/0015.jpg"), ct: 0.02, cb: 0.05)
+
+#slide2x([16], image("../public/merged-3-1/0016.jpg"), image("../public/translated-3-1/0016.jpg"), ct: 0.01, cb: 0.17)
+
+#slide2x([17], image("../public/merged-3-1/0017.jpg"), image("../public/translated-3-1/0017.jpg"), ct: 0.01, cb: 0.01)
+
+#slide2x([18], image("../public/merged-3-1/0018.jpg"), image("../public/translated-3-1/0018.jpg"), ct: 0.01, cb: 0.06)
+
+#slide2x([19], image("../public/merged-3-1/0019.jpg"), image("../public/translated-3-1/0019.jpg"), ct: 0.01, cb: 0.15)
 
 = Dependencies & Hazards | 依赖与冒险
 
@@ -87,6 +129,7 @@ slug: /course/ca/note/3
 
 #no-par-margin
 #align(center, image("images/2025-04-30-20-30-02.png", width: 50%))
+
 
 == Data Hazards | 数据冒险
 
@@ -189,63 +232,28 @@ mark
 
 #slide2x([37], image("../public/merged-3-0/0037.jpg"), image("../public/translated-3-0/0037.jpg"), ct: 0.01, cb: 0.06)
 
-#slide2x([1], image("../public/merged-3-1/0001.jpg"), image("../public/translated-3-1/0001.jpg"), ct: 0.11)
+= Software Approaches | 软件解决方法
 
-#slide2x([2], image("../public/merged-3-1/0002.jpg"), image("../public/translated-3-1/0002.jpg"), ct: 0.01, cb: 0.12)
+#slide2x([20], image("../public/merged-3-1/0020.jpg"), image("../public/translated-3-1/0020.jpg"), ct: 0.01, cb: 0.12)
 
-#slide2x([3], image("../public/merged-3-1/0003.jpg"), image("../public/translated-3-1/0003.jpg"), ct: 0.01, cb: 0.01)
+== Loop Unrolling | 循环展开
 
-#slide2x([4], image("../public/merged-3-1/0004.jpg"), image("../public/translated-3-1/0004.jpg"), ct: 0.01, cb: 0.27)
+#slide2x([21], image("../public/merged-3-1/0021.jpg"), image("../public/translated-3-1/0021.jpg"), cb: 0.02)
 
-#slide2x([5], image("../public/merged-3-1/0005.jpg"), image("../public/translated-3-1/0005.jpg"), ct: 0.01, cb: 0.06)
-
-#slide2x([6], image("../public/merged-3-1/0006.jpg"), image("../public/translated-3-1/0006.jpg"))
-
-#slide2x([7], image("../public/merged-3-1/0007.jpg"), image("../public/translated-3-1/0007.jpg"), ct: 0.01, cb: 0.22)
-
-#slide2x([8], image("../public/merged-3-1/0008.jpg"), image("../public/translated-3-1/0008.jpg"), ct: 0.01, cb: 0.07)
-
-#slide2x([9], image("../public/merged-3-1/0009.jpg"), image("../public/translated-3-1/0009.jpg"), cb: 0.07)
-
-#slide2x([10], image("../public/merged-3-1/0010.jpg"), image("../public/translated-3-1/0010.jpg"), cb: 0.10)
-
-#slide2x([11], image("../public/merged-3-1/0011.jpg"), image("../public/translated-3-1/0011.jpg"), ct: 0.01, cb: 0.04)
-
-#slide2x([12], image("../public/merged-3-1/0012.jpg"), image("../public/translated-3-1/0012.jpg"), ct: 0.02, cb: 0.17)
-
-#slide2x([13], image("../public/merged-3-1/0013.jpg"), image("../public/translated-3-1/0013.jpg"), ct: 0.01, cb: 0.23)
-
-#slide2x([14], image("../public/merged-3-1/0014.jpg"), image("../public/translated-3-1/0014.jpg"), cb: 0.12)
-
-#slide2x([15], image("../public/merged-3-1/0015.jpg"), image("../public/translated-3-1/0015.jpg"), ct: 0.02, cb: 0.05)
-
-#slide2x([16], image("../public/merged-3-1/0016.jpg"), image("../public/translated-3-1/0016.jpg"), ct: 0.01, cb: 0.17)
-
-#slide2x([17], image("../public/merged-3-1/0017.jpg"), image("../public/translated-3-1/0017.jpg"), ct: 0.01, cb: 0.01)
-
-#slide2x([18], image("../public/merged-3-1/0018.jpg"), image("../public/translated-3-1/0018.jpg"), ct: 0.01, cb: 0.06)
-
-#slide2x([19], image("../public/merged-3-1/0019.jpg"), image("../public/translated-3-1/0019.jpg"), ct: 0.01, cb: 0.15)
-
-#slide2x([20], image("../public/merged-3-1/0020.jpg"), image("../public/translated-3-1/0020.jpg"), ct: 0.01, cb: 0.09)
-
-#slide2x([21], image("../public/merged-3-1/0021.jpg"), image("../public/translated-3-1/0021.jpg"))
-
-#slide2x([22], image("../public/merged-3-1/0022.jpg"), image("../public/translated-3-1/0022.jpg"), ct: 0.01, cb: 0.17)
+#slide2x([22], image("../public/merged-3-1/0022.jpg"), image("../public/translated-3-1/0022.jpg"), ct: 0.01, cb: 0.20)
 
 #slide2x([23], image("../public/merged-3-1/0023.jpg"), image("../public/translated-3-1/0023.jpg"))
 
 #slide2x([24], image("../public/merged-3-1/0024.jpg"), image("../public/translated-3-1/0024.jpg"), cb: 0.01)
 
-
-#slide2x([25], image("../public/merged-3-1/0025.jpg"), image("../public/translated-3-1/0025.jpg"), ct: 0.01, cb: 0.11)
+#slide2x([25], image("../public/merged-3-1/0025.jpg"), image("../public/translated-3-1/0025.jpg"), ct: 0.01, cb: 0.14)
 
 = Dynamic Scheduling | 动态调度
 
 #slide2x([26], image("../public/merged-3-1/0026.jpg"), image("../public/translated-3-1/0026.jpg"))
 
 - 回顾（计组知识）：*静态调度(static scheduling)* 静态调度的流水线处理器在获取指令后会发射该指令，除非发现该指令存在数据依赖且无法通过 *前递(forwarding)* 来隐藏该指令，此时冒险检测硬件会暂停流水线，直到依赖清除后在获取新的指令。
-- *动态调度(dynamic scheduling)*：通过硬件重排指令的执行阶段（允许 *顺序发射(in-order issue)* 但是 *乱序执行(out-of-order execution)*）以减少停顿，并且不改变数据流和异常。
+- *动态调度(dynamic scheduling)*：通过硬件重排指令的执行阶段（允许 *顺序发射(in-order issue)* 但是 *乱序执行(out-of-order execution)*）以减少停顿，并且不改变 *数据流(data flow)* 和 *异常(exception behavior)*。
   - 优点：
     - 可以让在某个流水线上被编译的代码在其他流水线上也能高效运行。
     - 能够处理在编译时无法处理的依赖，比如内存引用或数据依赖分支，或者采用现代的动态链接或分派。
