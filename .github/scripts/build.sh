@@ -12,6 +12,7 @@ cd ../../../
 cd computer-architecture/
 python scripts/typ2md.py notes/chap1.typ
 python scripts/typ2md.py notes/chap2.typ
+python scripts/typ2md.py notes/Chap3-ILP.typ
 cd ../
 
 # 使用 Prettier 格式化 markdown 文件
