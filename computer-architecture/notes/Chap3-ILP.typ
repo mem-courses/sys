@@ -96,45 +96,66 @@ slug: /course/ca/note/3
 
 #slide2x([14], image("../public/merged-3-0/0014.jpg"), image("../public/translated-3-0/0014.jpg"), ct: 0.01, cb: 0.12)
 
-- *读后写依赖(read-after-write dependency, RAW dependency)*：
-  - 又称 *真数据依赖(true data dependency)*。
-  - 一般来说，只能通过 forwarding 或 stall 来解决。
+- *读后写依赖(read-after-write dependency, RAW dependency)*，又称 *真数据依赖(true data dependency)*。
+- 一般来说，只能通过 forwarding 或 stall 来解决。
+
+#example(title: [通过 stall 解决 RAW 冒险])[
+  #no-par-margin
+  #align(center, image("images/2025-04-30-21-01-05.png", width: 80%))
+]
 
 === WAW Dependences
 
 #slide2x([15], image("../public/merged-3-0/0015.jpg"), image("../public/translated-3-0/0015.jpg"), ct: 0.01, cb: 0.06)
 
-- *写后写依赖(write-after-write dependency, WAW dependency)*：
-  - 又称 *输出依赖(output dependency)*，是 *命名依赖(name dependency)* 的一种。
-  - WAW 和 WAR 这两种命名依赖都可以通过重命名寄存器的方式解决。
+- *写后写依赖(write-after-write dependency, WAW dependency)*，又称 *输出依赖(output dependency)*，是 *命名依赖(name dependency)* 的一种。
+- WAW 和 WAR 这两种命名依赖都可以通过重命名寄存器的方式解决。
+
+#example(title: [通过 stall 解决 WAW 冒险])[
+  #no-par-margin
+  #align(center, image("images/2025-04-30-21-02-20.png", width: 70%))
+]
+
+#slide2x([19], image("../public/merged-3-0/0019.jpg"), image("../public/translated-3-0/0019.jpg"), ct: 0.01, cb: 0.13)
+
+- 解决方法一：取消掉前一条指令的 WB 阶段，可以在 ID 阶段进行检测。
+- 解决方法二：检测到冲突时阻滞在 ID 阶段（即后文小结的方法）。
 
 === WAR Dependences
 
-#slide2x([16], image("../public/merged-3-0/0016.jpg"), image("../public/translated-3-0/0016.jpg"), ct: 0.01)
+#slide2x([16], image("../public/merged-3-0/0016.jpg"), image("../public/translated-3-0/0016.jpg"), ct: 0.01, cb: 0.5)
 
-- *写后读依赖(write-after-read dependency, WAR dependency)*：
-  - 又称 *反依赖(anti-dependency)*，是 *命名依赖(name dependency)* 的一种。
-  - 在大部分顺序发射、顺序执行的流水线中，因为是顺序读取（一般都是尽可能早的读取出值），不会出现 WAR 冒险。
+- *写后读依赖(write-after-read dependency, WAR dependency)* 又称 *反依赖(anti-dependency)*，是 *命名依赖(name dependency)* 的一种。
 
-#slide2x([17], image("../public/merged-3-0/0017.jpg"), image("../public/translated-3-0/0017.jpg"), ct: 0.02, cb: 0.17)
+#no-par-margin
+#align(center, image("images/2025-04-30-20-59-47.png", width: 42%))
+#no-par-margin
 
-#slide2x([18], image("../public/merged-3-0/0018.jpg"), image("../public/translated-3-0/0018.jpg"), ct: 0.03)
-
-#slide2x([19], image("../public/merged-3-0/0019.jpg"), image("../public/translated-3-0/0019.jpg"), ct: 0.01, cb: 0.10)
-
-#slide2x([20], image("../public/merged-3-0/0020.jpg"), image("../public/translated-3-0/0020.jpg"), ct: 0.01, cb: 0.49)
+- 在大部分顺序发射、顺序执行的流水线（称为 *顺序流水线(sequential pipeline)*）中，因为是顺序读取（一般都是尽可能早的读取出值），不会出现 WAR 冒险。
 
 #slide2x([21], image("../public/merged-3-0/0021.jpg"), image("../public/translated-3-0/0021.jpg"), ct: 0.01)
 
-#slide2x([22], image("../public/merged-3-0/0022.jpg"), image("../public/translated-3-0/0022.jpg"), ct: 0.01, cb: 0.09)
+#tip(title: [小结：顺序流水线解决结构冒险与数据冒险的方法])[
+  一种简单且常用的方法是，对于结构冒险、RAW 冒险和 WAR 冒险，全都在 ID 阶段进行判断，如果不行就在 ID 阶段暂停，等到依赖解除后再进行发射。
 
-#slide2x([23], image("../public/merged-3-0/0023.jpg"), image("../public/translated-3-0/0023.jpg"), ct: 0.01, cb: 0.09)
+  #no-par-margin
+  #align(center, image("images/2025-04-30-20-50-00.png", width: 40%))
+]
 
-#slide2x([24], image("../public/merged-3-0/0024.jpg"), image("../public/translated-3-0/0024.jpg"), ct: 0.01, cb: 0.11)
+#slide2x([20], image("../public/merged-3-0/0020.jpg"), image("../public/translated-3-0/0020.jpg"), ct: 0.01, cb: 0.49)
+
+#summary(title: [MIPS R4000 流水线])[
+  - `| IF | IS | RF | EX | DF | DS | TC | WB |`
+
+  #no-par-margin
+  #align(center, image("images/2025-04-30-20-56-06.png", width: 60%))
+]
 
 #slide2x([25], image("../public/merged-3-0/0025.jpg"), image("../public/translated-3-0/0025.jpg"), ct: 0.01, cb: 0.26)
 
 miss?
+
+这里讲的冒险问题其实没听懂
 
 #slide2x([26], image("../public/merged-3-0/0026.jpg"), image("../public/translated-3-0/0026.jpg"), ct: 0.01, cb: 0.03)
 
@@ -144,7 +165,13 @@ miss?
 
 #slide2x([29], image("../public/merged-3-0/0029.jpg"), image("../public/translated-3-0/0029.jpg"), ct: 0.01, cb: 0.04)
 
+== Controls Hazards | 控制冒险
+
 #slide2x([30], image("../public/merged-3-0/0030.jpg"), image("../public/translated-3-0/0030.jpg"), ct: 0.01, cb: 0.01)
+
+- 最常用的方法就是 stall（*延迟分支(delayed branch)*）。
+
+== Hazards among FP Instructions
 
 #slide2x([31], image("../public/merged-3-0/0031.jpg"), image("../public/translated-3-0/0031.jpg"), ct: 0.01, cb: 0.07)
 
