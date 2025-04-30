@@ -57,7 +57,7 @@ blog-cssclasses:
   #no-par-margin
 
   这里 `FP add` 是四级流水线（$"latency = function unit time - 1 = 3"$），并且是完全流水线的功能模块，所以启动间隔为 $1$。
-  
+
   #no-par-margin
   #align(center, image("images/2025-04-30-21-06-00.png", width: 50%))
 ]
@@ -232,11 +232,29 @@ mark
 
 #slide2x([37], image("../public/merged-3-0/0037.jpg"), image("../public/translated-3-0/0037.jpg"), ct: 0.01, cb: 0.06)
 
-= Software Approaches | 软件解决方法
+= Basic Compiler Techniques | 基本编译技术
 
 #slide2x([20], image("../public/merged-3-1/0020.jpg"), image("../public/translated-3-1/0020.jpg"), ct: 0.01, cb: 0.12)
 
-== Loop Unrolling | 循环展开
+在本节中，我们考虑以下 C 代码：
+
+```c
+for (i = 999; i >= 0; i--)   // typeof i is long long
+    x[i] += s;               // typeof x[i] is double
+```
+
+编译到 RISC-V 的结果如下：
+
+```asm
+Loop:
+    fld     f0, 0(x1)
+    fadd.d  f4, f0, f2
+    fsd     f4, 0(x1)
+    addi    x1, x1, -8
+    bne     x1, x2, Loop
+```
+
+== Scheduling | 调度
 
 #slide2x([21], image("../public/merged-3-1/0021.jpg"), image("../public/translated-3-1/0021.jpg"), cb: 0.02)
 
@@ -244,9 +262,50 @@ mark
 
 #slide2x([23], image("../public/merged-3-1/0023.jpg"), image("../public/translated-3-1/0023.jpg"))
 
+- 使用 *调度(scheduling)* 优化本节实例代码，可以减少一个时钟周期的停顿。
+
+#no-par-margin
+#table(
+  columns: (1fr, 1fr),
+  table.header(
+    [*调度前*],
+    [*调度后*],
+  ),
+
+  align(center, image("images/2025-05-01-00-21-28.png", width: 60%)), align(center, image("images/2025-05-01-00-21-43.png", width: 60%)),
+)
+
+
+== Loop Unrolling | 循环展开
+
 #slide2x([24], image("../public/merged-3-1/0024.jpg"), image("../public/translated-3-1/0024.jpg"), cb: 0.01)
 
 #slide2x([25], image("../public/merged-3-1/0025.jpg"), image("../public/translated-3-1/0025.jpg"), ct: 0.01, cb: 0.14)
+
+- 使用 *循环展开(loop unrolling)* 并进行调度，可以进一步减少每次迭代的平均周期数。
+
+#no-par-margin
+#table(
+  columns: (1fr, 1fr),
+  table.header(
+    [*循环展开四次的结果*],
+    [*循环展开四次并调度的结果*],
+  ),
+
+  [
+    平均每循环 6.5 个时钟周期
+    #no-par-margin
+    #align(center, image("images/2025-05-01-00-24-10.png", width: 100%))
+  ],
+  [
+    平均每循环 3.5 个时钟周期
+    #no-par-margin
+    #align(center, image("images/2025-05-01-00-24-18.png", width: 60%))
+  ],
+)
+
+- 这里假设了迭代次数是 $4$ 的倍数，如果不是的话需要再后面再补上单迭代的循环，以确保总迭代次数不变。
+- 循环展开u
 
 = Dynamic Scheduling | 动态调度
 
