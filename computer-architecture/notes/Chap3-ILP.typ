@@ -339,14 +339,14 @@ TBD: 具体方法论
 
 - 带记分牌的流水线阶段：`IF - IS - RO - EX - WB`。
   - 与 RISC-V 五级流水线的区别：
-    - ID 阶段：分成了 *发射(issue)* 和 *读操作数(read operands)* 两个阶段。
+    - ID 阶段：分成了 *发射(issue)* 和 *取数(read operands)* 两个阶段。
     - MEM 阶段：省略，合并到 EX 阶段。
 
 #slide2x([35], image("../public/merged-3-1/0035.jpg"), image("../public/translated-3-1/0035.jpg"), cb: 0.02)
 
 #slide2x([36], image("../public/merged-3-1/0036.jpg"), image("../public/translated-3-1/0036.jpg"), cb: 0.03)
 
-- 记分牌流水线各阶段原则：
+- 记分牌流水线工作流程：
   - IS
     - 当且仅当 (1) 功能单元可用 (2) 没有其他活跃指令占用了相同的目标寄存器 时，发射指令。
     - 可以避免结构冒险与 WAW 冒险。
@@ -356,11 +356,40 @@ TBD: 具体方法论
 
 #slide2x([37], image("../public/merged-3-1/0037.jpg"), image("../public/translated-3-1/0037.jpg"), ct: 0.01, cb: 0.09)
 
+- 记分牌的数据结构：
+  - 指令状态：
+  - *功能单元状态(function unit state)*：
+    - $upright("Busy")$：表明这个功能单元是否在执行某条指令。
+    - $upright("Op")$：正在这个功能单元执行的指令操作。
+    - $F_i$：目标寄存器。
+    - $F_j,F_k$：源寄存器。
+    - $Q_j,Q_k$：源寄存器会由哪个功能单元产生（如有）。
+    - $R_j,R_k$：源寄存器是否就绪（都就绪时才读），读完在下一周期要标记为 NO。
+  - 计算器结果状态：
+
 #slide2x([38], image("../public/merged-3-1/0038.jpg"), image("../public/translated-3-1/0038.jpg"), ct: 0.01)
 
-#slide2x([39], image("../public/merged-3-1/0039.jpg"), image("../public/translated-3-1/0039.jpg"), ct: 0.01)
+#{
+  set table(align: left)
+  table(
+    columns: (1fr, 1fr),
+    table.header(
+      align(center, [*记分牌状态*]),
+      align(center, [*说明*]),
+    ),
 
-#slide2x([40], image("../public/merged-3-1/0040.jpg"), image("../public/translated-3-1/0040.jpg"))
+    align(center, image("images/2025-05-01-10-48-25.png", width: 100%)),
+    [第一个周期，记分牌是空的，功能部件也都是空闲的，因此第一条指令顺利渡过发射阶段，并在周期结束的时候更新了记分牌。
+
+      注意看更新内容。整数部件现在显示忙碌，而 LD 指令的操作数不存在冒险，$R_k$ 显示 Yes，在寄存器状态里标记 F6 即将被整数部件改写。
+    ],
+
+    align(center, image("images/2025-05-01-10-51-08.png", width: 100%)),
+    [第二个周期，因为整数部件被占用了，所以第二条 LD 指令不能发射。同时第一条 LD 已经顺利渡过读数阶段，需要将 $R_k$ 标记为 NO。
+
+      第二条 LD 在周期结束时不会更新记分牌。],
+  )
+}
 
 #slide2x([41], image("../public/merged-3-1/0041.jpg"), image("../public/translated-3-1/0041.jpg"))
 
