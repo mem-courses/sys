@@ -1,19 +1,17 @@
 # typ2md.py
 # author: memset0
-# version: 2.2.0 (2024-04-02)
+# version: 3.2.1 (2024-04-03)
 
 import os
 import re
 import sys
-import json
-import yaml
 import base64
 import tempfile
 import subprocess
 from abc import ABC
 
 SETTINGS = {
-    "VERSION": "2.1.0",
+    "VERSION": "3.2.0",
     "CDN_ROOT": "https://course.cdn.memset0.cn/ca/",
 }
 
@@ -29,6 +27,9 @@ HEADING_END = TAG_BEGIN_END + "heading" + TAG_END
 
 RESOURCE_BEGIN = TAG_BEGIN_BEGIN + "resource" + TAG_END
 RESOURCE_END = TAG_BEGIN_END + "resource" + TAG_END
+
+HTML_BEGIN = TAG_BEGIN_BEGIN + "html" + TAG_END
+HTML_END = TAG_BEGIN_END + "html" + TAG_END
 
 IMAGE_BEGIN = TAG_BEGIN_BEGIN + "image" + TAG_END
 IMAGE_END = TAG_BEGIN_END + "image" + TAG_END
@@ -48,6 +49,31 @@ FRONTMATTER_END = TAG_BEGIN_END + "frontmatter" + TAG_END
 WIDTH_BEGIN = TAG_BEGIN_BEGIN + "width" + TAG_END
 WIDTH_END = TAG_BEGIN_END + "width" + TAG_END
 
+PANDOC_LUA_SCRIPT = '''
+-- Pandoc Lua filter to convert table elements to raw HTML blocks
+
+function Block (elem)
+  -- Check if the current block element is a Table
+  if elem.t == "Table" then
+    -- Create a minimal Pandoc document containing only this table element
+    -- This allows us to use pandoc.write on just the table
+    local single_table_doc = pandoc.Pandoc({elem})
+
+    -- Use pandoc's internal HTML writer to convert the table document to an HTML string
+    -- You might use "html" or "html5" depending on your needs
+    local html_output = pandoc.write(single_table_doc, "html", {{ "raw_tex", wrap = "none"}})
+
+    -- Return a RawBlock element.
+    -- The first argument "html" specifies that the content is raw HTML.
+    -- The second argument is the generated HTML string.
+    return pandoc.RawBlock("html", html_output)
+  end
+  -- For any other block element type, return nil to indicate
+  -- that the element should be processed by pandoc as usual.
+  return nil
+end
+'''
+
 
 class Feature(ABC):
     def __init__(self):
@@ -64,6 +90,7 @@ class Feature(ABC):
 
 class TypstRefine(Feature):
     TEMPLATE = '''
+    #set smartquote(enabled: false)  // set but not work
     #let align(pos, body) = body
     #let no-par-margin = (..) => par[]
     #show "。": "．"
@@ -84,7 +111,7 @@ class TypstRefine(Feature):
 
         # 删除空白注释
         content = re.sub(r'\<\!\-\-\s+\-\-\>', '', content)
-        
+
         # 处理换行
         content = content.replace(NEWLINE, '\n\n')
 
@@ -98,16 +125,12 @@ class FrontMatter(Feature):
 
     @staticmethod
     def dump(content):
-        data = yaml.safe_load(content)
-        json_str = json.dumps(data, ensure_ascii=False)
-        hash = base64.b64encode(json_str.encode()).decode()
-        return f'{FRONTMATTER_BEGIN}{hash}{FRONTMATTER_END}'
+        encoded = base64.b64encode(content.strip().encode()).decode()
+        return f'{FRONTMATTER_BEGIN}{encoded}{FRONTMATTER_END}'
 
     @staticmethod
-    def load(hash):
-        json_str = base64.b64decode(hash).decode()
-        data = json.loads(json_str)
-        return yaml.safe_dump(data, allow_unicode=True)
+    def load(encoded):
+        return base64.b64decode(encoded).decode().strip()
 
     @staticmethod
     def pre_process(content):
@@ -120,8 +143,18 @@ class FrontMatter(Feature):
         frontmatter_pattern = re.compile(f'{FRONTMATTER_BEGIN}(.*?){FRONTMATTER_END}', re.DOTALL)
 
         match = frontmatter_pattern.search(content)
+        if not match:
+            return content
+        
         frontmatter = FrontMatter.load(match.group(1))
         content = frontmatter_pattern.sub('', content)
+        
+        def filter_smart(match):
+            html = match.group(1)
+            html = html.replace('“', '"').replace('”', '"') # 处理弯引号
+            return html
+        html_pattern = re.compile(f'{HTML_BEGIN}(.*?){HTML_END}', re.DOTALL)
+        content = html_pattern.sub(filter_smart, content)
 
         return '---\n' + frontmatter.strip() + '\n---\n\n' + content
 
@@ -176,10 +209,10 @@ class Images(Feature):
     def pre_process(content):
         return content, f'''
         #let image(src, width: 100%) = {{
-            [{IMAGE_BEGIN}]
+            [{HTML_BEGIN}{IMAGE_BEGIN}]
             [src="{RESOURCE_BEGIN}#src;{RESOURCE_END}" ]
             [style="width: {WIDTH_BEGIN}#width;{WIDTH_END}" ]
-            [{IMAGE_END}]
+            [{IMAGE_END}{HTML_END}]
         }}
         '''
 
@@ -436,12 +469,17 @@ def pandoc_process(content, source_dir):
     try:
         with tempfile.NamedTemporaryFile(suffix='.md', mode='w', delete=False, encoding='utf8') as output_file:
             output_path = output_file.name
+        
+        with tempfile.NamedTemporaryFile(suffix='.lua', mode='w', delete=False, encoding='utf8') as lua_file:
+            lua_path = lua_file.name
+            lua_file.write(PANDOC_LUA_SCRIPT)
 
         cmd = [
             'pandoc',
             '--from=typst',
-            '--to=markdown',
+            '--to=markdown+raw_html',
             '--wrap=none',
+            '--lua-filter=' + lua_path,
             '--output=' + output_path,
             temp_path
         ]
@@ -494,6 +532,11 @@ def convert(source_file, target_file):
 
 
 if __name__ == "__main__":
+    # 从环境变量中加载设置
+    for key in SETTINGS.keys():
+        if os.getenv('TYP2MD_' + key):
+            SETTINGS[key] = os.getenv('TYP2MD_' + key)
+
     print(f'typ2md.py @ {SETTINGS["VERSION"]}')
 
     dirname = os.path.abspath(os.path.dirname(__file__))
@@ -503,7 +546,7 @@ if __name__ == "__main__":
     if len(sys.argv) > 1:
         source_file = os.path.abspath(sys.argv[1])
     else:
-        source_file = os.path.abspath(os.path.join(dirname, '../notes/chap1.typ'))
+        source_file = os.path.abspath(os.path.join(dirname, '../../notes/06.typ'))
     print('  source_file:', source_file)
 
     if len(sys.argv) > 2:
