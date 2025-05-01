@@ -56,7 +56,7 @@ blog-cssclasses:
   #align(center, image("images/2025-04-30-20-05-26.png", width: 40%))
   #no-par-margin
 
-  这里 `FP add` 是四级流水线（$"latency = function unit time - 1 = 3"$），并且是完全流水线的功能模块，所以启动间隔为 $1$。
+  这里 `FP add` 是四级流水线（$"latency" = "function unit time" - 1 = 3$），并且是完全流水线的（说明启动间隔为 $1$）功能模块。
 
   #no-par-margin
   #align(center, image("images/2025-04-30-21-06-00.png", width: 50%))
@@ -305,7 +305,8 @@ Loop:
 )
 
 - 这里假设了迭代次数是 $4$ 的倍数，如果不是的话需要再后面再补上单迭代的循环，以确保总迭代次数不变。
-- 循环展开u
+
+TBD: 具体方法论
 
 = Dynamic Scheduling | 动态调度
 
@@ -326,9 +327,9 @@ Loop:
 
 #slide2x([30], image("../public/merged-3-1/0030.jpg"), image("../public/translated-3-1/0030.jpg"), cb: 0.12)
 
-== Scoreboarding | 记分牌算法
+== The Scoreboard Algorithm | 记分牌算法
 
-#slide2x([31], image("../public/merged-3-1/0031.jpg"), image("../public/translated-3-1/0031.jpg"), cb: 0.20)
+#slide2x([31], image("../public/merged-3-1/0031.jpg"), image("../public/translated-3-1/0031.jpg"), cb: 0.23)
 
 #slide2x([32], image("../public/merged-3-1/0032.jpg"), image("../public/translated-3-1/0032.jpg"), cb: 0.05)
 
@@ -336,9 +337,22 @@ Loop:
 
 #slide2x([34], image("../public/merged-3-1/0034.jpg"), image("../public/translated-3-1/0034.jpg"), ct: 0.01, cb: 0.19)
 
+- 带记分牌的流水线阶段：`IF - IS - RO - EX - WB`。
+  - 与 RISC-V 五级流水线的区别：
+    - ID 阶段：分成了 *发射(issue)* 和 *读操作数(read operands)* 两个阶段。
+    - MEM 阶段：省略，合并到 EX 阶段。
+
 #slide2x([35], image("../public/merged-3-1/0035.jpg"), image("../public/translated-3-1/0035.jpg"), cb: 0.02)
 
 #slide2x([36], image("../public/merged-3-1/0036.jpg"), image("../public/translated-3-1/0036.jpg"), cb: 0.03)
+
+- 记分牌流水线各阶段原则：
+  - IS
+    - 当且仅当 (1) 功能单元可用 (2) 没有其他活跃指令占用了相同的目标寄存器 时，发射指令。
+    - 可以避免结构冒险与 WAW 冒险。
+  - RO
+    - 直到#mark[两个源操作数都可用];时，才进行读取。
+    - 可以动态地避免 RAW 冒险。
 
 #slide2x([37], image("../public/merged-3-1/0037.jpg"), image("../public/translated-3-1/0037.jpg"), ct: 0.01, cb: 0.09)
 
