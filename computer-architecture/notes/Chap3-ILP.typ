@@ -460,25 +460,9 @@ TBD: 具体方法论
   )
 }
 
-#slide2x([41], image("../public/merged-3-1/0041.jpg"), image("../public/translated-3-1/0041.jpg"))
-
-#slide2x([42], image("../public/merged-3-1/0042.jpg"), image("../public/translated-3-1/0042.jpg"))
-
-#slide2x([43], image("../public/merged-3-1/0043.jpg"), image("../public/translated-3-1/0043.jpg"))
-
-#slide2x([44], image("../public/merged-3-1/0044.jpg"), image("../public/translated-3-1/0044.jpg"))
-
-#slide2x([45], image("../public/merged-3-1/0045.jpg"), image("../public/translated-3-1/0045.jpg"))
-
-#slide2x([46], image("../public/merged-3-1/0046.jpg"), image("../public/translated-3-1/0046.jpg"))
-
-#slide2x([47], image("../public/merged-3-1/0047.jpg"), image("../public/translated-3-1/0047.jpg"))
-
 #slide2x([48], image("../public/merged-3-1/0048.jpg"), image("../public/translated-3-1/0048.jpg"))
 
 #slide2x([49], image("../public/merged-3-1/0049.jpg"), image("../public/translated-3-1/0049.jpg"), cb: 0.05)
-
-#slide2x([50], image("../public/merged-3-1/0050.jpg"), image("../public/translated-3-1/0050.jpg"))
 
 #slide2x([51], image("../public/merged-3-1/0051.jpg"), image("../public/translated-3-1/0051.jpg"))
 
@@ -576,7 +560,7 @@ TBD: 具体方法论
 
 #slide2x([33], image("../public/merged-3-2/0033.jpg"), image("../public/translated-3-2/0033.jpg"), cb: 0.05)
 
-- 使用 Tomasulo 算法实现循环：效果不佳。
+- Tomasulo 算法在循环场景中也有助于提升性能（我认为这是因为 Tomasulo 算法的优化不会），但是效果肯定没有直接循环展开的提升来的大。
 
 #slide2x([34], image("../public/merged-3-2/0034.jpg"), image("../public/translated-3-2/0034.jpg"), ct: 0.01, cb: 0.10)
 
@@ -618,9 +602,9 @@ TBD: 具体方法论
 
 #slide2x([53], image("../public/merged-3-2/0053.jpg"), image("../public/translated-3-2/0053.jpg"), ct: 0.01)
 
-#slide2x([54], image("../public/merged-3-2/0054.jpg"), image("../public/translated-3-2/0054.jpg"), ct: 0.01, cb: 0.03)
+#slide2x([54], image("../public/merged-3-2/0054.jpg"), image("../public/translated-3-2/0054.jpg"), ct: 0.01, cb: 0.17)
 
-#slide2x([55], image("../public/merged-3-2/0055.jpg"), image("../public/translated-3-2/0055.jpg"), ct: 0.01, cb: 0.15)
+#slide2x([55], image("../public/merged-3-2/0055.jpg"), image("../public/translated-3-2/0055.jpg"), ct: 0.01, cb: 0.19)
 
 #slide2x([56], image("../public/merged-3-2/0056.jpg"), image("../public/translated-3-2/0056.jpg"), ct: 0.01)
 
@@ -628,7 +612,7 @@ TBD: 具体方法论
 
 #slide2x([57], image("../public/merged-3-2/0057.jpg"), image("../public/translated-3-2/0057.jpg"), ct: 0.01, cb: 0.04)
 
-#slide2x([58], image("../public/merged-3-2/0058.jpg"), image("../public/translated-3-2/0058.jpg"), ct: 0.01, cb: 0.04)
+#slide2x([58], image("../public/merged-3-2/0058.jpg"), image("../public/translated-3-2/0058.jpg"), ct: 0.01, cb: 0.07)
 
 #slide2x([59], image("../public/merged-3-2/0059.jpg"), image("../public/translated-3-2/0059.jpg"), ct: 0.02, cb: 0.05)
 
