@@ -608,77 +608,77 @@ TBD: 具体方法论
 
 #slide2x([56], image("../public/merged-3-2/0056.jpg"), image("../public/translated-3-2/0056.jpg"), ct: 0.01)
 
-== Scoreboard with Explicit Register Renaming | 带显示寄存器重命名的记分牌
+// == Scoreboard with Explicit Register Renaming | 带显示寄存器重命名的记分牌
 
-#slide2x([57], image("../public/merged-3-2/0057.jpg"), image("../public/translated-3-2/0057.jpg"), ct: 0.01, cb: 0.04)
+// #slide2x([57], image("../public/merged-3-2/0057.jpg"), image("../public/translated-3-2/0057.jpg"), ct: 0.01, cb: 0.04)
 
-#slide2x([58], image("../public/merged-3-2/0058.jpg"), image("../public/translated-3-2/0058.jpg"), ct: 0.01, cb: 0.07)
+// #slide2x([58], image("../public/merged-3-2/0058.jpg"), image("../public/translated-3-2/0058.jpg"), ct: 0.01, cb: 0.07)
 
-#slide2x([59], image("../public/merged-3-2/0059.jpg"), image("../public/translated-3-2/0059.jpg"), ct: 0.02, cb: 0.05)
+// #slide2x([59], image("../public/merged-3-2/0059.jpg"), image("../public/translated-3-2/0059.jpg"), ct: 0.02, cb: 0.05)
 
-#slide2x([60], image("../public/merged-3-2/0060.jpg"), image("../public/translated-3-2/0060.jpg"), ct: 0.02, cb: 0.12)
+// #slide2x([60], image("../public/merged-3-2/0060.jpg"), image("../public/translated-3-2/0060.jpg"), ct: 0.02, cb: 0.12)
 
-#slide2x([61], image("../public/merged-3-2/0061.jpg"), image("../public/translated-3-2/0061.jpg"), cb: 0.14)
+// #slide2x([61], image("../public/merged-3-2/0061.jpg"), image("../public/translated-3-2/0061.jpg"), cb: 0.14)
 
-#slide2x([62], image("../public/merged-3-2/0062.jpg"), image("../public/translated-3-2/0062.jpg"), cb: 0.04)
+// #slide2x([62], image("../public/merged-3-2/0062.jpg"), image("../public/translated-3-2/0062.jpg"), cb: 0.04)
 
-#slide2x([63], image("../public/merged-3-2/0063.jpg"), image("../public/translated-3-2/0063.jpg"), cb: 0.01)
+// #slide2x([63], image("../public/merged-3-2/0063.jpg"), image("../public/translated-3-2/0063.jpg"), cb: 0.01)
 
-#slide2x([64], image("../public/merged-3-2/0064.jpg"), image("../public/translated-3-2/0064.jpg"))
+// #slide2x([64], image("../public/merged-3-2/0064.jpg"), image("../public/translated-3-2/0064.jpg"))
 
-#slide2x([65], image("../public/merged-3-2/0065.jpg"), image("../public/translated-3-2/0065.jpg"), cb: 0.22)
+// #slide2x([65], image("../public/merged-3-2/0065.jpg"), image("../public/translated-3-2/0065.jpg"), cb: 0.22)
 
-#slide2x([66], image("../public/merged-3-2/0066.jpg"), image("../public/translated-3-2/0066.jpg"))
+// #slide2x([66], image("../public/merged-3-2/0066.jpg"), image("../public/translated-3-2/0066.jpg"))
 
-#slide2x([67], image("../public/merged-3-2/0067.jpg"), image("../public/translated-3-2/0067.jpg"))
+// #slide2x([67], image("../public/merged-3-2/0067.jpg"), image("../public/translated-3-2/0067.jpg"))
 
-#slide2x([68], image("../public/merged-3-2/0068.jpg"), image("../public/translated-3-2/0068.jpg"))
+// #slide2x([68], image("../public/merged-3-2/0068.jpg"), image("../public/translated-3-2/0068.jpg"))
 
-#slide2x([69], image("../public/merged-3-2/0069.jpg"), image("../public/translated-3-2/0069.jpg"), cb: 0.01)
+// #slide2x([69], image("../public/merged-3-2/0069.jpg"), image("../public/translated-3-2/0069.jpg"), cb: 0.01)
 
-#slide2x([70], image("../public/merged-3-2/0070.jpg"), image("../public/translated-3-2/0070.jpg"), cb: 0.05)
+// #slide2x([70], image("../public/merged-3-2/0070.jpg"), image("../public/translated-3-2/0070.jpg"), cb: 0.05)
 
-#slide2x([71], image("../public/merged-3-2/0071.jpg"), image("../public/translated-3-2/0071.jpg"), cb: 0.01)
+// #slide2x([71], image("../public/merged-3-2/0071.jpg"), image("../public/translated-3-2/0071.jpg"), cb: 0.01)
 
-#slide2x([72], image("../public/merged-3-2/0072.jpg"), image("../public/translated-3-2/0072.jpg"))
+// #slide2x([72], image("../public/merged-3-2/0072.jpg"), image("../public/translated-3-2/0072.jpg"))
 
-#slide2x([73], image("../public/merged-3-2/0073.jpg"), image("../public/translated-3-2/0073.jpg"), cb: 0.02)
+// #slide2x([73], image("../public/merged-3-2/0073.jpg"), image("../public/translated-3-2/0073.jpg"), cb: 0.02)
 
-#slide2x([74], image("../public/merged-3-2/0074.jpg"), image("../public/translated-3-2/0074.jpg"), cb: 0.02)
+// #slide2x([74], image("../public/merged-3-2/0074.jpg"), image("../public/translated-3-2/0074.jpg"), cb: 0.02)
 
-#slide2x([75], image("../public/merged-3-2/0075.jpg"), image("../public/translated-3-2/0075.jpg"), cb: 0.01)
+// #slide2x([75], image("../public/merged-3-2/0075.jpg"), image("../public/translated-3-2/0075.jpg"), cb: 0.01)
 
-#slide2x([76], image("../public/merged-3-2/0076.jpg"), image("../public/translated-3-2/0076.jpg"))
+// #slide2x([76], image("../public/merged-3-2/0076.jpg"), image("../public/translated-3-2/0076.jpg"))
 
-#slide2x([77], image("../public/merged-3-2/0077.jpg"), image("../public/translated-3-2/0077.jpg"), cb: 0.02)
+// #slide2x([77], image("../public/merged-3-2/0077.jpg"), image("../public/translated-3-2/0077.jpg"), cb: 0.02)
 
-#slide2x([78], image("../public/merged-3-2/0078.jpg"), image("../public/translated-3-2/0078.jpg"))
+// #slide2x([78], image("../public/merged-3-2/0078.jpg"), image("../public/translated-3-2/0078.jpg"))
 
-#slide2x([79], image("../public/merged-3-2/0079.jpg"), image("../public/translated-3-2/0079.jpg"), cb: 0.01)
+// #slide2x([79], image("../public/merged-3-2/0079.jpg"), image("../public/translated-3-2/0079.jpg"), cb: 0.01)
 
-#slide2x([80], image("../public/merged-3-2/0080.jpg"), image("../public/translated-3-2/0080.jpg"), cb: 0.01)
+// #slide2x([80], image("../public/merged-3-2/0080.jpg"), image("../public/translated-3-2/0080.jpg"), cb: 0.01)
 
-#slide2x([81], image("../public/merged-3-2/0081.jpg"), image("../public/translated-3-2/0081.jpg"), cb: 0.02)
+// #slide2x([81], image("../public/merged-3-2/0081.jpg"), image("../public/translated-3-2/0081.jpg"), cb: 0.02)
 
-#slide2x([82], image("../public/merged-3-2/0082.jpg"), image("../public/translated-3-2/0082.jpg"), cb: 0.02)
+// #slide2x([82], image("../public/merged-3-2/0082.jpg"), image("../public/translated-3-2/0082.jpg"), cb: 0.02)
 
-#slide2x([83], image("../public/merged-3-2/0083.jpg"), image("../public/translated-3-2/0083.jpg"), cb: 0.02)
+// #slide2x([83], image("../public/merged-3-2/0083.jpg"), image("../public/translated-3-2/0083.jpg"), cb: 0.02)
 
-#slide2x([84], image("../public/merged-3-2/0084.jpg"), image("../public/translated-3-2/0084.jpg"), cb: 0.02)
+// #slide2x([84], image("../public/merged-3-2/0084.jpg"), image("../public/translated-3-2/0084.jpg"), cb: 0.02)
 
-#slide2x([85], image("../public/merged-3-2/0085.jpg"), image("../public/translated-3-2/0085.jpg"), cb: 0.02)
+// #slide2x([85], image("../public/merged-3-2/0085.jpg"), image("../public/translated-3-2/0085.jpg"), cb: 0.02)
 
-#slide2x([86], image("../public/merged-3-2/0086.jpg"), image("../public/translated-3-2/0086.jpg"), cb: 0.02)
+// #slide2x([86], image("../public/merged-3-2/0086.jpg"), image("../public/translated-3-2/0086.jpg"), cb: 0.02)
 
-#slide2x([87], image("../public/merged-3-2/0087.jpg"), image("../public/translated-3-2/0087.jpg"))
+// #slide2x([87], image("../public/merged-3-2/0087.jpg"), image("../public/translated-3-2/0087.jpg"))
 
-#slide2x([88], image("../public/merged-3-2/0088.jpg"), image("../public/translated-3-2/0088.jpg"), cb: 0.02)
+// #slide2x([88], image("../public/merged-3-2/0088.jpg"), image("../public/translated-3-2/0088.jpg"), cb: 0.02)
 
-#slide2x([89], image("../public/merged-3-2/0089.jpg"), image("../public/translated-3-2/0089.jpg"))
+// #slide2x([89], image("../public/merged-3-2/0089.jpg"), image("../public/translated-3-2/0089.jpg"))
 
-#slide2x([90], image("../public/merged-3-2/0090.jpg"), image("../public/translated-3-2/0090.jpg"), cb: 0.02)
+// #slide2x([90], image("../public/merged-3-2/0090.jpg"), image("../public/translated-3-2/0090.jpg"), cb: 0.02)
 
-#slide2x([91], image("../public/merged-3-2/0091.jpg"), image("../public/translated-3-2/0091.jpg"), ct: 0.01, cb: 0.13)
+// #slide2x([91], image("../public/merged-3-2/0091.jpg"), image("../public/translated-3-2/0091.jpg"), ct: 0.01, cb: 0.13)
 
 = References
 
